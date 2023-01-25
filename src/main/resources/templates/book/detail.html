@@ -191,10 +191,10 @@
                 class="scrollspy-example p-3 rounded-2" tabindex="0">
 
                 <h4 id="bookInfo" th:text="${ book.bookName }"></h4>
-                <p th:text="${ book.bookIntro }"></p>
+                <p th:text="${ bookIntro.bookIntro }"></p>
 
                 <div style="text-align: center;">
-                    <img loading="lazy" th:src="${ book.bookIntroImage }">
+                    <img loading="lazy" th:src="${ bookIntro.bookIntroImage }">
                 </div>
                 
                 <br/><br/>

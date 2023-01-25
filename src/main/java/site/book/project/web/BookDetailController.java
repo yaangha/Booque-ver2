@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Book;
+import site.book.project.domain.BookIntro;
 import site.book.project.domain.BookWish;
 import site.book.project.domain.Post;
 import site.book.project.domain.User;
@@ -23,7 +24,7 @@ import site.book.project.domain.User;
 import site.book.project.dto.UserSecurityDto;
 
 import site.book.project.dto.BookWishDto;
-
+import site.book.project.service.BookIntroService;
 import site.book.project.service.BookService;
 import site.book.project.service.BookWishService;
 import site.book.project.service.PostService;
@@ -37,8 +38,9 @@ public class BookDetailController {
 	private final BookService bookService;
 	private final PostService postService;
 	private final UserService userService;
-
+	
 	private final BookWishService bookWishService;
+	private final BookIntroService bookIntroService;
 
     
     @GetMapping("/detail")
@@ -47,7 +49,7 @@ public class BookDetailController {
             Model model) {
         
         Book book = bookService.read(id);
-        
+        BookIntro bookIntro = bookIntroService.introByIsbn(book.getIsbn());
         
         // 현제 페이지 책 제외 다른 작가 리스트
         List<Book> bookList = bookService.readAuthor(book.getAuthor());
@@ -72,7 +74,7 @@ public class BookDetailController {
         model.addAttribute("score", score);
         // comment 넘기기
         // post 넘기기(post글 필요)
-
+        model.addAttribute("bookIntro", bookIntro);
      
         // choi 책 한권에 대한 post 정보 받기
         List<Post> postList = postService.findBybookId(id);
