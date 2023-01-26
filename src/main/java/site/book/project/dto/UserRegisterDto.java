@@ -4,6 +4,7 @@ package site.book.project.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import site.book.project.domain.User;
+import site.book.project.domain.UserRole;
 
 @NoArgsConstructor
 @Data
@@ -19,7 +20,7 @@ public class UserRegisterDto {
     
     public User toEntity() {
 
-        return User.builder().username(signupUsername).password(signupPassword).email(signupEmail).nickName(signupNickName).name(signupName).phone(signupPhone).address(signupAddress)
+        return User.builder().username(username).password(password).email(email).nickName(nickname).name(name).phone(phone)
                 .build()
                 .addRole(UserRole.USER);
 
