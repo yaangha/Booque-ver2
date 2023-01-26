@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import site.book.project.dto.BuyInfoDto;
 import site.book.project.dto.CartDto;
+import site.book.project.dto.UserSecurityDto;
 import site.book.project.service.CartService;
 
 @Slf4j
@@ -63,6 +66,19 @@ public class CartRestController {
         log.info("이거 맞아???? 뭐지..??    {}" ,test);
     }
     
+    //(하은수정) 장바구니 버튼 누르면 데이터 저장 -> 모달창은 장바구니 이동여부만 체크
+    @PostMapping("api/cartAdd")
+    public void saveCart(@RequestBody BuyInfoDto dto, @AuthenticationPrincipal UserSecurityDto userSecurityDto) {
+        Integer userId = userSecurityDto.getId(); // userId로 cart, wish 정보 찾기
+        
+        // 장바구니 데이터 cart table에 생성
+        if (cartService.checkUser(userId, dto.getBookId()) == 1) { // 사용자 없으면 create
+            cartService.addCart(userId, dto.getBookId(), dto.getCount());
+        } else { // 사용자 있으면 update
+            Integer afterCount = cartService.updateCount(userId, dto.getBookId(), dto.getCount());
+            log.info("변경 수량={}", afterCount);
+        }
+    }
  
     
 }

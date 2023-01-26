@@ -135,8 +135,7 @@
                 <div class="btn-group my-2 w-100" role="group" aria-label="Basic example">
                 <!-- (하은) 장바구니 페이지 갈지말지 -->
                 <!-- Button trigger modal -->
-                <button type="button" class="w-50 btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" >장바구니</button>
-
+                <button id="btnCart" type="button" class="w-50 btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" >장바구니</button>
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -147,12 +146,12 @@
                             </div>
                             <div class="modal-body">장바구니로 이동하시겠습니까?</div>
                             <div class="modal-footer">
-                                <button id="btnContinueShopping" type="submit" class="btn btn-outline-dark" data-bs-dismiss="modal">계속 쇼핑하기</button>
-                                <button id="btnGoCart" type="submit" class="btn btn-dark" data-bs-dismiss="modal">장바구니 가기</button>
+                                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">계속 쇼핑하기</button>
+                                <button id="btnGoCart" type="button" th:onclick="location.href='/cart'" class="btn btn-dark" data-bs-dismiss="modal">장바구니 가기</button>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
                 <button id="btnOrderNow" type="button" class="w-50 btn btn-danger">구매하기</button>
 
                 </div>
@@ -315,6 +314,9 @@
 
         <!-- (지혜) 위시리스트 버튼(담기/취소) -->
         <script th:src="@{ /js/wishList.js }"></script>
+        
+        <!-- (하은) 장바구니 ajax -->
+        <script th:src="@{ /js/cart.js }"></script>
 
         <script>
         const btnP = document.querySelector('#btnCountP');
@@ -343,28 +345,6 @@
             countP = countP+' '
             count.setAttribute('value',countP);
 
-        })
-        
-        
-        
-        // (하은) 장바구니 버튼 
-        const addCartInfo = document.querySelector('#addCartInfo');
-
-        // 계속 쇼핑하기
-        const btnContinueShopping = document.querySelector('#btnContinueShopping');
-        btnContinueShopping.addEventListener('click', function () {
-          addCartInfo.action = '/cart/onlyAdd';
-          addCartInfo.method = 'post';
-          addCartInfo.submit();
-        })
-        
-        // 장바구니 가기
-        const btnGoCart = document.querySelector('#btnGoCart');
-        btnGoCart.addEventListener('click', function () {           
-            // addCartInfo.action = '/cart/add';
-            addCartInfo.action = '/cart';
-            addCartInfo.method = 'post';
-            addCartInfo.submit();
         })
         
         // 바로 구매하기 버튼 -> 해당 책 데이터만 order 테이블에 추가됨
