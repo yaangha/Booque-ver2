@@ -8,13 +8,13 @@
     
     // 장바구니 버튼 누르면 DB 저장 -> 모달창에선 장바구니 이동여부만 체크
     const btnCart = document.querySelector('#btnCart');
-    const btnGoCart = document.querySelector('#btnGoCart');
+    // const btnGoCart = document.querySelector('#btnGoCart');
     
     btnCart.addEventListener('click', saveCart);
-    btnGoCart.addEventListener('click', saveCart);
+    // btnGoCart.addEventListener('click', saveCart);
     
     function saveCart() {
-        const bookId = document.querySelector('#id').value;
+        const bookId = document.querySelector('#bookId').value;
         const count = document.querySelector('#count').value;
         
         const data = {

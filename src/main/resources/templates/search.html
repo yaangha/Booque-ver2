@@ -67,6 +67,7 @@
                     
                     <form id="formCart" action="/search/cart" >
                         <input type="hidden"  name="bookId" th:value="${ book.bookId}" />
+                        <input type="hidden" name="count" value="1" />
                     </form>
                       <a th:href="@{ /detail?id={bookId} (bookId = ${ book.bookId })}" th:bookId="${book.bookId}" th:username="${#authentication.name}" onclick="viewHitUp(this.getAttribute('bookId'),this.getAttribute('username'));"><img th:src="${ book.bookImage }" style="width: 150px;"></a>
                 </td>
@@ -139,7 +140,9 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     
         <!-- choi 배송 날짜 요일표시-->
-    
+        
+    <!-- (하은) 장바구니 ajax -->    
+    <script th:src="@{ /js/cart.js }"></script>
     <script>
     
     let today = new Date();  
@@ -156,21 +159,21 @@
     
     
     // 장바구니 버튼 
-    const btnCarts = document.querySelectorAll('#btnCart')
+//    const btnCarts = document.querySelectorAll('#btnCart')
     
-    btnCarts.forEach(btn => {
-        btn.addEventListener('click', e => {
-            const tr = btn.closest('tr')
-            const form = tr.querySelector('form#formCart')
-            const result = confirm('장바구니로 이동하시겠습니까?')
+//    btnCarts.forEach(btn => {
+//        btn.addEventListener('click', e => {
+//            const tr = btn.closest('tr')
+//            const form = tr.querySelector('form#formCart')
+//           const result = confirm('장바구니로 이동하시겠습니까?')
             
-            if(result){
-                form.action = '/cart'; // (하은수정) /search/cart -> /cart
-                form.method = 'post';
-                form.submit();
-            }
-        })
-    })
+//            if(result){
+//                form.action = '/cart'; // (하은수정) /search/cart -> /cart
+//                form.method = 'post';
+//                form.submit();
+//            }
+//        })
+//    })
     
     const btnOrders = document.querySelectorAll('#btnOrder')
     btnOrders.forEach(btn => {

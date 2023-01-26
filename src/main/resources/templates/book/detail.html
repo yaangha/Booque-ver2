@@ -101,7 +101,7 @@
                 <!--  <div class="col-2 my-2">
                 <img src="#" style="width: 50px" />  -->
                 <input type="hidden" id="id" name="id" th:value="${ book.bookId }">
-                <input type="hidden" id="id" name="bookId" th:value="${ book.bookId }">  
+                <input type="hidden" id="bookId" name="bookId" th:value="${ book.bookId }">  
 
                 <div th:text="${ book.author }"><span style="color: gray;"> 저자</span></div>
                 <div th:text="${ book.publisher }"></div>
@@ -147,7 +147,7 @@
                             <div class="modal-body">장바구니로 이동하시겠습니까?</div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">계속 쇼핑하기</button>
-                                <button id="btnGoCart" type="button" th:onclick="location.href='/cart'" class="btn btn-dark" data-bs-dismiss="modal">장바구니 가기</button>
+                                <button id="btnCart" type="button" th:onclick="location.href='@{/cart}'" class="btn btn-dark" data-bs-dismiss="modal">장바구니 가기</button>
                             </div>
                         </div>
                     </div>
