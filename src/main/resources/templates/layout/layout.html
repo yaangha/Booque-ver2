@@ -350,7 +350,7 @@
 
   <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding-24 w3-left" onclick="w3_open()"  style="margin-left:50px;"><i class="fa fa-bars"></i></a>
     <a href="/" class="w3-bar-item w3-padding-24 w3-wide" id="logo-top" style="text-decoration-line: none; color:white; padding-left:60px;">
-        BOOQUE 
+        BOOQUE ver 2
     </a>
     
         <!-- 로그인 하지 않은 상태 -->
@@ -361,17 +361,21 @@
         </th:block>
         <!-- 로그인 한 상태 -->
         <th:block sec:authorize="isAuthenticated()">
-            <!-- 로그인(인증) 됐나요? -->
-
+            
+            <!-- 부끄장터 버튼 -->
+            <a th:href="@{ / }">
+            <span class="w3-right" style="margin-top:25px; padding-left:40px; padding-right:40px; border-left:2px solid grey; color:hotpink;">Booque 장 터</span>
+            </a>
+            
             <!-- 회원정보 버튼(Dropdown) -->
             <div class="w3-dropdown-hover w3-bar-item w3-right" id="btnUser" 
-            style="color:white; margin-top:8px; margin-right:50px;">
+            style="color:white; margin-top:8px; margin-right:40px;">
                 <button class="w3-button">
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
                     </svg>
                 </button>
-                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="top:66px; right:15px;">
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="top:66px; right:173px;">
                     <a th:href="@{ /myPage }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">마이페이지</a>
                     <a th:href="@{ /post/list }" class="w3-bar-item w3-button" 
@@ -392,9 +396,9 @@
       <span class="w3-bar-item w3-button w3-right" style="color:white; margin-top:18px; margin-right:25px; margin-left:40px;" onclick="search_open()">
       <i class="fa fa-search"></i></span> 
       
-      <!-- 유저네임 표시 -->
       <!-- 로그인 한 상태에서만 보여줌 -->
       <th:block sec:authorize="isAuthenticated()">
+      <!-- 유저네임 표시 -->
       <div class="w3-right" style="margin-top:25px; padding-right:40px; border-right:2px solid grey;">님</div>
       <div class="w3-right" sec:authentication="name" style="margin-top:25px; margin-right:7px; color:cornflowerblue; font-weight:bold;"></div>
       </th:block>
@@ -533,6 +537,8 @@
    
    <div class="w3-large w3-text-grey" style="margin-top:30px; font-weight:bold">
    
+        <a th:href="@{ / }" class="w3-bar-item w3-button w3-large" style="padding-left:50px;">Booque 장터</a>
+   
          <!-- 로그인 하지 않은 상태 -->
             <th:block sec:authorize="isAnonymous()">
             <!-- 익명 사용자인 경우에 보여줄 내용 -->
@@ -542,7 +548,7 @@
             id="registerUser" href="#exampleModalToggle" role="button"  style="padding-left:50px;">회원가입</a>
             </th:block>
             
-        <!-- 로그인 한 상태 -->
+        <!-- 로그인 한 상태 --> 
             <th:block sec:authorize="isAuthenticated()">
             <!-- 로그인(인증) 됐나요? -->
             
