@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{ layout/layout }">
+
+<div layout:fragment="content">
+    <div>검색 페이지</div>
+    
+    <form th:action="@{ /market/searchResult }" id="search" >
+        <select id="typeUsed" name="typeUsed" >
+            <option value="all">통합검색</option>
+            <option value="isbn">ISBN</option>
+        </select>
+        <input type="search" id="keywordUsed" name="keywordUsed">
+        <button type="submit" style="border:none; margin-right:40px; margin-left:20px;"  onclick="search();">
+        <i class="fa fa-search" id="btnSearch"></i></button>
+    </form>
+    
+
+    
+    
+    
+    
+    
+</div>  <!-- fragment="content" 끝 -->
+
+<th:block layout:fragment="script">
+    <script>
+    function search(){
+        const form = document.querySelector('#search');
+        const keyword = document.querySelector('#typeUsed').value;
+        if(keyword==""){
+            alert('검색어');
+            event.preventDefault();
+            return;
+        }
+    }
+    </script>
+</th:block>
+
+
+</html>

@@ -18,17 +18,10 @@ public class UserRegisterDto {
     private String name;
     private String phone;
     
-    private String signupUsername; // request로 들어오는 값
-    private String signupPassword;
-    private String signupEmail;
-    private String signupNickName;
-    private String signupName;
-    private String signupPhone;
-    private String signupAddress;
-    
     public User toEntity() {
 
-        return User.builder().username(signupUsername).password(signupPassword).email(signupEmail).nickName(signupNickName).name(signupName).phone(signupPhone).address(signupAddress)
+
+        return User.builder().username(username).password(password).email(email).nickName(nickname).name(name).phone(phone)
                 .build()
                 .addRole(UserRole.USER);
 

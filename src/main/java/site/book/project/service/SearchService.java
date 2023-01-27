@@ -20,6 +20,8 @@ public class SearchService {
     private final SearchRepository searchRepository;
     
     
+    
+    
     @Transactional(readOnly = true)
     public Page<Book> search(String type, String keyword, String order, Pageable pageable){
         Page<Book> list = null;

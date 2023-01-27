@@ -12,7 +12,7 @@
     <!-- 반응형 웹 -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     
-    <title>BOOQUE</title>
+    <title>BOOQUE2</title>
     
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
@@ -363,6 +363,12 @@
         <th:block sec:authorize="isAuthenticated()">
             <!-- 로그인(인증) 됐나요? -->
 
+
+            <!-- 부끄장터 버튼 -->
+            <a th:href="@{ /market/main }">
+            <span class="w3-right" style="margin-top:25px; padding-left:40px; padding-right:40px; border-left:2px solid grey; color:hotpink; font-weight:bold;">Booque 장 터</span>
+            </a>
+            
             <!-- 회원정보 버튼(Dropdown) -->
             <div class="w3-dropdown-hover w3-bar-item w3-right" id="btnUser" 
             style="color:white; margin-top:8px; margin-right:50px;">
