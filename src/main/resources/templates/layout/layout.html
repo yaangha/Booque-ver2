@@ -364,18 +364,26 @@
             
             <!-- 부끄장터 버튼 -->
             <a th:href="@{ / }">
-            <span class="w3-right" style="margin-top:25px; padding-left:40px; padding-right:40px; border-left:2px solid grey; color:hotpink;">Booque 장 터</span>
+            <span class="w3-right" style="margin-top:25px; padding-left:40px; padding-right:40px; border-left:2px solid grey; color:hotpink; font-weight:bold;">Booque 장 터</span>
+            </a>
+            
+            <!-- 채팅 버튼(내 채팅 모아보기) -->
+            <a th:href="@{ /myChats }" class="w3-bar-item w3-button  w3-right" id="btnChat" style="margin-top:18px; margin-right:30px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chat-right-dots" viewBox="0 0 16 16">
+                  <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1H2zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z"/>
+                  <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                </svg>
             </a>
             
             <!-- 회원정보 버튼(Dropdown) -->
             <div class="w3-dropdown-hover w3-bar-item w3-right" id="btnUser" 
-            style="color:white; margin-top:8px; margin-right:40px;">
+            style="color:white; margin-top:8px; margin-right:5px;">
                 <button class="w3-button">
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
                     </svg>
                 </button>
-                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="top:66px; right:173px;">
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="top:66px; right:225px;">
                     <a th:href="@{ /myPage }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">마이페이지</a>
                     <a th:href="@{ /post/list }" class="w3-bar-item w3-button" 
@@ -619,7 +627,7 @@ function nothingKeywordCheck(){
 
 
     <!-- 상단/사이드바, 모달 등 모든 페이지에 들어가는 공통 자바스크립트 -->
-<script th:src="@{ /js/script.js }"></script>
+    <script th:src="@{ /js/script.js }"></script>
   
 
 </body>
