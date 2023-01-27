@@ -94,10 +94,18 @@ public class PostController {
         // (하은) post에 있는 bookId로 책 정보 넘기기
         List<Book> books = new ArrayList<>();
         
-        for ( PostListDto p : postList) {
+        if(postList.size() > 4 ) {
+            for(int i=0; i < 4 ; i++) {
+                Book book = bookService.read(postList.get(i).getBookId());
+                books.add(book);
+            }
             
-            Book book = bookService.read(p.getBookId());
-            books.add(book);
+        } else {
+            for ( PostListDto p : postList) {
+                
+                Book book = bookService.read(p.getBookId());
+                books.add(book);
+            }
         }
             
         
