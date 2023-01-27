@@ -37,6 +37,9 @@ public class UsedBook {
     private Integer bookId;
     
     @Column(nullable = false)
+    private String bookTitle;
+    
+    @Column(nullable = false)
     private Integer price;
     
     @CreatedDate
@@ -62,5 +65,10 @@ public class UsedBook {
     
     @Builder.Default
     private Integer chats = 0;
+    
+    @Column(nullable = false)
+    private String title;
+    
+
         
 }
