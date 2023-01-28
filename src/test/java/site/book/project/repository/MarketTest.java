@@ -13,7 +13,7 @@ public class MarketTest {
     
     @Autowired
     private UsedBookRepository usedBookRepository;
-    
+
     
     @Test
     public void test() {

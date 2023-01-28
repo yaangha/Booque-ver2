@@ -5,6 +5,58 @@
     layout:decorate="~{ layout/layout }">
 
 <div layout:fragment="content">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Booque Market</title>
+    
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+        crossorigin="anonymous" />
+
+    
+    <style>
+         #info li {
+            list-style: none;
+            padding-top: 32px;
+            padding-bottom: 32px;   
+            font-size: 18px;
+            border-top: 1px solid silver;
+         }
+         
+         ul {
+            padding-left: 0;
+         }
+         
+         ul li div {
+            display: inline-block;
+            vertical-align: top;
+         }
+         
+         .contents {
+            width: 168px;
+         }
+         
+    </style>
+
+
+</head>
+<body>
+    <div class="w-70 container">
+    <h1>상품 등록 페이지</h1>
+    
+    <!-- 진행 순서 보여주기 -->
+    <ul class="h5 list-group list-group-horizontal justify-content-center">
+        <li class="list-group-item border-0" style="font-weight: bold;">01 책 검색</li>
+        <li class="list-group-item border-0" style="color:gray;">></li>
+        <li class="list-group-item border-0" style="color:gray;">02 글 작성</li>
+        <li class="list-group-item border-0" style="color:gray;">></li>
+        <li class="list-group-item border-0" style="color:gray;">03 업로드</li>
+    </ul>
+
+
     <div>검색 페이지</div>
     
     <form th:action="@{ /market/searchResult }" id="search" >
@@ -19,11 +71,86 @@
     
 
     
+        <div><br/></div>
+        <div>총 검색된 결과 : <span th:text="${searchList.totalElements}"></span></div>
+        <!-- 검색 상단바 START -->
+
+        
+
+        <!-- 도서 목록 START -->
+          <table class="w-100 table" style="text-align: center;">
+
+            <tbody style="height: 200px;" th:if="${ searchList.totalElements == 0}">
+                <tr>
+                    <td>
+                        <img class="mb-2" style="text-align:center;" width="1100" height="230" src="/images/nothing.jpg"/><br/>
+                        <span class="h5">입력하신 내용을 다시 한 번 확인해주세요!</span>
+                    </td>
+                </tr>
+            </tbody>
+            
+            <tbody style="height: 200px;" th:if="${ searchList.totalElements != 0}">
+            <tr th:each="book : ${ searchList }">
+                <td class="align-middle">
+                    
+	                <form id="formMarket" action="/market/create" >
+	                    <input type="hidden"  name="bookId" th:value="${ book.bookId}" />
+	                </form>
+	                <a th:href="@{ /detail?id={bookId} (bookId = ${ book.bookId })}">
+	                <img th:src="${ book.bookImage }" style="width: 100px;"></a>
+                </td>
+                <td class="align-middle" style="text-align: left;"> 
+                            <small class="d-inline-flex px-2 my-1 border rounded text-secondary">
+                                <span  th:text="${ book.bookgroup }"></span><span> / </span><span th:text="${ book.category }"></span>
+                            </small>
+                            <div class="h5" th:text="${ book.bookName }"></div>
+                            <div th:text="${ book.author }"></div>
+                            <div th:text="${ book.publisher }"></div>
+                            <div th:text="${ book.publishedDate }"></div>
+                </td>
+
+
+                <td class="align-middle">
+                            <div  th:text="|정가 ${#numbers.formatInteger(book.prices, 0, 'COMMA')}원|"> </div>
+                
+                </td>
+
+                <td class="align-middle">
+
+                  
+                    <button type="button" class="btn btn-dark btn-sm my-2" id="btnMarket"
+                              style="width: 100px;">부끄 마켓</button><br/>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+
+    <!-- 페이징 시작 -->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center" th:if="${searchList.totalPages != 0}">
+                <li class="page-item" th:classappend="${1 == searchList.pageable.pageNumber + 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/market/searchResult?typeUsed={type}&keywordUsed={rekeyword}
+                     (type = ${ reTypeUsed }, rekeyword = ${ reKeywordUsed},  page = ${searchList.pageable.pageNumber - 1})}">Previous</a>
+                </li>
+                <li class="page-item" th:classappend="${i == searchList.pageable.pageNumber + 1} ? 'disabled'" 
+                    th:each="i : ${#numbers.sequence(startPage, endPage)}"><a class="page-link" th:href="@{/market/searchResult?typeUsed={type}&keywordUsed={rekeyword}
+                     (type = ${ reTypeUsed }, rekeyword = ${ reKeywordUsed }, page = ${i - 1})}" th:text="${i}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${searchList.totalPages == searchList.pageable.pageNumber + 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/market/searchResult?typeUsed={type}&keywordUsed={rekeyword}
+                    (type = ${ reTypeUsed }, rekeyword = ${ reKeywordUsed},  page = ${searchList.pageable.pageNumber + 1})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    <!-- 페이징 끝 -->
     
-    
-    
-    
+
+
+    </div> <!-- w70 container -->
+</body>  
 </div>  <!-- fragment="content" 끝 -->
+
+
 
 <th:block layout:fragment="script">
     <script>
@@ -36,7 +163,22 @@
             return;
         }
     }
+    
+    const form = document.querySelector('#formMarket');
+    const btnMarket = document.querySelector('#btnMarket');
+    
+    btnMarket.addEventListener('click', function() {
+    	form.submit();
+    })
+    
     </script>
+    
+    <!-- 부트스트랩 -->
+	<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+    crossorigin="anonymous"></script>
+    
 </th:block>
 
 
