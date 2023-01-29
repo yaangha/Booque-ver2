@@ -350,8 +350,15 @@
 
   <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding-24 w3-left" onclick="w3_open()"  style="margin-left:50px;"><i class="fa fa-bars"></i></a>
     <a href="/" class="w3-bar-item w3-padding-24 w3-wide" id="logo-top" style="text-decoration-line: none; color:white; padding-left:60px;">
-        BOOQUE 
+        BOOQUE 2
     </a>
+
+                     <!-- 부끄장터 버튼 -->
+           <a th:href="@{ /market/main }">
+           <span class="w3-bar-item w3-padding-24 w3-wide" style=" color:hotpink; font-weight:bold;">Booque 장 터</span>
+           </a>
+
+
     
         <!-- 로그인 하지 않은 상태 -->
         <th:block sec:authorize="isAnonymous()">
@@ -364,10 +371,7 @@
             <!-- 로그인(인증) 됐나요? -->
 
 
-            <!-- 부끄장터 버튼 -->
-            <a th:href="@{ /market/main }">
-            <span class="w3-right" style="margin-top:25px; padding-left:40px; padding-right:40px; border-left:2px solid grey; color:hotpink; font-weight:bold;">Booque 장 터</span>
-            </a>
+
             
             <!-- 회원정보 버튼(Dropdown) -->
             <div class="w3-dropdown-hover w3-bar-item w3-right" id="btnUser" 
@@ -404,6 +408,7 @@
       <div class="w3-right" style="margin-top:25px; padding-right:40px; border-right:2px solid grey;">님</div>
       <div class="w3-right" sec:authentication="name" style="margin-top:25px; margin-right:7px; color:cornflowerblue; font-weight:bold;"></div>
       </th:block>
+
       
       
     <!-- 검색 창 내려오기 -->

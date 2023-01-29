@@ -57,9 +57,10 @@
     </ul>
     
     <h2 style="padding-bottom: 10px;">기본정보<span style="font-size: 16px; color: red; margin-left: 30px">* 필수정보</span></h2>
-    <form action="">
+    <form action="/market/create" method="post">
     <ul id="info">
     	<li>
+    	<input type="text" th:value="${ usedBookId }" name="usedBookId">
     		<div>판매할 책 정보</div>
     		<img th:src="${ book.bookImage }" style="width: 80px;">
     		<div th:text="${ book.bookName }"></div>
@@ -71,7 +72,7 @@
 
     		<span th:text="${ book.isbn }"></span>
     		<input type="hidden" th:value="${ book.bookName }" name="bookTitle" >
-    		<input type="hidden" th:value="${ book.bookId }" name="bookTitle" >
+    		<input type="hidden" th:value="${ book.bookId }" name="bookId" >
     		
     	</li>
         <li>
@@ -91,10 +92,11 @@
         </li>
         <li>
             <div class="contents" style="display: inline-block;">제목<span style="color: red;">*</span></div>
-            <div><input class="form-control" type="text" placeholder="판매글 제목을 입력해주세요!" style="width: 1100px; height: 50px;"/></div>
+            <div><input class="form-control" name="title" type="text" placeholder="판매글 제목을 입력해주세요!" style="width: 1100px; height: 50px;"/></div>
         </li>
         <li>
             <div class="contents">거래지역</div>
+            <input type="text" name="location">
         </li>
         <li>
             <div class="contents">상태<span style="color: red;">*</span></div>
@@ -106,15 +108,15 @@
         </li>
         <li>
             <div class="contents">가격<span style="color: red;">*</span></div>
-            <div><input class="form-control" type="text" placeholder="숫자만 입력해주세요!" style="width: 300px; height: 50px; display: inline-block;"/> 원</div>
+            <div><input class="form-control" name="price" type="text" placeholder="숫자만 입력해주세요!" style="width: 300px; height: 50px; display: inline-block;"/> 원</div>
         </li>
         <li>
             <div class="contents">설명<span style="color: red;">*</span></div>
-            <div><textarea rows="10" class="form-control" style="width:1100px;" placeholder="여러 장의 상품 사진과 사용감, 구입 연도 등 구매자에게 필요한 정보를 꼭 포함해주세요!"></textarea></div>
+            <div><textarea rows="10" class="form-control" name="contents" style="width:1100px;" placeholder="여러 장의 상품 사진과 사용감, 구입 연도 등 구매자에게 필요한 정보를 꼭 포함해주세요!"></textarea></div>
         </li>
     </ul>
+	<input class="btn btn-danger" style="width: 200px; height:50px; margin: 5px; font-size: 18px;" type="submit" value="등 록 하 기" />
 	</form>
-    <button class="btn btn-danger" style="width: 200px; height:50px; margin: 5px; font-size: 18px;">등 록 하 기</button>
     </div> <!-- w-70 end -->
     
 <!-- 부트스트랩 -->

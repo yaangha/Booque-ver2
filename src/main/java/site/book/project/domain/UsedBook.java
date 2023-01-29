@@ -15,16 +15,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import site.book.project.dto.MarketCreateDto;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Builder
 @ToString
 @Entity(name = "USEDBOOK")
 @SequenceGenerator(name = "USEDBOOK_SEQ_GEN", sequenceName = "USEDBOOK_SEQ", allocationSize = 1)
-public class UsedBook {
+public class UsedBook extends BaseTimeEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USEDBOOK_SEQ_GEN")
@@ -36,29 +39,27 @@ public class UsedBook {
     @Column(nullable = false)
     private Integer bookId;
     
-    @Column(nullable = false)
+    @Column
     private String bookTitle;
     
-    @Column(nullable = false)
+    @Column
     private Integer price;
     
-    @CreatedDate
-    private LocalDateTime createdTime;
-    
+    // 판매 상태(판매중, 예약중, 판매완료)
     @Builder.Default
-    private LocalDateTime modifiedTime = LocalDateTime.now();
+    private String status = "판매중";
     
-    @Column(nullable = false)
-    private String status;
-    
-    @Column(nullable = false)
+    @Column
     private String location;
+    
+    @Column
+    private String bookLevel;
+    
+    @Column
+    private String title;
     
     @Builder.Default
     private Integer wishCount = 0;
-    
-    @Column(nullable = false)
-    private String bookLevel;
     
     @Builder.Default
     private Integer hits = 0;
@@ -66,8 +67,18 @@ public class UsedBook {
     @Builder.Default
     private Integer chats = 0;
     
-    @Column(nullable = false)
-    private String title;
+    
+    public UsedBook update(MarketCreateDto dto) {
+    	this.bookTitle = dto.getBookTitle();
+    	this.bookLevel = dto.getLevel();
+    	this.price = dto.getPrice();
+    	this.location = dto.getLocation();
+    	this.title = dto.getTitle();
+ 
+    	
+    	return this;
+    }
+
     
 
         

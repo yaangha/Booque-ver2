@@ -92,10 +92,6 @@
             <tbody style="height: 200px;" th:if="${ searchList.totalElements != 0}">
             <tr th:each="book : ${ searchList }">
                 <td class="align-middle">
-                    
-	                <form id="formMarket" action="/market/create" >
-	                    <input type="hidden"  name="bookId" th:value="${ book.bookId}" />
-	                </form>
 	                <a th:href="@{ /detail?id={bookId} (bookId = ${ book.bookId })}">
 	                <img th:src="${ book.bookImage }" style="width: 100px;"></a>
                 </td>
@@ -116,10 +112,11 @@
                 </td>
 
                 <td class="align-middle">
-
-                  
-                    <button type="button" class="btn btn-dark btn-sm my-2" id="btnMarket"
-                              style="width: 100px;">부끄 마켓</button><br/>
+	                <form id="formMarket" action="/market/create" >
+	                    <input type="hidden"  name="bookId" th:value="${ book.bookId}" />
+                    	<input class="btn btn-dark btn-sm my-2" id="btnMarket"
+                              style="width: 100px;"  type="submit" value="부끄마켓">
+	                </form>
                 </td>
             </tr>
         </tbody>
@@ -154,15 +151,6 @@
 
 <th:block layout:fragment="script">
     <script>
-    function search(){
-        const form = document.querySelector('#search');
-        const keyword = document.querySelector('#typeUsed').value;
-        if(keyword==""){
-            alert('검색어');
-            event.preventDefault();
-            return;
-        }
-    }
     
     const form = document.querySelector('#formMarket');
     const btnMarket = document.querySelector('#btnMarket');

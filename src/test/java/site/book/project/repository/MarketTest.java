@@ -14,10 +14,16 @@ public class MarketTest {
     @Autowired
     private UsedBookRepository usedBookRepository;
 
+    @Autowired
+    private UsedBookPostRepository postRepository;
+    
+    @Autowired
+    private UsedBookImageRepository imageRe;
     
     @Test
     public void test() {
-        Assertions.assertNotNull(usedBookRepository);
+        Assertions.assertNotNull(postRepository);
+        Assertions.assertNotNull(imageRe);
         
     }
     
