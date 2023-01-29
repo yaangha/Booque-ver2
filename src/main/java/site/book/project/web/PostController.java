@@ -94,10 +94,18 @@ public class PostController {
         // (하은) post에 있는 bookId로 책 정보 넘기기
         List<Book> books = new ArrayList<>();
         
-        for ( PostListDto p : postList) {
+        if(postList.size() > 4 ) {
+            for(int i=0; i < 4 ; i++) {
+                Book book = bookService.read(postList.get(i).getBookId());
+                books.add(book);
+            }
             
-            Book book = bookService.read(p.getBookId());
-            books.add(book);
+        } else {
+            for ( PostListDto p : postList) {
+                
+                Book book = bookService.read(p.getBookId());
+                books.add(book);
+            }
         }
             
         
@@ -117,7 +125,7 @@ public class PostController {
         log.info("create(dto ={})", dto);   
       
         Post entity = postService.create(dto); 
-        
+        log.info("과연 유저 id는 대체 어디서 들어온것? {}", dto.getUserId());
         // (홍찬) 리뷰순에서 사용할 것 - 글이 등록되기 전에
         // BookID에 해당하는 포스트 글이 1 증가시켜주기
         postService.countUpPostByBookId(dto.getBookId());

@@ -20,6 +20,8 @@ public class SearchService {
     private final SearchRepository searchRepository;
     
     
+    
+    
     @Transactional(readOnly = true)
     public Page<Book> search(String type, String keyword, String order, Pageable pageable){
         Page<Book> list = null;
@@ -35,6 +37,8 @@ public class SearchService {
                 return list = searchRepository.foreignSearchByKeyword(keyword, pageable);
             } else if (type.equals("au")) { // 저자 검색
                 return list = searchRepository.authorSearchByKeyword(keyword, pageable);
+            } else if (type.equals("isbn")) {
+            	return list = searchRepository.isbnSearchByKeyword(keyword, pageable);
             }
         } else if (order.equals("highPrice")) { // 최고가순 정렬
             if(type.equals("all")) { // 통합 검색
