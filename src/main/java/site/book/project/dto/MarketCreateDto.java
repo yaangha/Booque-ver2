@@ -25,20 +25,4 @@ public class MarketCreateDto {
 	
 	private String contents;  // 따로 저장되어야함. 
 	
-	
-	public UsedBook toUsedBook() {
-		return UsedBook.builder().userId(userId).bookId(bookId)
-				.bookTitle(bookTitle)
-				.bookLevel(level)
-				.price(price).
-				status("판매중").
-				location(location).title(title).build();
-	}
-//
-//	public UsedBookPost(String) {
-//		return UsedBookPost.builder()
-//	}
-	
-	
-	
 }

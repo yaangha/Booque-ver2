@@ -1,5 +1,8 @@
 package site.book.project.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -13,9 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Book;
+import site.book.project.domain.UsedBook;
+import site.book.project.domain.UsedBookPost;
+import site.book.project.domain.User;
 import site.book.project.dto.MarketCreateDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.BookRepository;
+import site.book.project.repository.UsedBookPostRepository;
+import site.book.project.repository.UsedBookRepository;
+import site.book.project.repository.UserRepository;
 import site.book.project.service.SearchService;
 import site.book.project.service.UsedBookService;
 
@@ -28,6 +37,9 @@ public class MarketController {
     private final SearchService searchService;
     private final UsedBookService usedBookService;
     private final BookRepository bookRepository;
+    private final UsedBookRepository usedBookRepository;
+    private final UsedBookPostRepository usedBookPostRepository;
+    private final UserRepository userRepository;
     
     @GetMapping("/main") // /market/main 부끄마켓 메인 페이지 이동
     public void main() {
@@ -89,8 +101,47 @@ public class MarketController {
     }
     
     @GetMapping("/detail") // /market/detail 중고판매글 상세 페이지 이동
-    public void detail() {
-    	
+    public void detail(Integer usedBookId, Model model) {
+        // 책 정보 불러오기(bookId) -> postId로 bookId 찾기
+        // 판매글 정보 불러오기
+        // 판매글제목 & 가격 & 수정시간 & 지역 & 본문 & 판매여부 & 책상태 & 이미지
+        UsedBook usedBook = usedBookRepository.findById(usedBookId).get();        
+        UsedBookPost usedBookPost = usedBookPostRepository.findByUsedBookId(usedBookId);
+        User user = userRepository.findById(usedBook.getUserId()).get(); // 작성자의 정보
+        Book book = bookRepository.findById(usedBook.getBookId()).get();
+        
+        String content = usedBookPost.getContent();
+        
+        // 판매하는 책과 동일한 책(다른 중고책) 리스트
+        List<UsedBook> otherUsedBookList = usedBookService.readOtherUsedBook(usedBook.getBookId());
+        List<UsedBook> otherUsedBookListFinal = new ArrayList<>();
+        
+        for (UsedBook u : otherUsedBookList) {
+            if(usedBookId != u.getId()) {
+                otherUsedBookListFinal.add(u);
+            }
+        }
+        
+        
+        model.addAttribute("book", book);
+        model.addAttribute("user", user); // userName만 보낼 수 있게 수정(?)
+        model.addAttribute("content", content);
+        model.addAttribute("usedBookPost", usedBookPost);
+        model.addAttribute("usedBook", usedBook);
+        model.addAttribute("otherUsedBookListFinal", otherUsedBookListFinal);
+            
+    }
+    
+    /**
+     * 
+     * @param id 마이페이지에 표시될 user 
+     * @param model
+     */
+    @GetMapping("/mypage") // /market/mypage 판매글작성자&마이페이지 이동
+    public void mypage(Integer id, Model model) {
+        User user = userRepository.findById(id).get();
+        
+        model.addAttribute("user", user);
     }
     
 
