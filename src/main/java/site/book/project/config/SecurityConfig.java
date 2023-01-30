@@ -1,22 +1,34 @@
 package site.book.project.config;
 
 import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+import lombok.RequiredArgsConstructor;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
-public class SecurityConfig {
-    @Bean // 스프링 컨텍스트에서 생성, 관리하는 객체 - 필요한 곳에 의존성 주입. <bean></bean>같은.
+@RequiredArgsConstructor
+@EnableWebSocket
+public class SecurityConfig  {
+	
+	private final WebSocketHandler webSocketHandler;
+	
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+		registry.addHandler(webSocketHandler, "/ws/chat").setAllowedOrigins("*");
+	}
+    
+	@Bean // 스프링 컨텍스트에서 생성, 관리하는 객체 - 필요한 곳에 의존성 주입. <bean></bean>같은.
     // 암호화 알고리즘 객체 -> Spring Security에서는 비밀번호는 반드시 암호화를 해야 함. 암호화 안되면 오류!
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
