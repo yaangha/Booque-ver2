@@ -1,21 +1,32 @@
 package site.book.project.web;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import groovy.transform.AutoExternalize;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Book;
+import site.book.project.domain.UsedBook;
 import site.book.project.dto.MarketCreateDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.BookRepository;
+import site.book.project.repository.SearchRepository;
 import site.book.project.service.SearchService;
 import site.book.project.service.UsedBookService;
 
@@ -26,23 +37,29 @@ import site.book.project.service.UsedBookService;
 public class MarketController {
     
     private final SearchService searchService;
+    private final SearchRepository searchRepository;
     private final UsedBookService usedBookService;
     private final BookRepository bookRepository;
+    
     
     @GetMapping("/main") // /market/main 부끄마켓 메인 페이지 이동
     public void main() {
         
     }
     
+//    @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동
+//    public void create(@AuthenticationPrincipal UserSecurityDto u , Integer bookId, Model model) {
+//    	log.info("책 번호 {}", bookId);
+//    	Book book = bookRepository.findById(bookId).get();
+//    	
+//    	Integer usedBookId = usedBookService.create(bookId, u.getId());
+//    	log.info("책 검색을 하고 버튼을 누르면 디비단에 저장이 되게 해야해. {}, {}, {}", bookId, u.getId(), usedBookId);
+//    	model.addAttribute("book", book);
+//    	model.addAttribute("usedBookId", usedBookId);
+//    }
     @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동
-    public void create(@AuthenticationPrincipal UserSecurityDto u , Integer bookId, Model model) {
-    	log.info("책 번호 {}", bookId);
-    	Book book = bookRepository.findById(bookId).get();
-    	
-    	Integer usedBookId = usedBookService.create(bookId, u.getId());
-    	log.info("책 검색을 하고 버튼을 누르면 디비단에 저장이 되게 해야해. {}, {}, {}", bookId, u.getId(), usedBookId);
-    	model.addAttribute("book", book);
-    	model.addAttribute("usedBookId", usedBookId);
+    public void create(Model model) {
+
     }
     
     @PostMapping("/create")
@@ -52,7 +69,6 @@ public class MarketController {
     	
     	dto.setUserId(userDto.getId());
     	
-    	log.info("자자자 함 봐야지!! {}", dto);
     	usedBookService.create( usedBookId, dto );
     	
     	return "redirect:/market/main";
@@ -85,12 +101,43 @@ public class MarketController {
         model.addAttribute("reKeywordUsed", keywordUsed);
         model.addAttribute("reTypeUsed", typeUsed);
         
-        return "/market/search";
+        return "/market/create";
     }
+    
+    
+    
     
     @GetMapping("/detail") // /market/detail 중고판매글 상세 페이지 이동
     public void detail() {
     	
+    }
+    
+    
+    
+    
+    @GetMapping("/searchT")
+    @ResponseBody
+    public ResponseEntity<List<Book>> bookList(String keyword){
+        log.info("확인 해야지 키워드가 잘 넘어갔는지{}   ",keyword);
+        
+        List<Book> searhList = searchRepository.unifiedSearchByKeyword(keyword);
+        return ResponseEntity.ok(searhList);
+    }
+    
+    @GetMapping("/createM")
+    @ResponseBody
+    public Map<String, Object>  createUsedBook(@AuthenticationPrincipal UserSecurityDto u, Integer bookId, Model mdoel) {
+        log.info("잘 넘어 왔니!! 유저{} ,챡번호 {}", u, bookId);
+        // 저장
+        
+        Map<String, Object> maps = new HashMap<>();
+        
+        Integer usedBookId = usedBookService.create(bookId, u.getId());
+        Book book = bookRepository.findById(bookId).get();
+        
+        maps.put("book", book);
+        maps.put("usedBookId", usedBookId);
+       return maps; 
     }
     
 
