@@ -123,7 +123,7 @@
                 <form id="formStatus">
                 <input id="usedBookId" name="usedBookId" type="hidden" th:value="${ usedBook.id }" />
                 <select id="status" name="status" class="form-select" style="width:120px; height: 40px; margin-bottom: 10px; display: inline-block;">
-                    <option value="판매중">판매중</option>
+                    <option value="판매중" th:text="${ usedBook.status eq '판매중'} ? 'selected' : ''"></option>
                     <option value="예약중">예약중</option>
                     <option value="판매완료">판매완료</option>
                 </select>
