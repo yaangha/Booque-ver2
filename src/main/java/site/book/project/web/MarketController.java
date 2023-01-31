@@ -75,34 +75,7 @@ public class MarketController {
     }
     
     
-    /**
-     * 책 검색 후 디비 판매글로 넘어가기
-     * ajax를 이용해서 추천 검색어처럼 만들수 있지 않을까? 
-     * 은정
-     */
-    @GetMapping("/search") // /market/create 중고판매글 작성 페이지 이동
-    public void searchUsed(Model model) {
-    	Page<Book> searchList = null;
-    	model.addAttribute("searchList", searchList);
-        
-    }
-    // 은정
-    @GetMapping("/searchResult") // 검색후 페이지?
-    public String search(String typeUsed, String keywordUsed, Model model, @PageableDefault(size=10) Pageable pageable) {
-        
-        Page<Book> searchList = searchService.search(typeUsed, keywordUsed, "0", pageable);
 
-        // 페이징 - 시작페이지, 끝 페이지 (신상품순, 최저가순, 최고가순)
-        int startPage = Math.max(1, searchList.getPageable().getPageNumber() - 3);
-        int endPage = Math.min(searchList.getTotalPages(), searchList.getPageable().getPageNumber() + 3);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("searchList", searchList);
-        model.addAttribute("reKeywordUsed", keywordUsed);
-        model.addAttribute("reTypeUsed", typeUsed);
-        
-        return "/market/create";
-    }
     
     
     
@@ -114,8 +87,12 @@ public class MarketController {
     
     
     
-    
-    @GetMapping("/searchT")
+    /**
+     * ajax를 이용해서 키워드 받고 검색하기
+     * @param keyword 검색할 단어(isbn은 아직은 제외됨)
+     * @return
+     */
+    @GetMapping("/search")
     @ResponseBody
     public ResponseEntity<List<Book>> bookList(String keyword){
         log.info("확인 해야지 키워드가 잘 넘어갔는지{}   ",keyword);
@@ -124,10 +101,15 @@ public class MarketController {
         return ResponseEntity.ok(searhList);
     }
     
-    @GetMapping("/createM")
+    /**
+     * UsedBook 테이블에 userId, bookId 먼저 저장하기
+     * @param u user 정보
+     * @param bookId  선택한 책의 PK
+     * @return  Map타입을 통해 Book과 usedBookId(PK)를 넘김
+     */
+    @GetMapping("/createUsed")
     @ResponseBody
-    public Map<String, Object>  createUsedBook(@AuthenticationPrincipal UserSecurityDto u, Integer bookId, Model mdoel) {
-        log.info("잘 넘어 왔니!! 유저{} ,챡번호 {}", u, bookId);
+    public Map<String, Object>  createUsedBook(@AuthenticationPrincipal UserSecurityDto u, Integer bookId) {
         // 저장
         
         Map<String, Object> maps = new HashMap<>();

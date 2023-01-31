@@ -61,11 +61,10 @@
         <input type="text" name="keyword" id="keywordM">
         <button type="button" id="btnSearchM" >검색</button>
     </div>
-    <!-- 검색한 책을 테이블 형식으로 보여주고, 책이 선택 되면 그 이후에 한권의 책만 -->
+    <!-- 검색한 책을 테이블 형식 데이터 자스로 작성 -->
     <div id="bookList"></div>
-    <!-- 책을 선택 했을 때 -->
+    <!-- 책을 선택 했을 때 보여줄 데이터 자스로 작성 -->
     <div id="bookSelect"></div>
-    <input form="formTest" name="bookTitle" value="실험용">
     
     <ul class="h5 list-group list-group-horizontal justify-content-center">
         <li class="list-group-item border-0" style="color:gray;">01 책 검색</li>
@@ -76,7 +75,7 @@
     </ul>
     
     <h2 style="padding-bottom: 10px;">기본정보<span style="font-size: 16px; color: red; margin-left: 30px">* 필수정보</span></h2>
-    <form id="formTest" action="/market/create" method="post">
+    <form id="formCreate" action="/market/create" method="post">
     <div id="usedId"></div>
     <ul id="info">
 

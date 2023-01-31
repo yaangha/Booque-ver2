@@ -18,7 +18,7 @@
 
     function create(keyword){
         
-        axios.get('/market/searchT?keyword='+keyword)
+        axios.get('/market/search?keyword='+keyword)
         .then(response => {
             bookList(response.data)
         })
@@ -77,18 +77,18 @@
         
     const btnMarket = document.querySelectorAll('#btnMarket') 
     btnMarket.forEach(btn =>{
+        
         btn.addEventListener('click', function(){
-            console.log('클릭')
-            console.log(btn.value)
-            axios.get('/market/createM?bookId='+btn.value)
+            
+            axios.get('/market/createUsed?bookId='+btn.value)
                 .then(response =>{
                     alert('저장이 되었습니다.')
-                    // 메서드 만들고 디비 저장 하나만 보이게
-                    // div 만들기
+                    // bookList는 지우고, 선택 된 책만 보여줌.
                     bookList.innerHTML='';
+                    
+                    // Map을 통해서 리턴하면 여러개의 타입을 받을 수 있음. key 값만 주면 됨.
                     console.log(response.data.book)
                     console.log(response.data.usedBookId)
-                    
                     bookSelect(response.data.book, response.data.usedBookId)
                         
                 })
@@ -101,8 +101,10 @@
         
     }
     
-    
-    function bookSelect(c,a){
+    /** 판매할 책 선택 후 html에서 보여줄 선택된 책의 정보!
+        c는 book정보, a는 UsedBook의 PK
+     */
+    function bookSelect(book,usedBookId){
         // str로 만들기 
         const bookSelectDiv = document.querySelector('#bookSelect')
         let str='';
@@ -112,24 +114,24 @@
 
          +  ' <tr > ' 
          +        ' <td class="align-middle"> ' 
-         +   `<a href="/detail?id=${c.bookId}" onclick="viewHitUp(${c.bookId}, ${username});"><img src="${c.bookImage}" style="width: 150px;"/></a>  </td>` 
+         +   `<a href="/detail?id=${book.bookId}" ><img src="${book.bookImage}" style="width: 150px;"/></a>  </td>` 
          +        ' </td> ' 
          +        ' <td class="align-middle" style="text-align: left;"> '  
          +                    ' <small class="d-inline-flex px-2 my-1 border rounded text-secondary"> ' 
-         +                        ' <span>'+c.bookgroup+'</span><span> / </span><span>'+c.category+'</span> ' 
+         +                        ' <span>'+book.bookgroup+'</span><span> / </span><span>'+book.category+'</span> ' 
          +                    ' </small> ' 
-         +                    ' <div class="h5">'+c.bookName+'</div> ' 
+         +                    ' <div class="h5"><input readyonly style="border:none;"  form="formCreate" name="bookTitle"  value="'+book.bookName+'"/></div> ' 
          +        ' </td> ' 
          +        ' <td class="align-middle" style="text-align: left;"> '  
-         +                    ' <div ><span> 작가 : </span>'+c.author+'</div> ' 
+         +                    ' <div ><span> 작가 : </span>'+book.author+'</div> ' 
          +        ' </td> ' 
          +        ' <td class="align-middle" style="text-align: left;"> '  
          +          '<small>출판사</small>'
-         +                    ' <div > '+c.publisher+'</div> ' 
-         +                    ' <div>'+c.publishedDate+'</div> ' 
+         +                    ' <div > '+book.publisher+'</div> ' 
+         +                    ' <div>'+book.publishedDate+'</div> ' 
          +        ' </td> ' 
          +        ' <td class="align-middle" style="text-align: left;"> '  
-         +                    ' <div> isbn : '+c.isbn+'</div> ' 
+         +                    ' <div> isbn : '+book.isbn+'</div> ' 
          +        ' </td> ' 
 
 
@@ -148,7 +150,7 @@
         document.getElementById('marketCreate').style.display='none';
         
         const idDiv = document.querySelector('#usedId')
-        let used = '<input type="text" name=usedBookId value="'+a+'">';
+        let used = '<input type="text" name=usedBookId value="'+usedBookId+'">';
         idDiv.innerHTML = used
         
     }
