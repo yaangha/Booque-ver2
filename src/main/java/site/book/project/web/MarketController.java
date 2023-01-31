@@ -144,5 +144,19 @@ public class MarketController {
         model.addAttribute("user", user);
     }
     
-
+    @GetMapping("/modify")
+    public void modify(Integer usedBookId, String status) {
+        
+    }
+    
+    @PostMapping("/modifyStatus")
+    public String modifyStatus(Integer usedBookId, String status) {
+        UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
+        usedBook = usedBook.updateStauts(status);
+        usedBookRepository.save(usedBook);
+        
+        log.info("하은 책 판매여부 확인 = {}", status);
+        
+        return "redirect:/market/detail?usedBookId=" + usedBookId;
+    }
 }
