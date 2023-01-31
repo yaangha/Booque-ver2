@@ -63,10 +63,46 @@ public class UsedBookService {
 	}
 
 	// (하은) 코드 수정 필요!! 지금 실패함!! 찜하기 누르면 usedBookWish DB에 create
-	public void addUsedBookWish(Integer usedBookId, Integer userId) {
-	    log.info("usedBookService 하은 테스트!! = {}", usedBookId);
-	    usedBookWishRepository.save(UsedBookWish.builder().usedBookId(usedBookId).userId(userId).build());
+	public Integer addUsedBookWish(Integer usedBookId, Integer userId) {
+	// 사용자 정보가 있으면 값을 바꾸고, 없으면 만들기 
+	    UsedBookWish wish = usedBookWishRepository.findByUserIdAndUsedBookId(userId, usedBookId);
+	    Integer result = 0;
+	    
+	    if(wish == null) {
+	        usedBookWishRepository.save(UsedBookWish.builder().usedBookId(usedBookId).userId(userId).build());
+	        result = 1;
+	    } else {
+            usedBookWishRepository.delete(wish);
+            result = 0;
+        }
+	    
+	    // 0은 삭제 1은 존재
+	    return result;
+	    
 	}
+	
+	@Transactional
+	public void addWishCount(Integer usedBookId) {
+	    
+	    UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
+	    Integer a = usedBook.getWishCount() + 1;
+	    usedBook = usedBook.updateWishCount(a);
+	    usedBookRepository.save(usedBook);
+	    
+	}
+	
+	@Transactional
+	public void minusWishCount(Integer usedBookId) {
+	    log.info("되니? 보이니??");
+	    UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
+	    
+	    Integer a = usedBook.getWishCount() - 1;
+	    
+	    usedBook = usedBook.updateWishCount(a);
+	    usedBookRepository.save(usedBook);
+	}
+	
+	
 
 	// (하은) bookId가 동일한 다른 중고책 리스트 만들기
     public List<UsedBook> readOtherUsedBook(Integer bookId) {

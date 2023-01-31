@@ -85,6 +85,12 @@ public class UsedBook extends BaseTimeEntity {
         
         return this;
     }
+    
+    public UsedBook updateWishCount(Integer count) {
+        this.wishCount = count;
+        
+        return this;
+    }
 
         
 }
