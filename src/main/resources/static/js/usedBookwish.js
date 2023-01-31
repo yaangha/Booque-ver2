@@ -18,6 +18,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 console.log(response.data)
                 chaingHeart(response.data)
             })
+            .catch(err =>{
+                console.log(err)
+            })
         
         
         

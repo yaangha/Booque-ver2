@@ -108,8 +108,11 @@
             <span th:text="${ user.booqueLevel }"></span>
             <span th:text="${ user.booqueScore }"></span> point
         </a>
-        <div class="align-middle float-end" style="display: inline-block;" >
-            <button id="btnModify" class="btn btn-success" style="width:120px; height:40px;">수 정 하 기</button>
+    	<div class="align-middle float-end" style="display: inline-block;" th:if="${ user.username } != ${ #authentication.name }">
+	    	<button class="btn btn-success" style="width:120px; height:40px;">채 팅 하 기</button>
+    	</div>
+        <div class="align-middle float-end" style="display: inline-block;" th:unless="${ user.username } != ${ #authentication.name }">
+            <a class="btn btn-success" th:href="@{ /market/modify?usedBookId={usedBookId} (usedBookId = ${ usedBook.id })}" style="width:120px; height:40px;">수 정 하 기</a>
         </div>
     	<div class="align-middle float-end" style="display: inline-block;" >
         <!-- 위치 우째함..  -->
@@ -124,35 +127,35 @@
                 
                     <img id="yesWish" style="width: 25px; display:none; " src="https://cdn-icons-png.flaticon.com/512/833/833472.png" />
                     <img id="noWish" style="width: 25px; display:none;" src=" https://cdn-icons-png.flaticon.com/512/833/833300.png" /> 
+                    <input id="usedBookId" name="usedBookId" type="hidden" th:value="${ usedBook.id }" />
             </div>
-            
-
-            
-            
-	    	<button class="btn btn-success" style="width:120px; height:40px;">채 팅 하 기</button>
     	</div>
     </div>
     
     <div> <!-- content -->        
         <div class="w-75 align-top" style="display: inline-block;"> <!-- content left -->
+            <div th:if="${ user.username } == ${ #authentication.name }">
                 <form id="formStatus">
-                <input id="usedBookId" name="usedBookId" type="hidden" th:value="${ usedBook.id }" />
-                <select id="status" name="status" class="form-select" style="width:120px; height: 40px; margin-bottom: 10px; display: inline-block;">
-                    <option value="판매중">판매중</option>
-                    <option value="예약중">예약중</option>
-                    <option value="판매완료">판매완료</option>
+                <input id="statusUsedBookId" name="statusUsedBookId" type="hidden" th:value="${ usedBook.id }" />
+                <select onchange="changeStatus()" id="selectStatus" name="selectStatus" class="form-select" style="width:120px; height: 40px; margin-bottom: 10px; display: inline-block;">
+                    <option value="판매중" th:selected="${ usedBook.status } == '판매중'">판매중</option>
+                    <option value="예약중" th:selected="${ usedBook.status } == '예약중'">예약중</option>
+                    <option value="판매완료" th:selected="${ usedBook.status } == '판매완료'">판매완료</option>
                 </select>
                 </form>
-                <button id="btnStatusModify" class="btn btn-outline-success" style="width:80px; height:40px; display: inline-block;">변 경</button>
+            </div>
+            <div th:unless="${ user.username } == ${ #authentication.name }">
                 <select class="form-select" style="width:120px; height: 40px; margin-bottom: 10px;" disabled>
                     <option th:text="${ usedBook.status }" th:value="${ usedBook.status }"></option>
                 </select>
+            </div>
             
     	    <div class="h3" th:text="${ usedBook.title }"></div>
     	    <div class="h2" style="color: red;" th:text="|${#numbers.formatInteger(usedBook.price, 0, 'COMMA')}원|"></div>	
+            <div><span th:text="|${#numbers.formatInteger(usedBook.price - book.prices, 0, 'COMMA')}원|"></span> 할인</div>
             <div>상품상태: <span th:text="${ usedBook.bookLevel }"></span></div>
     	    <small style="color: gray;" th:text="${ #temporals.format(usedBook.modifiedTime, 'yyyy/MM/dd HH:mm:ss') }"></small>
-    	    <p id="content" th:text="${ usedBookPost.content }"></p>
+    	    <div id="content" th:text="${ usedBookPost.content }" style="white-space:pre;"></div>
         </div> <!-- content left end -->
         
         <div style="display: inline-block;"> <!-- content right -->
@@ -183,7 +186,7 @@
     <div id="other"> <!-- 이 책의 다른 중고 상품은? -->
     	<h4><span>이 책</span>의 다른 중고 상품은?</h4>
     	<div class="otherList" th:each="usedBook : ${ otherUsedBookListFinal }"> <!-- 다른 상품 나열 부분 -->
-    		<div> <!-- 상품목록 1개 -->
+    		<div style="height: 315px;"> <!-- 상품목록 1개 -->
     		<a th:href="@{ /market/detail(usedBookId=${ usedBook.id }) }">
     			<div class="border" style="width:200px; height: 200px; margin-bottom: 5px;"></div>
     			<div th:text="${ usedBook.title }" style="font-size:17px;"></div>
@@ -202,24 +205,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
     <script th:src="@{ /js/usedBookwish.js }"></script>
     <!-- 자바스크립트 부분 -->
-    <script> // (하은) detail -> modify 페이지 이동
-    const btnModify = document.querySelector('#btnModify');
-    const formStatus = document.querySelector('#formStatus');
-    
-    btnModify.addEventListener('click', function() {
-    	formStatus.action = '/market/modify';
-    	formStatus.method = 'get';
-    	formStatus.submit();
-    })
-    	
-    // (하은) 책 판매여부만 변경
-    const btnStatusModify = document.querySelector('#btnStatusModify');
-    
-    btnStatusModify.addEventListener('click', function() {
+    <script type="text/javascript">
+    // (하은) 책 판매여부 변경
+    function changeStatus() {
+    	// const selectStatus = document.getElementById("selectStatus");
+    	// const status = selectStatus.options[selectStatus.selectedIndex].text;
+        
+    	const formStatus = document.querySelector('#formStatus');
     	formStatus.action = '/market/modifyStatus';
     	formStatus.method = 'post';
-    	formStatus.submit();
-    })
+    	formStatus.submit();  
+    }
     </script>
     
     

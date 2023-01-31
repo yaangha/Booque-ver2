@@ -60,6 +60,8 @@ public class UsedBookService {
 		// UsedBookPost에 저장
 		postRepository.save(UsedBookPost.builder().usedBookId(usedBookId).content(dto.getContents()).build());
 		
+		log.info("컨텐트를 찾아서~~~~!{},, {}", dto, dto.getContents());
+		
 	}
 
 	// (하은) 코드 수정 필요!! 지금 실패함!! 찜하기 누르면 usedBookWish DB에 create
