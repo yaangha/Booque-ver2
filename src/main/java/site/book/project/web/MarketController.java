@@ -162,18 +162,18 @@ public class MarketController {
     }
     
     @GetMapping("/modify")
-    public void modify(Integer usedBookId, String status) {
+    public void modify(Integer usedBookId) {
         
     }
     
     @PostMapping("/modifyStatus")
-    public String modifyStatus(Integer usedBookId, String status) {
-        UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
-        usedBook = usedBook.updateStauts(status);
+    public String modifyStatus(Integer statusUsedBookId, String selectStatus) {
+        UsedBook usedBook = usedBookRepository.findById(statusUsedBookId).get();
+        usedBook = usedBook.updateStauts(selectStatus);
         usedBookRepository.save(usedBook);
         
-        log.info("하은 책 판매여부 확인 = {}", status);
+        log.info("하은 책 판매여부 확인 = {}", selectStatus);
         
-        return "redirect:/market/detail?usedBookId=" + usedBookId;
+        return "redirect:/market/detail?usedBookId=" + statusUsedBookId;
     }
 }

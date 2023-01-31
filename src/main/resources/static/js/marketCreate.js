@@ -114,17 +114,14 @@
 
          +  ' <tr > ' 
          +        ' <td class="align-middle"> ' 
-         +   `<a href="/detail?id=${book.bookId}" ><img src="${book.bookImage}" style="width: 150px;"/></a>  </td>` 
+         +   `<a href="/detail?id=${book.bookId}" ><img src="${book.bookImage}" style="width: 80px;"/></a>  </td>` 
          +        ' </td> ' 
          +        ' <td class="align-middle" style="text-align: left;"> '  
          +                    ' <small class="d-inline-flex px-2 my-1 border rounded text-secondary"> ' 
          +                        ' <span>'+book.bookgroup+'</span><span> / </span><span>'+book.category+'</span> ' 
          +                    ' </small> ' 
-         +                    ' <div class="h5"><input readyonly style="border:none;"  form="formCreate" name="bookTitle"  value="'+book.bookName+'"/></div> ' 
-         +        ' </td> ' 
-         +        ' <td class="align-middle" style="text-align: left;"> '  
+         +                    ' <div class="h5"><input readyonly style="border:none; " class="w-100" form="formCreate" name="bookTitle"  value="'+book.bookName+'"/></div> ' 
          +                    ' <div ><span> 작가 : </span>'+book.author+'</div> ' 
-         +        ' </td> ' 
          +        ' <td class="align-middle" style="text-align: left;"> '  
          +          '<small>출판사</small>'
          +                    ' <div > '+book.publisher+'</div> ' 
@@ -139,9 +136,9 @@
                 
          +        ' </td> ' 
 
-         +        ' <td class="align-middle"> ' 
-         +                ' <input class="btn btn-dark btn-sm my-2"  style="width: 100px;"   value="뭐 넣지"> '
-         +        ' </td> ' 
+//         +        ' <td class="align-middle"> ' 
+//         +                ' <input class="btn btn-dark btn-sm my-2"  style="width: 100px;"   value="뭐 넣지"> '
+//         +        ' </td> ' 
          +    ' </tr> ' 
          +   ' </tbody> ' 
           +   ' </table> ' ;  
