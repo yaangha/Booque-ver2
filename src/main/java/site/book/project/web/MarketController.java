@@ -3,30 +3,30 @@ package site.book.project.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import groovy.transform.AutoExternalize;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Book;
 import site.book.project.domain.UsedBook;
+import site.book.project.domain.UsedBookPost;
+import site.book.project.domain.User;
 import site.book.project.dto.MarketCreateDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.BookRepository;
 import site.book.project.repository.SearchRepository;
+import site.book.project.repository.UsedBookPostRepository;
+import site.book.project.repository.UsedBookRepository;
+import site.book.project.repository.UserRepository;
 import site.book.project.service.SearchService;
 import site.book.project.service.UsedBookService;
 
@@ -36,10 +36,12 @@ import site.book.project.service.UsedBookService;
 @RequiredArgsConstructor
 public class MarketController {
     
-    private final SearchService searchService;
     private final SearchRepository searchRepository;
     private final UsedBookService usedBookService;
     private final BookRepository bookRepository;
+    private final UsedBookRepository usedBookRepository;
+    private final UsedBookPostRepository usedBookPostRepository;
+    private final UserRepository userRepository;
     
     
     @GetMapping("/main") // /market/main 부끄마켓 메인 페이지 이동
@@ -71,7 +73,7 @@ public class MarketController {
     	
     	usedBookService.create( usedBookId, dto );
     	
-    	return "redirect:/market/main";
+    	return "redirect:/market/detail?usedBookId="+usedBookId;
     }
     
     
@@ -81,8 +83,32 @@ public class MarketController {
     
     
     @GetMapping("/detail") // /market/detail 중고판매글 상세 페이지 이동
-    public void detail() {
-    	
+    public void detail(Integer usedBookId, Model model) {
+        // 책 정보 불러오기(bookId) -> postId로 bookId 찾기
+        // 판매글 정보 불러오기
+        // 판매글제목 & 가격 & 수정시간 & 지역 & 본문 & 판매여부 & 책상태 & 이미지
+        UsedBook usedBook = usedBookRepository.findById(usedBookId).get();        
+        UsedBookPost usedBookPost = usedBookPostRepository.findByUsedBookId(usedBookId);
+        User user = userRepository.findById(usedBook.getUserId()).get(); // 작성자의 정보
+        Book book = bookRepository.findById(usedBook.getBookId()).get();
+        
+        // 판매하는 책과 동일한 책(다른 중고책) 리스트
+        List<UsedBook> otherUsedBookList = usedBookService.readOtherUsedBook(usedBook.getBookId());
+        List<UsedBook> otherUsedBookListFinal = new ArrayList<>();
+        
+        for (UsedBook u : otherUsedBookList) {
+            if(usedBookId != u.getId()) {
+                otherUsedBookListFinal.add(u);
+            }
+        }
+        
+        
+        model.addAttribute("book", book);
+        model.addAttribute("user", user); // userName만 보낼 수 있게 수정(?)
+        model.addAttribute("usedBookPost", usedBookPost);
+        model.addAttribute("usedBook", usedBook);
+        model.addAttribute("otherUsedBookListFinal", otherUsedBookListFinal);
+            
     }
     
     
@@ -123,4 +149,31 @@ public class MarketController {
     }
     
 
+    /**
+     * 
+     * @param id 마이페이지에 표시될 user 
+     * @param model
+     */
+    @GetMapping("/mypage") // /market/mypage 판매글작성자&마이페이지 이동
+    public void mypage(Integer id, Model model) {
+        User user = userRepository.findById(id).get();
+        
+        model.addAttribute("user", user);
+    }
+    
+    @GetMapping("/modify")
+    public void modify(Integer usedBookId, String status) {
+        
+    }
+    
+    @PostMapping("/modifyStatus")
+    public String modifyStatus(Integer usedBookId, String status) {
+        UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
+        usedBook = usedBook.updateStauts(status);
+        usedBookRepository.save(usedBook);
+        
+        log.info("하은 책 판매여부 확인 = {}", status);
+        
+        return "redirect:/market/detail?usedBookId=" + usedBookId;
+    }
 }

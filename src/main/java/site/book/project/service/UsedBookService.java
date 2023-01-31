@@ -1,5 +1,7 @@
 package site.book.project.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -7,10 +9,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.UsedBook;
 import site.book.project.domain.UsedBookPost;
+import site.book.project.domain.UsedBookWish;
+import site.book.project.domain.User;
 import site.book.project.dto.MarketCreateDto;
 import site.book.project.repository.UsedBookImageRepository;
 import site.book.project.repository.UsedBookPostRepository;
 import site.book.project.repository.UsedBookRepository;
+import site.book.project.repository.UsedBookWishRepository;
+import site.book.project.repository.UserRepository;
 
 @Slf4j
 @Service
@@ -22,7 +28,7 @@ public class UsedBookService {
 	private final UsedBookRepository usedBookRepository;
 	private final UsedBookPostRepository postRepository;
 	private final UsedBookImageRepository imgRepository;
-	
+	private final UsedBookWishRepository usedBookWishRepository;
 	
 	/**(은정)
 	 * 책 검색 후 바로 UsedBook테이블에 저장하여 UsedBookPost와 UsedBookImage에 연결할 수 있는
@@ -56,8 +62,20 @@ public class UsedBookService {
 		
 	}
 
+	// (하은) 코드 수정 필요!! 지금 실패함!! 찜하기 누르면 usedBookWish DB에 create
+	public void addUsedBookWish(Integer usedBookId, Integer userId) {
+	    log.info("usedBookService 하은 테스트!! = {}", usedBookId);
+	    usedBookWishRepository.save(UsedBookWish.builder().usedBookId(usedBookId).userId(userId).build());
+	}
 
-
+	// (하은) bookId가 동일한 다른 중고책 리스트 만들기
+    public List<UsedBook> readOtherUsedBook(Integer bookId) {
+        log.info("하은 중고책의 책 정보를 가진 아이디는? = {}", bookId);
+        
+        List<UsedBook> otherUsedBookList = usedBookRepository.findByBookId(bookId);
+        
+        return otherUsedBookList;
+    }
 
 
 	

@@ -6,4 +6,6 @@ import site.book.project.domain.UsedBookPost;
 
 public interface UsedBookPostRepository extends JpaRepository<UsedBookPost, Integer>{
 
+    UsedBookPost findByUsedBookId(Integer usedBookId);
+    
 }

@@ -79,7 +79,12 @@ public class UsedBook extends BaseTimeEntity {
     	return this;
     }
 
-    
+    // (하은) 책 판매여부 변경
+    public UsedBook updateStauts(String status) {
+        this.status = status;
+        
+        return this;
+    }
 
         
 }

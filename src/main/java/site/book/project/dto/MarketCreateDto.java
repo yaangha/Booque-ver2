@@ -25,6 +25,4 @@ public class MarketCreateDto {
 	
 	private String contents;  // 따로 저장되어야함. 
 	
-
-	
 }
