@@ -84,24 +84,25 @@ public class UsedBookService {
 	}
 	
 	@Transactional
-	public void addWishCount(Integer usedBookId) {
+	public Integer addWishCount(Integer usedBookId) {
 	    
 	    UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
 	    Integer a = usedBook.getWishCount() + 1;
 	    usedBook = usedBook.updateWishCount(a);
 	    usedBookRepository.save(usedBook);
-	    
+	    return a;
 	}
 	
 	@Transactional
-	public void minusWishCount(Integer usedBookId) {
-	    log.info("되니? 보이니??");
+	public Integer minusWishCount(Integer usedBookId) {
 	    UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
 	    
 	    Integer a = usedBook.getWishCount() - 1;
 	    
 	    usedBook = usedBook.updateWishCount(a);
 	    usedBookRepository.save(usedBook);
+	    
+	    return a;
 	}
 	
 	

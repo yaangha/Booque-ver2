@@ -112,7 +112,7 @@
 	    	<button class="btn btn-success" style="width:120px; height:40px;">채 팅 하 기</button>
     	</div>
         <div class="align-middle float-end" style="display: inline-block;" th:unless="${ user.username } != ${ #authentication.name }">
-            <a class="btn btn-success" th:href="@{ /market/modify?usedBookId={usedBookId} (usedBookId = ${ usedBook.id })}" style="width:120px; height:40px;">수 정 하 기</a>
+            <a class="btn btn-success" th:href="@{ /market/modify?usedBookId={usedBookId} (usedBookId = ${ usedBook.id })}" style="width:120px; height:40px; margin-left: 20px;">수 정 하 기</a>
         </div>
     	<div class="align-middle float-end" style="display: inline-block;" >
         <!-- 위치 우째함..  -->
@@ -180,7 +180,7 @@
     </div> <!-- content end -->
     
     <div style="color:gray;">
-    	<p>관심 <span th:text="${ usedBook.wishCount }">0</span> | 채팅 <span>0</span> | 조회 <span>0</span></p>
+    	<p>관심 <span id="wishCount" th:text="${ usedBook.wishCount }"></span> | 채팅 <span>0</span> | 조회 <span>0</span></p>
     </div>
     
     <div id="other"> <!-- 이 책의 다른 중고 상품은? -->
