@@ -64,22 +64,28 @@
 .border-top {
     border-top: 1px solid #dee2e6!important;
 }
+.chat-history {
+    padding: 30px 30px 20px;
+    border-bottom: 2px solid white;
+    overflow-y: scroll;
+    height: 375px;
+}
 </style>
 </head>
     <div class="container p-0">
 
         <h1 class="h3 mb-3">Messages</h1>
 
-        <div class="card">
+        <div class="card"><!-- 내 채팅목록 & 현재 채팅 화면 -->
             <div class="row g-0">
                 <div class="col-12 col-lg-5 col-xl-3 border-right">
 
                     <div class="px-4 d-none d-md-block">
                         <div class="d-flex align-items-center">
                             <div class="flex-grow-1">
-                                <input type="text" class="form-control my-3" placeholder="Search...">
-                                <button id="userName" onclick="registration()" class="form-control my-3">Enter the chat</button>
-                                <button onclick="fetchAll()" class="form-control my-3">Refresh</button>
+                                <input id="chatUser" type="text" class="form-control my-3" placeholder="Search...">
+                                <button id="userName" class="form-control my-3">Enter the chat</button>
+                                <button id="refresh" class="form-control my-3">Refresh</button>
                             </div>
                         </div>
                     </div>
@@ -97,14 +103,14 @@
 
                     <hr class="d-block d-lg-none mt-1 mb-0">
                 </div>
-                <div class="col-12 col-lg-7 col-xl-9">
+                <div class="col-12 col-lg-7 col-xl-9"><!-- 현재 채팅 화면(오른쪽 화면) -->
                     <div class="py-2 px-4 border-bottom d-none d-lg-block">
                         <div class="d-flex align-items-center py-1">
                             <div class="position-relative">
                                 <img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
                             </div>
                             <div class="flex-grow-1 pl-3">
-                                <strong>Sharon Lessman</strong>
+                                <strong id="selectedUserId"></strong>
                                 <div class="text-muted small"><em>Typing...</em></div>
                             </div>
                             <div>
@@ -115,19 +121,25 @@
                         </div>
                     </div>
 
-                    
+                    <!-- 채팅 내용 들어갈 공간 -->
+                    <div class="chat-history">
+                        <ul>
 
+                        </ul>
+                    </div>
+                    
+                    <!-- 채팅 작성 형식란 -->
                     <div class="flex-grow-0 py-3 px-4 border-top">
                         <div class="input-group">
-                            <input id="chat-to-send" type="text" class="form-control" placeholder="Type your message">
+                            <input id="chat-to-send" type="text" class="form-control" placeholder="보낼 내용을 입력하세요.">
                             <button id="btnSend" class="btn btn-primary">보내기</button>
                         </div>
-                    </div>
+                    </div><!-- 채팅 작성 형식란 끝 -->
 
-                </div>
+                </div><!-- 현재 채팅 화면(오른쪽 화면) 끝 -->
             </div>
-        </div>
-    </div>
+        </div><!-- 내 채팅목록 & 현재 채팅 화면 끝 -->
+    </div><!-- 컨테이너 끝 -->
     
     
     
@@ -135,6 +147,30 @@
     
     
     <th:block layout:fragment="script" th:inline="javascript">
+    <script id="message-template" type="text/x-handlebars-template">
+    <li class="p-0">
+        <div class="message-data align-right">
+            <span class="message-data-time">{{time}}, Today</span> &nbsp; &nbsp;
+            <span class="message-data-name">You</span> <i class="fa fa-circle me"></i>
+        </div>
+        <div class="message other-message float-right">
+            {{messageOutput}}
+        </div>
+    </li>
+</script>
+
+    <script id="message-response-template"
+        type="text/x-handlebars-template">
+    <li>
+        <div class="message-data">
+            <span class="message-data-name"><i class="fa fa-circle online"></i> {{userName}}</span>
+            <span class="message-data-time">{{time}}, Today</span>
+        </div>
+        <div class="message my-message">
+            {{response}}
+        </div>
+    </li>
+</script>
     <!-- bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>

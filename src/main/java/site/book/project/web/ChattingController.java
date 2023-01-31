@@ -2,6 +2,7 @@ package site.book.project.web;
 
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,8 +21,10 @@ import site.book.project.domain.UserChatLog;
 @RequiredArgsConstructor
 public class ChattingController {
     
+    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
     
+    // 메시지 컨트롤러
     @MessageMapping("/chat/{to}")
     public void sendMessage (@DestinationVariable String to, Chatting chat) {
         log.info("sendMessage(to={}, chat={})", to, chat);

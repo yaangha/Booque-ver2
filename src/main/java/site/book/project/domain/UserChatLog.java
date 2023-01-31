@@ -26,7 +26,7 @@ public class UserChatLog {
     
     public void setUser(String userName) throws Exception {
         if (users.contains(userName)) {
-            throw new Exception("User already Exist" + userName);
+            throw new Exception("User already Exist/" + userName);
         }
         users.add(userName);
     }
