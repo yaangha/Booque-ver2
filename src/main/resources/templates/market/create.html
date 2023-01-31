@@ -111,7 +111,7 @@
         <li>
             <div class="contents">상태<span style="color: red;">*</span></div>
             <div>
-                <label for="best" style="margin-right: 32px"><input name="level" id="best" type="radio" value="최상" style="padding: 10px;" /> 최상</label>
+                <label for="best" style="margin-right: 32px"><input name="level" id="best" type="radio" checked="checked" value="최상" style="padding: 10px;" /> 최상</label>
                 <label for="good" style="margin-right: 32px"><input name="level" id="good" type="radio" value="상" style="padding: 10px;" /> 상</label>
                 <label for="middle" style="margin-right: 32px"><input name="level" id="middle" type="radio" value="중" style="padding: 10px;" /> 중</label>
             </div>
@@ -125,7 +125,7 @@
             <div><textarea rows="10" class="form-control" name="contents" style="width:1100px;" placeholder="여러 장의 상품 사진과 사용감, 구입 연도 등 구매자에게 필요한 정보를 꼭 포함해주세요!" required></textarea></div>
         </li>
     </ul>
-    <input class="btn btn-danger" style="width: 200px; height:50px; margin: 5px; font-size: 18px;" type="submit" value="등 록 하 기" />
+    <input class="btn btn-danger" style="width: 200px; height:50px; margin: 5px; font-size: 18px;" type="submit" id="btnSubmit" value="등 록 하 기" />
     </form>
     </div> <!-- w-70 end -->
     
@@ -137,12 +137,24 @@
     
 <!-- script 부분 -->
 
+<!-- (하은) 판매글 등록시 주소 없으면 alert 창 뜨게 -->
+<script>
+const btnSubmit = document.querySelector('#btnSubmit');
+btnSubmit.addEventListener('click', function () {
+	const sample3_address = document.querySelector('#sample3_address').value;
+		
+	if (sample3_address == '') {
+		alert('주소란을 채워주세요!');
+		return;
+	}
+});
+
+</script>
+
 <!-- (하은) 주소 API -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script th:src="@{ /js/marketCreate.js }" ></script>
 <script>
-
-
     // 우편번호 찾기 찾기 화면을 넣을 element
     var element_wrap = document.getElementById('wrap');
 
@@ -189,11 +201,6 @@
     }
 </script>    
     
-
-
-    
-
-
 </body>
 </div>
 </html>

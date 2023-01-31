@@ -155,7 +155,7 @@
             <div><span th:text="|${#numbers.formatInteger(usedBook.price - book.prices, 0, 'COMMA')}원|"></span> 할인</div>
             <div>상품상태: <span th:text="${ usedBook.bookLevel }"></span></div>
     	    <small style="color: gray;" th:text="${ #temporals.format(usedBook.modifiedTime, 'yyyy/MM/dd HH:mm:ss') }"></small>
-    	    <div id="content" th:text="${ usedBookPost.content }" style="white-space:pre;"></div>
+    	    <div id="content" th:text="${ usedBookPost.content }" style="white-space:pre; font-size:18px;"></div>
         </div> <!-- content left end -->
         
         <div style="display: inline-block;"> <!-- content right -->
