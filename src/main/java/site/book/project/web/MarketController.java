@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Book;
 import site.book.project.domain.UsedBook;
 import site.book.project.domain.UsedBookPost;
+import site.book.project.domain.UsedBookWish;
 import site.book.project.domain.User;
 import site.book.project.dto.MarketCreateDto;
 import site.book.project.dto.UserSecurityDto;
@@ -26,6 +27,7 @@ import site.book.project.repository.BookRepository;
 import site.book.project.repository.SearchRepository;
 import site.book.project.repository.UsedBookPostRepository;
 import site.book.project.repository.UsedBookRepository;
+import site.book.project.repository.UsedBookWishRepository;
 import site.book.project.repository.UserRepository;
 import site.book.project.service.SearchService;
 import site.book.project.service.UsedBookService;
@@ -42,7 +44,7 @@ public class MarketController {
     private final UsedBookRepository usedBookRepository;
     private final UsedBookPostRepository usedBookPostRepository;
     private final UserRepository userRepository;
-    
+    private final UsedBookWishRepository usedBookWishRepository;
     
     @GetMapping("/main") // /market/main 부끄마켓 메인 페이지 이동
     public void main() {
@@ -83,7 +85,7 @@ public class MarketController {
     
     
     @GetMapping("/detail") // /market/detail 중고판매글 상세 페이지 이동
-    public void detail(Integer usedBookId, Model model) {
+    public void detail(@AuthenticationPrincipal UserSecurityDto userDto ,Integer usedBookId, Model model) {
         // 책 정보 불러오기(bookId) -> postId로 bookId 찾기
         // 판매글 정보 불러오기
         // 판매글제목 & 가격 & 수정시간 & 지역 & 본문 & 판매여부 & 책상태 & 이미지
@@ -91,6 +93,16 @@ public class MarketController {
         UsedBookPost usedBookPost = usedBookPostRepository.findByUsedBookId(usedBookId);
         User user = userRepository.findById(usedBook.getUserId()).get(); // 작성자의 정보
         Book book = bookRepository.findById(usedBook.getBookId()).get();
+        
+        UsedBookWish wish = null;
+        // 로그인 한 사람의 정보를 통해 내것도 하트 누를 수 있음!
+        // userId, usedBookId가 있으니
+        if(userDto != null) {
+            log.info("여기 보이긴 하니~~~~~~~~~~~~~~~~~~~~~");
+            wish = usedBookWishRepository.findByUserIdAndUsedBookId(userDto.getId(), usedBookId);
+            log.info("찾을 수 있니?? 널이니?? {}", wish);
+            
+        }
         
         // 판매하는 책과 동일한 책(다른 중고책) 리스트
         List<UsedBook> otherUsedBookList = usedBookService.readOtherUsedBook(usedBook.getBookId());
@@ -101,8 +113,8 @@ public class MarketController {
                 otherUsedBookListFinal.add(u);
             }
         }
-        
-        
+        // 로그인 한 사람이 하트를 누름, 하트가 저장됨. 근데 하트가 하트가,,! 
+        model.addAttribute("wish", wish);
         model.addAttribute("book", book);
         model.addAttribute("user", user); // userName만 보낼 수 있게 수정(?)
         model.addAttribute("usedBookPost", usedBookPost);
