@@ -59,7 +59,6 @@
          +        ' <td class="align-middle"> ' 
          +            ' <form id="formMarket" action="/market/create" > ' 
          +                ' <input type="hidden"  name="bookId" value="'+c.bookId+'"/> ' 
-         +                ' <input class="btn btn-dark btn-sm my-2" id="btnMarke" style="width: 100px;"  type="submit" value="부끄마켓"> '
          +      '<button class="btn btn-dark btn-sm my-2" style="width: 200px;" type="button" id="btnMarket" value="'+c.bookId+'">부끄마켓 판매하기</button>' 
          +            ' </form> ' 
          +        ' </td> ' 

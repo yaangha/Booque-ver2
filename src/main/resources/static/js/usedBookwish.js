@@ -16,7 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
             .then(response =>{
                 console.log('컨트롤러로 넘어감')
                 console.log(response.data)
-                chaingHeart(response.data)
+                changeHeart(response.data.check, response.data.count)
             })
             .catch(err =>{
                 console.log(err)
@@ -28,9 +28,10 @@ window.addEventListener('DOMContentLoaded', () => {
     
     
     
-    function chaingHeart(h){
+    function changeHeart(h, count){
         const noWish = document.querySelector('#noWish')
         const yesWish = document.querySelector('#yesWish')
+        const wishCount = document.querySelector('#wishCount')
         
         if(h){
             yesWish.style.display = "block";
@@ -38,8 +39,9 @@ window.addEventListener('DOMContentLoaded', () => {
         }else{
             yesWish.style.display = "none";
             noWish.style.display = "block";
-            
         }
+        
+        wishCount.innerText = count;
         
     }
     

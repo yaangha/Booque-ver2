@@ -34,4 +34,11 @@ public class UsedBookPost {
     @Column(nullable = false)
     private String content;
     
+    
+    public UsedBookPost update(String content) {
+        this.content = content;
+        
+        return this;
+    }
+    
 }

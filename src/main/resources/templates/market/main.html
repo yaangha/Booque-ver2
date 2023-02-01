@@ -31,7 +31,11 @@
             display: inline-block;
             margin-left: 20px;
             margin-right: 20px;
-        }        
+        }      
+        
+        #img {
+            box-shadow: 10px 10px 20px lightgrey;
+        }  
     </style>
     
   
@@ -53,8 +57,7 @@
         </div>
         <div class="float-end" style="display: inline-block;">
             <a class="btn btn-success" th:href="@{ /market/create }">상품등록</a>
-            <a class="btn btn-danger" style="margin-right: 40px;">마이부끄</a>
-            <a class="btn btn-outline-secondary" th:href="@{ /market/mypage?userNickname={postWriter} (postWriter = ${ userNickname })}">마이부끄</a>
+            <a th:if="${userNickname} != null" class="btn btn-danger" style="margin-right: 40px;" th:href="@{ /market/mypage?userNickname={userNickname} (userNickname = ${ userNickname })}">마이부끄</a>
             
         </div>
     </div><!-- 상단 div end -->
@@ -72,7 +75,7 @@
         
     <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:40px; display:inline-block;"><!-- content 1개 -->
         <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ marketCreateDto.usedBookId }) }">
-            <div class="border" style="height:350px; width:350px; margin-bottom:10px; background-color: silver;"></div>
+            <div id="img" class="border" style="height:350px; width:350px; margin-bottom:10px; background-color: silver;"></div>
             <div class="text-truncate" th:text="${ marketCreateDto.title }" style="font-weight: bold; font-size: 20px;"></div>
             <div th:text="|${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold; font-size: 25px; color:red;"></div>
             <div th:text="${ marketCreateDto.location }" style="display: inline-block;"></div>

@@ -16,117 +16,206 @@
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
         crossorigin="anonymous" />
 
-    
     <style>
-         #info li {
-            list-style: none;
-            padding-top: 32px;
-            padding-bottom: 32px;   
-            font-size: 18px;
+        #profile {
+            margin-top: 25px;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid silver;
+        }
+        
+        #content {
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+        
+        #other {
             border-top: 1px solid silver;
-         }
-         
-         ul {
-            padding-left: 0;
-         }
-         
-         ul li div {
+            padding-top: 25px;
+        }
+        
+        .otherList {
+            margin-bottom: 25px;
+            margin-right: 50px;
             display: inline-block;
-            vertical-align: top;
-         }
-         
-         .contents {
-            width: 168px;
-         }
-         
+        }
+        
+        a {
+            text-decoration: none;
+            color: black;
+        }
+        
+        a:hover {
+            color: black;
+        }
+        
     </style>
-    
+  
 </head>
 <body>
     
     <div class="w-70 container">
-    <h1>중고판매글 수정 페이지</h1>
     
-    <h2 style="padding-bottom: 10px;">기본정보<span style="font-size: 16px; color: red; margin-left: 30px">* 필수정보</span></h2>
-    <form action="/market/create" method="post">
-    <ul id="info">
-    	<li>
-    	<input type="text" th:value="${ usedBookId }" name="usedBookId">
-    		<div>판매할 책 정보</div>
-    		<img th:src="${ book.bookImage }" style="width: 80px;">
-    		<div th:text="${ book.bookName }"></div>
-			
-    		<small class="d-inline-flex px-2 my-1 border rounded text-secondary">
-                 <span  th:text="${ book.bookgroup }"></span><span> / </span><span th:text="${ book.category }"></span>
-			</small>
-    		<span>가격</span> <span th:text="${ book.prices }"></span>원 
-
-    		<span th:text="${ book.isbn }"></span>
-    		<input type="hidden" th:value="${ book.bookName }" name="bookTitle" >
-    		<input type="hidden" th:value="${ book.bookId }" name="bookId" >
-    		
-    	</li>
-        <li>
-            <div class="contents">책 이미지<span style="color: red;">*</span><small style="font-size:14px; color: gray;">(0/5)</small></div>
-            <div>                
-                <ul>
-                    <li style="border-top: none; padding: 0px; padding-bottom: 10px;">
-                        <div class="border" style="width: 200px; height: 200px; text-align: center;">이미지 등록</div>
-                    </li>
-                </ul>
-                <div style="color: blue; font-size: 13px;">
-                    * 이미지는 상품 등록 시 정사각형으로 잘려서 등록됩니다.<br>
-                    * 첫 번째 업로드한 파일이 대표 이미지로 설정됩니다.<br>
-                    * 큰 이미지일 경우 이미지가 깨지는 경우가 발생할 수 있습니다.
+    <div class="w-75 container"> <!-- images -->
+        <div id="carouselExampleDark" class="carousel carousel-dark slide">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="4" aria-label="Slide 5"></button>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="rounded mx-auto d-block w-50 border" style="height: 500px;">test1</div>
+                    <!-- <img src="..." class="d-block w-100" alt="..."> -->
+                </div>
+                <div class="carousel-item">
+                    <div class="rounded mx-auto d-block w-50 border" style="height:500px;">test2</div>
+                        <!-- <img src="..." class="d-block w-100" alt="..."> -->
+                </div>
+                <div class="carousel-item">
+                    <div class="rounded mx-auto d-block w-50 border" style="height:500px;">test3</div>
+                    <!-- <img src="..." class="d-block w-100" alt="..."> -->
+                </div>
+                <div class="carousel-item">
+                    <div class="rounded mx-auto d-block w-50 border" style="height:500px;">test4</div>
+                    <!-- <img src="..." class="d-block w-100" alt="..."> -->
+                </div>
+                <div class="carousel-item">
+                    <div class="rounded mx-auto d-block w-50 border" style="height:500px;">test5</div>
+                    <!-- <img src="..." class="d-block w-100" alt="..."> -->
                 </div>
             </div>
-        </li>
-        <li>
-            <div class="contents" style="display: inline-block;">제목<span style="color: red;">*</span></div>
-            <div><input class="form-control" name="title" type="text" placeholder="판매글 제목을 입력해주세요!" style="width: 1100px; height: 50px;"/></div>
-        </li>
-        <li>
-            <div class="contents">거래지역</div>
-            <div>
-            	<input type="text" name="location" class="form-control" id="sample3_address" style="width: 300px; height: 50px; display: inline-block;" placeholder="주소를 검색하세요!" readonly>
-            	<input type="button" onclick="sample3_execDaumPostcode()" style="display: inline-block; width:100px; height: 48px;" class="btn btn-outline-success" value="주 소 검 색">
-            	<div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
-					<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
-				</div>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    
+    <div id="profile"> <!-- profile -->
+        <a th:href="@{ /market/mypage(id=${ user.id }) }"><!-- 작성자 부끄마켓 개인 페이지로 이동 -->
+            <img style="width:60px; height:60px; display:inline-block; margin-right: 10px;" th:src="${ user.userImage }">
+            <div class="align-middle" style="display: inline-block;">
+                <div style="font-weight: bold; font-size:21px;" th:text="${ user.nickName }"></div>
+                <div th:text="${ usedBook.location }" style="width: 300px;"></div>
             </div>
-        </li>
-        <li>
-            <div class="contents">상태<span style="color: red;">*</span></div>
+            <span th:text="${ user.booqueLevel }"></span>
+            <span th:text="${ user.booqueScore }"></span> point
+        </a>
+
+    </div>
+    
+    <div> <!-- content -->        
+        <div class="w-75 align-top" style="display: inline-block;"> <!-- content left -->
+        <form id="formModify">
+                            <input name="bookTitle" th:value="${ book.bookName }">
+            <input id="usedBookId" name="usedBookId" type="hidden" th:value="${ usedBook.id }" />
+            <select onchange="changeStatus2()" id="selectStatus" name="selectStatus" class="form-select" style="width:120px; height: 40px; margin-bottom: 10px; display: inline-block;">
+                <option value="판매중" th:selected="${ usedBook.status } == '판매중'">판매중</option>
+                <option value="예약중" th:selected="${ usedBook.status } == '예약중'">예약중</option>
+                <option value="판매완료" th:selected="${ usedBook.status } == '판매완료'">판매완료</option>
+            </select>
+                
+                
+            <div class="h4">현재 주소 </div>
+            
+            <input  style="border:none; width: 500px;"  name="originLocation" th:value="${ usedBook.location }">
+            <br>
+            <div class="h4">주소 변경</div>
             <div>
-                <label for="best" style="margin-right: 32px"><input name="level" id="best" type="radio" value="최상" style="padding: 10px;" /> 최상</label>
-                <label for="good" style="margin-right: 32px"><input name="level" id="good" type="radio" value="상" style="padding: 10px;" /> 상</label>
-                <label for="middle" style="margin-right: 32px"><input name="level" id="middle" type="radio" value="중" style="padding: 10px;" /> 중</label>
+                <input type="text" name="location" class="form-control" id="sample3_address" 
+                        style="width: 300px; height: 50px; display: inline-block;" placeholder="주소를 변경하시려면 검색하세요~!" readonly>
+                <input type="button" onclick="sample3_execDaumPostcode()" class="btn btn-outline-success"
+                        style="display: inline-block; width:100px; height: 48px;"  value="주 소 검 색">
+                <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
+                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" 
+                        style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
+                </div>
             </div>
-        </li>
-        <li>
-            <div class="contents">가격<span style="color: red;">*</span></div>
-            <div><input class="form-control" name="price" type="text" placeholder="숫자만 입력해주세요!" style="width: 300px; height: 50px; display: inline-block;"/> 원</div>
-        </li>
-        <li>
+
+            
+            <div class="h4" >제목 <span style="color: red;">*</span></div>
+            <input class="form-control" name="title" type="text" placeholder="판매글 제목을 입력해주세요!" th:value="${ usedBook.title }"
+                     style="width: 900px; height: 50px;" required autofocus/>
+            
+            <div class="contents h4">가격<span style="color: red;"> *</span></div>
+            <div><input class="form-control" name="price" type="text" th:value="${usedBook.price}" placeholder="숫자만 입력해주세요!" 
+                        autofocus style="width: 300px; height: 50px; display: inline-block;" required/> 원</div>
+            
+            
+            
+            <div>상품상태: <span th:text="${ usedBook.bookLevel }"></span></div>
+            <div class="contents" style="margin-left: 100px">상품 상태<span style="color: red;">*</span></div>
+            <div style="margin-left: 100px">
+                <label for="best" style="margin-right: 32px"><input th:checked="${ usedBook.bookLevel } == 최상" name="level" id="best" type="radio" value="최상" style="padding: 10px;" /> 최상</label>
+                <label for="good" style="margin-right: 32px"><input th:checked="${ usedBook.bookLevel } == 상"  name="level" id="good" type="radio" value="상" style="padding: 10px;" /> 상</label>
+                <label for="middle" style="margin-right: 32px"><input th:checked="${ usedBook.bookLevel } == 중"  name="level" id="middle" type="radio" value="중" style="padding: 10px;" /> 중</label>
+            </div>
+            
+            <small style="color: gray;" th:text="${ #temporals.format(usedBook.modifiedTime, 'yyyy/MM/dd HH:mm:ss') }"></small>
+         
+            
             <div class="contents">설명<span style="color: red;">*</span></div>
-            <div><textarea rows="10" class="form-control" name="contents" style="width:1100px;" placeholder="여러 장의 상품 사진과 사용감, 구입 연도 등 구매자에게 필요한 정보를 꼭 포함해주세요!"></textarea></div>
-        </li>
-    </ul>
-	<input class="btn btn-danger" style="width: 200px; height:50px; margin: 5px; font-size: 18px;" type="submit" value="등 록 하 기" />
-	</form>
+            <div><textarea rows="10" class="form-control" name="contents" style="width:900px;" th:text="${ usedBookPost.content }" ></textarea></div>
+        </form>
+                    
+        </div> <!-- content left end -->
+        
+        <div style="display: inline-block;"> <!-- content right -->
+        <a th:href="@{ /detail(id=${ book.bookId }) }">
+            <div class="card mx-2 my-2" style="width: 13rem;">    
+                <img th:src="${ book.bookImage }"  class="card-img-top" alt="..." />
+                <div class="card-body" style="text-align: left;">
+                    <div class="my-2">
+                        <small class="d-inline-flex px-2 border border-1 rounded text-secondary">
+                            <span th:text="${ book.bookgroup }"></span><span> / </span><span th:text="${ book.category }"></span>
+                        </small>
+                    </div>
+                    <div  class="card-title" style="font-weight: bold; font-size: 15px;" th:text="${ book.bookName }"></div>
+
+                    <div th:text="${ book.author }"></div>
+                    <div>
+                        <span th:text="|${#numbers.formatInteger(book.prices, 0, 'COMMA')}원|"></span>(정가)
+                    </div>
+                </div>
+            </div>
+        </a>
+        </div> <!-- content right end -->
+    </div> <!-- content end -->
+    
+    
+    <div >
+        <button class="btn btn-outline-danger" id="btnModify">수 정 하 기</button>
+    </div>
+    
+    
+    
+    
+    <div style="color:gray;">
+        <p>관심 <span id="wishCount" th:text="${ usedBook.wishCount }"></span> | 
+        채팅 <span  th:text="${ usedBook.chats }"></span> | 
+        조회 <span th:text="${ usedBook.hits }"></span></p>
+    </div>
+    
+
+    
     </div> <!-- w-70 end -->
     
-<!-- 부트스트랩 -->
-<script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-    crossorigin="anonymous"></script>
+    <!-- 부트스트랩 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <!-- 자바스크립트 부분 -->
     
-<!-- script 부분 -->
-
-<!-- (하은) 주소 API -->
+    <!-- (하은) 주소 API -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
+
+
     // 우편번호 찾기 찾기 화면을 넣을 element
     var element_wrap = document.getElementById('wrap');
 
@@ -171,12 +260,50 @@
         // iframe을 넣은 element를 보이게 한다.
         element_wrap.style.display = 'block';
     }
-</script>    
+</script> 
     
+    
+    
+    
+    
+    <script type="text/javascript">
+    const btnModify = document.querySelector('#btnModify')
+    const formModify = document.querySelector('#formModify')
+    
+    btnModify.addEventListener('click', function(){
+    	
+    	console.log(formModify)
+    	
+        
+        formModify.action = '/market/modify';
+        formModify.method = 'post';
+        formModify.submit();
+        	
+     	
+    })
     
     
 
+    function changeStatus2() {
+        
+        const status = document.querySelector('#selectStatus').value;
+        const usedBookId = document.querySelector('#usedBookId').value;
 
+        const statusDto = {
+        	status : status,
+        	usedBookId : usedBookId
+        }
+        axios.post('/market/changeStatus', statusDto)
+             .then(response =>{
+            	 console.log(response)
+             })
+        
+    }
+    
+    
+    </script>
+    
+    
 </body>
 </div>
 </html>

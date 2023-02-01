@@ -63,22 +63,15 @@ public class MarketController {
                     .build();
             list.add(dto);
         }
+        if(userDto != null) {
+            model.addAttribute("userNickname", userDto.getNickName());       
+        }
         
-        model.addAttribute("userNickname", userDto.getNickName());
         model.addAttribute("list", list);
         
     }
     
-//    @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동
-//    public void create(@AuthenticationPrincipal UserSecurityDto u , Integer bookId, Model model) {
-//    	log.info("책 번호 {}", bookId);
-//    	Book book = bookRepository.findById(bookId).get();
-//    	
-//    	Integer usedBookId = usedBookService.create(bookId, u.getId());
-//    	log.info("책 검색을 하고 버튼을 누르면 디비단에 저장이 되게 해야해. {}, {}, {}", bookId, u.getId(), usedBookId);
-//    	model.addAttribute("book", book);
-//    	model.addAttribute("usedBookId", usedBookId);
-//    }
+
     @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동
     public void create(Model model) {
 
@@ -193,18 +186,34 @@ public class MarketController {
     }
     
     @GetMapping("/modify")
-    public void modify(Integer usedBookId) {
+    public void modify(Integer usedBookId, Model model) {
+        UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
+        UsedBookPost usedBookPost = usedBookPostRepository.findByUsedBookId(usedBookId);   
+        Book book = bookRepository.findById(usedBook.getBookId()).get();
+        User user = userRepository.findById(usedBook.getUserId()).get();
         
+        
+        model.addAttribute("usedBook", usedBook);
+        model.addAttribute("usedBookPost", usedBookPost);
+        model.addAttribute("book", book);
+        model.addAttribute("user", user);
+        log.info("여기는 읽히지??");
     }
     
-    @PostMapping("/modifyStatus")
-    public String modifyStatus(Integer statusUsedBookId, String selectStatus) {
-        UsedBook usedBook = usedBookRepository.findById(statusUsedBookId).get();
-        usedBook = usedBook.updateStauts(selectStatus);
-        usedBookRepository.save(usedBook);
+
+    
+    
+    @PostMapping("/modify")
+    public String modify(MarketCreateDto dto, String originLocation) {
+        log.info("수정창에서 읽어오는 dto , {}", dto);
+        log.info("주소 값을 안줄때는 원래 값을 읽어야 해! {}", originLocation);
         
-        log.info("하은 책 판매여부 확인 = {}", selectStatus);
+        // 책 제목 null이 됨.. 
+        if(dto.getLocation().equals("")) {
+            dto.setLocation(originLocation);
+        }
+        usedBookService.create(dto.getUsedBookId(), dto);
         
-        return "redirect:/market/detail?usedBookId=" + statusUsedBookId;
+        return "redirect:/market/detail?usedBookId=" + dto.getUsedBookId();
     }
 }

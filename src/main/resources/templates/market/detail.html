@@ -104,7 +104,11 @@
         	<div class="align-middle" style="display: inline-block;">
     	    	<div style="font-weight: bold; font-size:21px;" th:text="${ user.nickName }"></div>
                 <input type="text" id="usedLocation" th:value="${ usedBook.location }" style="width: 300px; border: none;" />
-                <div style="color:gray;">관심 <span th:text="${ usedBook.wishCount }">0</span> | 채팅 <span th:text="${ usedBook.chats }"></span> | 조회 <span th:text="${ usedBook.hits }"></span></div>
+                <div style="color:gray;">
+                    관심 <span id="wishCount" th:text="${ usedBook.wishCount }"></span> | 
+                    채팅 <span  th:text="${ usedBook.chats }"></span> | 
+                    조회 <span th:text="${ usedBook.hits }"></span>
+                </div>
         	</div>
         </a>
         <span th:text="${ user.booqueLevel }"></span>
@@ -113,7 +117,7 @@
 	    	<button class="btn btn-success" style="width:120px; height:40px;">채 팅 하 기</button>
     	</div>
         <div class="align-middle float-end" style="display: inline-block;" th:unless="${ user.username } != ${ #authentication.name }">
-            <a class="btn btn-success" th:href="@{ /market/modify?usedBookId={usedBookId} (usedBookId = ${ usedBook.id })}" style="width:120px; height:40px;">수 정 하 기</a>
+            <a class="btn btn-success" th:href="@{ /market/modify?usedBookId={usedBookId} (usedBookId = ${ usedBook.id })}" style="width:120px; height:40px; margin-left: 20px;">수 정 하 기</a>
         </div>
     	<div class="align-middle float-end" style="display: inline-block;" >
         <!-- 위치 우째함..  -->
@@ -136,14 +140,11 @@
     <div> <!-- content -->        
         <div class="w-75 align-top" style="display: inline-block;"> <!-- content left -->
             <div th:if="${ user.username } == ${ #authentication.name }">
-                <form id="formStatus">
-                <input id="statusUsedBookId" name="statusUsedBookId" type="hidden" th:value="${ usedBook.id }" />
                 <select onchange="changeStatus()" id="selectStatus" name="selectStatus" class="form-select" style="width:120px; height: 40px; margin-bottom: 10px; display: inline-block;">
                     <option value="판매중" th:selected="${ usedBook.status } == '판매중'">판매중</option>
                     <option value="예약중" th:selected="${ usedBook.status } == '예약중'">예약중</option>
                     <option value="판매완료" th:selected="${ usedBook.status } == '판매완료'">판매완료</option>
                 </select>
-                </form>
             </div>
             <div th:unless="${ user.username } == ${ #authentication.name }">
                 <select class="form-select" style="width:120px; height: 40px; margin-bottom: 10px;" disabled>
@@ -155,7 +156,7 @@
     	    <div class="h2" style="color: red;" th:text="|${#numbers.formatInteger(usedBook.price, 0, 'COMMA')}원|"></div>	
             <div><span th:text="|${#numbers.formatInteger(usedBook.price - book.prices, 0, 'COMMA')}원|"></span> 할인</div>
             <div>상품상태: <span th:text="${ usedBook.bookLevel }"></span></div>
-    	    <small style="color: gray;" th:text="${ #temporals.format(usedBook.modifiedTime, 'yyyy/MM/dd HH:mm:ss') }"></small>
+    	    <small style="color: gray;" th:text="${ #temporals.format(usedBook.modifiedTime, 'yyyy/MM/dd HH:mm') }"></small>
     	    <div id="content" th:text="${ usedBookPost.content }" style="white-space:pre; font-size:18px; margin-bottom:100px;"></div>
             <div id="map" style="width:300px; height:300px; margin-top:10px; margin-bottom:10px; z-index:-1"></div>
             <span>거래장소: </span>
@@ -207,12 +208,27 @@
     <!-- 자바스크립트 부분 -->
     <script type="text/javascript">
     // (하은) 책 판매여부 변경
+
+    
     function changeStatus() {
-    	const formStatus = document.querySelector('#formStatus');
-    	formStatus.action = '/market/modifyStatus';
-    	formStatus.method = 'post';
-    	formStatus.submit();  
+        
+        const status = document.querySelector('#selectStatus').value;
+        const usedBookId = document.querySelector('#usedBookId').value;
+
+        const statusDto = {
+            status : status,
+            usedBookId : usedBookId
+        }
+        axios.post('/market/changeStatus', statusDto)
+             .then(response =>{
+                 console.log(response)
+             })
+        
     }
+    
+    
+    
+    
     </script>
     
     <!--(하은) 지도 api -->
