@@ -174,8 +174,18 @@ public class MarketController {
     }
     
     @GetMapping("/modify")
-    public void modify(Integer usedBookId) {
+    public void modify(Integer usedBookId, Model model) {
+        UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
+        UsedBookPost usedBookPost = usedBookPostRepository.findByUsedBookId(usedBookId);   
+        Book book = bookRepository.findById(usedBook.getBookId()).get();
+        User user = userRepository.findById(usedBook.getUserId()).get();
         
+        
+        model.addAttribute("usedBook", usedBook);
+        model.addAttribute("usedBookPost", usedBookPost);
+        model.addAttribute("book", book);
+        model.addAttribute("user", user);
+        log.info("여기는 읽히지??");
     }
     
     @PostMapping("/modifyStatus")
@@ -187,5 +197,20 @@ public class MarketController {
         log.info("하은 책 판매여부 확인 = {}", selectStatus);
         
         return "redirect:/market/detail?usedBookId=" + statusUsedBookId;
+    }
+    
+    
+    @PostMapping("/modify")
+    public String modify(MarketCreateDto dto, String originLocation) {
+        log.info("수정창에서 읽어오는 dto , {}", dto);
+        log.info("주소 값을 안줄때는 원래 값을 읽어야 해! {}", originLocation);
+        
+        // 책 제목 null이 됨.. 
+        if(dto.getLocation().equals("")) {
+            dto.setLocation(originLocation);
+        }
+        usedBookService.create(dto.getUsedBookId(), dto);
+        
+        return "redirect:/market/detail?usedBookId=" + dto.getUsedBookId();
     }
 }

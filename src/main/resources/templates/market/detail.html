@@ -180,7 +180,9 @@
     </div> <!-- content end -->
     
     <div style="color:gray;">
-    	<p>관심 <span id="wishCount" th:text="${ usedBook.wishCount }"></span> | 채팅 <span>0</span> | 조회 <span>0</span></p>
+        <p>관심 <span id="wishCount" th:text="${ usedBook.wishCount }"></span> | 
+        채팅 <span  th:text="${ usedBook.chats }"></span> | 
+        조회 <span th:text="${ usedBook.hits }"></span></p>
     </div>
     
     <div id="other"> <!-- 이 책의 다른 중고 상품은? -->
@@ -208,13 +210,17 @@
     <script type="text/javascript">
     // (하은) 책 판매여부 변경
     function changeStatus() {
-    	// const selectStatus = document.getElementById("selectStatus");
-    	// const status = selectStatus.options[selectStatus.selectedIndex].text;
         
-    	const formStatus = document.querySelector('#formStatus');
-    	formStatus.action = '/market/modifyStatus';
-    	formStatus.method = 'post';
-    	formStatus.submit();  
+        const status = document.querySelector('#selectStatus').value;
+        const usedBookId = document.querySelector('#statusUsedBookId').value;
+
+        const statusDto = {
+            status : status,
+            usedBookId : usedBookId
+        }
+        axios.post('/market/changeStatus', statusDto)
+         
+        
     }
     </script>
     

@@ -58,9 +58,15 @@ public class UsedBookService {
 		entity.update(dto);
 		
 		// UsedBookPost에 저장
-		postRepository.save(UsedBookPost.builder().usedBookId(usedBookId).content(dto.getContents()).build());
+		UsedBookPost content = postRepository.findByUsedBookId(usedBookId);
 		
-		log.info("컨텐트를 찾아서~~~~!{},, {}", dto, dto.getContents());
+		if(content != null) {
+		    content.update(dto.getContents());
+		}else {
+		    postRepository.save(UsedBookPost.builder().usedBookId(usedBookId).content(dto.getContents()).build());
+		    
+		}
+		
 		
 	}
 

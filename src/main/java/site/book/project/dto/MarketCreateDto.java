@@ -16,7 +16,8 @@ import site.book.project.domain.UsedBookPost;
 public class MarketCreateDto {
 
 	private Integer userId;  // 이미저장이 되어 있는데 필요할까?
-	private Integer bookId;
+//	private Integer bookId;
+    private Integer usedBookId;
 	private String bookTitle;
 	private Integer price;
 	private String location;

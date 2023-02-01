@@ -111,7 +111,7 @@
         <li>
             <div class="contents">상태<span style="color: red;">*</span></div>
             <div>
-                <label for="best" style="margin-right: 32px"><input name="level" id="best" type="radio" value="최상" style="padding: 10px;" /> 최상</label>
+                <label for="best" style="margin-right: 32px"><input checked="checked" name="level" id="best" type="radio" value="최상" style="padding: 10px;" /> 최상</label>
                 <label for="good" style="margin-right: 32px"><input name="level" id="good" type="radio" value="상" style="padding: 10px;" /> 상</label>
                 <label for="middle" style="margin-right: 32px"><input name="level" id="middle" type="radio" value="중" style="padding: 10px;" /> 중</label>
             </div>
@@ -137,9 +137,9 @@
     
 <!-- script 부분 -->
 
+<script th:src="@{ /js/marketCreate.js }" ></script>
 <!-- (하은) 주소 API -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script th:src="@{ /js/marketCreate.js }" ></script>
 <script>
 
 
