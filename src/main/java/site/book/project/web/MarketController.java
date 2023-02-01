@@ -47,7 +47,25 @@ public class MarketController {
     private final UsedBookWishRepository usedBookWishRepository;
     
     @GetMapping("/main") // /market/main 부끄마켓 메인 페이지 이동
-    public void main() {
+    public void main(@AuthenticationPrincipal UserSecurityDto userDto, Model model) {
+        List<UsedBook> usedBookList = usedBookRepository.findAll();
+        
+        List<MarketCreateDto> list = new ArrayList<>();
+        
+        for (UsedBook ub : usedBookList) {
+            User user = userRepository.findById(ub.getUserId()).get();
+            Book book = bookRepository.findById(ub.getBookId()).get();
+            MarketCreateDto dto = MarketCreateDto.builder()
+                    .usedBookId(ub.getId())
+                    .userId(user.getId()).username(user.getUsername())
+                    .bookTitle(book.getBookName()).price(ub.getPrice())
+                    .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime())
+                    .build();
+            list.add(dto);
+        }
+        
+        model.addAttribute("userNickname", userDto.getNickName());
+        model.addAttribute("list", list);
         
     }
     
@@ -167,10 +185,11 @@ public class MarketController {
      * @param model
      */
     @GetMapping("/mypage") // /market/mypage 판매글작성자&마이페이지 이동
-    public void mypage(Integer id, Model model) {
-        User user = userRepository.findById(id).get();
+    public void mypage(String userNickname,Model model) {
         
-        model.addAttribute("user", user);
+        log.info("언제 나와{}", userNickname);
+        model.addAttribute("user", userNickname);
+        
     }
     
     @GetMapping("/modify")
