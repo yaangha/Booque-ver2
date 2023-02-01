@@ -51,16 +51,7 @@ public class MarketController {
         
     }
     
-//    @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동
-//    public void create(@AuthenticationPrincipal UserSecurityDto u , Integer bookId, Model model) {
-//    	log.info("책 번호 {}", bookId);
-//    	Book book = bookRepository.findById(bookId).get();
-//    	
-//    	Integer usedBookId = usedBookService.create(bookId, u.getId());
-//    	log.info("책 검색을 하고 버튼을 누르면 디비단에 저장이 되게 해야해. {}, {}, {}", bookId, u.getId(), usedBookId);
-//    	model.addAttribute("book", book);
-//    	model.addAttribute("usedBookId", usedBookId);
-//    }
+
     @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동
     public void create(Model model) {
 
@@ -188,16 +179,7 @@ public class MarketController {
         log.info("여기는 읽히지??");
     }
     
-    @PostMapping("/modifyStatus")
-    public String modifyStatus(Integer statusUsedBookId, String selectStatus) {
-        UsedBook usedBook = usedBookRepository.findById(statusUsedBookId).get();
-        usedBook = usedBook.updateStauts(selectStatus);
-        usedBookRepository.save(usedBook);
-        
-        log.info("하은 책 판매여부 확인 = {}", selectStatus);
-        
-        return "redirect:/market/detail?usedBookId=" + statusUsedBookId;
-    }
+
     
     
     @PostMapping("/modify")

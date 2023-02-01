@@ -28,11 +28,10 @@ public class MarketRestController {
     private final UsedBookService usedBookService;
     private final UsedBookRepository usedBookRepository;
     
-    
+    // (은정)
     @GetMapping("/api/usedBookWish")
     public Map<String, Object> saveUsedBookWish(Integer usedBookId, @AuthenticationPrincipal UserSecurityDto userSecurityDto) {
         
-        log.info("하은 확인용 = {}", usedBookId);
         Integer result =usedBookService.addUsedBookWish(usedBookId, userSecurityDto.getId());
         Integer count = 0;
         if(result==0) {
@@ -49,11 +48,9 @@ public class MarketRestController {
         return map;
     }
     
-    
+    //(은정)
     @PostMapping("/changeStatus")
     public void changeStatus(@RequestBody UsedBookStatus status) {
-        log.info("상태 변경을 ajax로 할거임 ,,{}",status.getStatus());
-        log.info("상태 변경을 ajax로 할거임 ,,{}",status.getUsedBookId());
         Integer usedBookId = status.getUsedBookId();
         String selectStatus = status.getStatus();
         
