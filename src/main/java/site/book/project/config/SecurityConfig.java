@@ -103,7 +103,7 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
     
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/chat").setAllowedOriginPatterns("*").withSockJS().setHeartbeatTime(1000);
     }
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {

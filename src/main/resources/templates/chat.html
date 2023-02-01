@@ -83,24 +83,20 @@
                     <div class="px-4 d-none d-md-block">
                         <div class="d-flex align-items-center">
                             <div class="flex-grow-1">
+                                <input type="hidden" id="loginUser" th:value="${#authentication.name}" />
+                                <input type="hidden" id="startChatWithYou" th:value="${ firstConnectUser }" />
                                 <input id="chatUser" type="text" class="form-control my-3" placeholder="Search...">
-                                <button id="userName" class="form-control my-3">Enter the chat</button>
                                 <button id="refresh" class="form-control my-3">Refresh</button>
                             </div>
                         </div>
                     </div>
 
-                    
-                    <a href="#" class="list-group-item list-group-item-action border-0">
-                        <div class="d-flex align-items-start">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Jennifer Chang" width="40" height="40">
-                            <div class="flex-grow-1 ml-3">
-                                Jennifer Chang
-                                <div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-                            </div>
-                        </div>
-                    </a>
+                    <!-- 내 대화 목록 -->
+                    <div id="myList">
+                    <ul class="list">
 
+                    </ul>
+                    </div>
                     <hr class="d-block d-lg-none mt-1 mb-0">
                 </div>
                 <div class="col-12 col-lg-7 col-xl-9"><!-- 현재 채팅 화면(오른쪽 화면) -->
@@ -147,6 +143,8 @@
     
     
     <th:block layout:fragment="script" th:inline="javascript">
+    
+    <!-- 내가 보낸 메세지 html, 상대가 보낸 메세지 html -->
     <script id="message-template" type="text/x-handlebars-template">
     <li class="p-0">
         <div class="message-data align-right">
@@ -157,9 +155,8 @@
             {{messageOutput}}
         </div>
     </li>
-</script>
-
-    <script id="message-response-template"
+    </script>
+    <script id="message-response-template" 
         type="text/x-handlebars-template">
     <li>
         <div class="message-data">
@@ -170,7 +167,9 @@
             {{response}}
         </div>
     </li>
-</script>
+    </script>
+    
+    
     <!-- bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
