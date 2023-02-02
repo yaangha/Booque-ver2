@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
         stompClient = Stomp.over(socket);
         stompClient.connect({},function(frame){
             console.log("connected to:"+ frame);
-            stompClient.subscribe("/topic/chat/"+ userName, function (response){
+            stompClient.subscribe("/topic/messages/"+ userName, function (response){
                 let data = JSON.parse(response.body);
                  if (toChatUser === data.fromLogin) {
                 render(data.message, data.fromLogin);
