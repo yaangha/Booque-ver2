@@ -2,6 +2,10 @@ package site.book.project.service;
 
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -122,7 +126,44 @@ public class UsedBookService {
         return otherUsedBookList;
     }
 
-
+    // (하은) 중고판매글 조회수
+    /**
+     * 
+     * @param id 조회수를 증가시킬 id(=> UsedBook의 PK)
+     * @param request
+     * @param response
+     * @return
+     */
+    /*
+    public int updateHits(Integer id, HttpServletRequest request, HttpServletResponse response) {
+        Cookie oldCookie = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) { // 이미 쿠키들이 있을 때 usedBookView 쿠키가 존재유무 체크
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("usedBookView")) {
+                    oldCookie = cookie;
+                }
+            }
+        }
+        
+        if (oldCookie != null) {
+            if (!oldCookie.getValue().contains("[" + id.toString() + "]")) { // 해당 쿠키가 없을시
+                usedBookRepository.updateHits(id); // 조회수 증가
+                oldCookie.setValue(oldCookie.getValue() + "[" + id + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24);
+                response.addCookie(oldCookie);
+            }
+        } else {
+            usedBookRepository.updateHits(id);
+            Cookie newCookie = new Cookie("usedBookView", "[" + id + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 24);
+            response.addCookie(newCookie);
+        }
+        
+        return usedBookRepository.updateHits(id);
+    } */
 	
     
     
