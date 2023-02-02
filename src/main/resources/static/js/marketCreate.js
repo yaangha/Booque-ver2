@@ -38,7 +38,7 @@
             
         str +=    ' <tr th:each="book : ${ searchList }"> ' 
          +        ' <td class="align-middle"> ' 
-         +   `<a href="/detail?id=${c.bookId}" onclick="viewHitUp(${c.bookId}, ${username});"><img src="${c.bookImage}" style="width: 80px;"/></a>  </td>` 
+         +   `<a href="/detail?id=${c.bookId}" ><img src="${c.bookImage}" style="width: 80px;"/></a>  </td>` 
          +        ' </td> ' 
          +        ' <td class="align-middle" style="text-align: left;"> '  
          +                    ' <small class="d-inline-flex px-2 my-1 border rounded text-secondary"> ' 
