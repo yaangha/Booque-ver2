@@ -114,7 +114,6 @@ public class MarketController {
         
         double sale =  (1-usedPrice/bookPrice)*100;
         
-        log.info(" 할인율 ?? {} ", sale);
         
         
         UsedBookWish wish = null;
