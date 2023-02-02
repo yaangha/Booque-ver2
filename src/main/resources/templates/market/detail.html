@@ -104,7 +104,11 @@
         	<div class="align-middle" style="display: inline-block;">
     	    	<div style="font-weight: bold; font-size:21px;" th:text="${ user.nickName }"></div>
                 <input type="text" id="usedLocation" th:value="${ usedBook.location }" style="width: 300px; border: none;" />
-                <div style="color:gray;">관심 <span th:text="${ usedBook.wishCount }">0</span> | 채팅 <span th:text="${ usedBook.chats }"></span> | 조회 <span th:text="${ usedBook.hits }"></span></div>
+                <div style="color:gray;">
+                    관심 <span id="wishCount" th:text="${ usedBook.wishCount }"></span> | 
+                    채팅 <span  th:text="${ usedBook.chats }"></span> | 
+                    조회 <span th:text="${ usedBook.hits }"></span>
+                </div>
         	</div>
         </a>
         <span th:text="${ user.booqueLevel }"></span>
@@ -152,9 +156,9 @@
     	    <div class="h2" style="color: red;" th:text="|${#numbers.formatInteger(usedBook.price, 0, 'COMMA')}원|"></div>	
             <div><span th:text="|${#numbers.formatInteger(usedBook.price - book.prices, 0, 'COMMA')}원|"></span> 할인</div>
             <div>상품상태: <span th:text="${ usedBook.bookLevel }"></span></div>
-    	    <small style="color: gray;" th:text="${ #temporals.format(usedBook.modifiedTime, 'yyyy/MM/dd HH:mm:ss') }"></small>
+    	    <small style="color: gray;" th:text="${ #temporals.format(usedBook.modifiedTime, 'yyyy/MM/dd HH:mm') }"></small>
     	    <div id="content" th:text="${ usedBookPost.content }" style="white-space:pre; font-size:18px; margin-bottom:100px;"></div>
-            <div id="map" style="width:300px; height:300px; margin-top:10px; margin-bottom:10px;"></div>
+            <div id="map" style="width:300px; height:300px; margin-top:10px; margin-bottom:10px; z-index:-1"></div>
             <span>거래장소: </span>
             <input type="text" id="usedLocation" th:value="${ usedBook.location }" style="width: 300px; border: none; margin-bottom:10px;" />
         </div> <!-- content left end -->
@@ -179,12 +183,6 @@
         </a>
         </div> <!-- content right end -->
     </div> <!-- content end -->
-    
-    <div style="color:gray;">
-        <p>관심 <span id="wishCount" th:text="${ usedBook.wishCount }"></span> | 
-        채팅 <span  th:text="${ usedBook.chats }"></span> | 
-        조회 <span th:text="${ usedBook.hits }"></span></p>
-    </div>
     
     <div id="other"> <!-- 이 책의 다른 중고 상품은? -->
     	<h4><span>이 책</span>의 다른 중고 상품은?</h4>
