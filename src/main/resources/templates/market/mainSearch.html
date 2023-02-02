@@ -45,18 +45,20 @@
     <div class="w-70 container">
     
     <div style="margin-bottom: 80px;"><!-- 상단 div(검색, 판매글, 마이페이지 이동 등) -->
+    
+    <h2>넘어옴</h2>
         <div style="margin-left:280px; display:inline-block;">
         <form id="formSearchL" action="/market/mainSearch" method="get">
             <select name="region" id="selectLocation" style="width:180px; height: 40px; display: inline-block; border: none;">
-                <option value="">지역을 선택하세요</option>
-                <option value="서울">서울특별시</option>
-                <option value="부산">부산광역시</option>
-                <option value="대구">대구광역시</option>
-                <option value="인천">인천광역시</option>
-                <option value="광주">광주광역시</option>
-                <option value="대전">대전광역시</option>
-                <option value="울산">울산광역시</option>
-                <option value="세종특별자치시">세종특별자치시</option>
+                <option  value="">지역을 선택하세요</option>
+                <option th:selected="${ region } == 서울" value="서울">서울특별시</option>
+                <option th:selected="${ region } == 서울" value="부산">부산광역시</option>
+                <option th:selected="${ region } == 서울" value="대구">대구광역시</option>
+                <option th:selected="${ region } == 서울" value="인천">인천광역시</option>
+                <option th:selected="${ region } == 서울" value="광주">광주광역시</option>
+                <option th:selected="${ region } == 서울" value="대전">대전광역시</option>
+                <option th:selected="${ region } == 서울" value="울산">울산광역시</option>
+                <option th:selected="${ region } == 서울" value="세종특별자치시">세종특별자치시</option>
                 <option value="경기도">경기도</option>
                 <option value="강원도">강원도</option>
                 <option value="충북">충청북도</option>
@@ -91,9 +93,9 @@
         </select>
     </div>
         
-    <div th:each="marketCreateDto : ${ list }" style="width:200px; margin:40px; display:inline-block;"><!-- content 1개 -->
+    <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:40px; display:inline-block;"><!-- content 1개 -->
         <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ marketCreateDto.usedBookId }) }">
-            <div id="img" class="border" style="height:250px; width:200px; margin-bottom:10px; background-color: silver;"></div>
+            <div id="img" class="border" style="height:350px; width:350px; margin-bottom:10px; background-color: silver;"></div>
             <div class="text-truncate" th:text="${ marketCreateDto.title }" style="font-weight: bold; font-size: 20px;"></div>
             <div th:text="|${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold; font-size: 25px; color:red;"></div>
             <div th:text="${ marketCreateDto.location }" style="display: inline-block;"></div>
@@ -127,6 +129,10 @@
         console.log(formSearch)
     	
     })
+    
+    const selectOption = document.querySelector('#selectLocation').option()
+    
+    console.log(selectOption)
     
     
     

@@ -136,19 +136,19 @@ public class MarketController {
     
     
     
-    /**
-     * ajax를 이용해서 키워드 받고 검색하기
-     * @param keyword 검색할 단어(isbn은 아직은 제외됨)
-     * @return
-     */
-    @GetMapping("/search")
-    @ResponseBody
-    public ResponseEntity<List<Book>> bookList(String keyword){
-        log.info("확인 해야지 키워드가 잘 넘어갔는지{}   ",keyword);
-        
-        List<Book> searhList = searchRepository.unifiedSearchByKeyword(keyword);
-        return ResponseEntity.ok(searhList);
-    }
+//    /**
+//     * ajax를 이용해서 키워드 받고 검색하기
+//     * @param keyword 검색할 단어(isbn은 아직은 제외됨)
+//     * @return
+//     */
+//    @GetMapping("/search")
+//    @ResponseBody
+//    public ResponseEntity<List<Book>> bookList(String keyword){
+//        log.info("확인 해야지 키워드가 잘 넘어갔는지{}   ",keyword);
+//        
+//        List<Book> searhList = searchRepository.unifiedSearchByKeyword(keyword);
+//        return ResponseEntity.ok(searhList);
+//    }
     
     /**
      * UsedBook 테이블에 userId, bookId 먼저 저장하기
@@ -197,7 +197,6 @@ public class MarketController {
         model.addAttribute("usedBookPost", usedBookPost);
         model.addAttribute("book", book);
         model.addAttribute("user", user);
-        log.info("여기는 읽히지??");
     }
     
 
@@ -216,4 +215,39 @@ public class MarketController {
         
         return "redirect:/market/detail?usedBookId=" + dto.getUsedBookId();
     }
+    
+    
+    @GetMapping("/mainSearch")
+    public void mainSearch(@AuthenticationPrincipal UserSecurityDto userDto ,String region, String mainKeyword, Model model ) {
+        log.info("보이니니니ㅣㄴ???");
+        log.info("이것도 알려줘 {}   {}", region, mainKeyword);
+        
+        List<UsedBook> usedBookList = usedBookRepository.searchM(region, mainKeyword);
+        
+        List<MarketCreateDto> list = new ArrayList<>();
+        
+        for (UsedBook ub : usedBookList) {
+            User user = userRepository.findById(ub.getUserId()).get();
+            Book book = bookRepository.findById(ub.getBookId()).get();
+            MarketCreateDto dto = MarketCreateDto.builder()
+                    .usedBookId(ub.getId())
+                    .userId(user.getId()).username(user.getUsername())
+                    .bookTitle(book.getBookName()).price(ub.getPrice())
+                    .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime())
+                    .build();
+            list.add(dto);
+        }
+        if(userDto != null) {
+            model.addAttribute("userNickname", userDto.getNickName());       
+        }
+        
+        model.addAttribute("list", list);
+        model.addAttribute("region", region);
+        model.addAttribute("mainKeyword", mainKeyword);
+        
+        
+        
+    }
+    
+    
 }

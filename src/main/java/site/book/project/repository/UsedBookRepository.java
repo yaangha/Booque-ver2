@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import site.book.project.domain.UsedBook;
 
@@ -19,4 +20,16 @@ public interface UsedBookRepository extends JpaRepository<UsedBook, Integer> {
     @Query("update UsedBook u set u.hits = u.hits + 1 where u.id = :id")
     int updateHits(Integer id); // id => UsedBook의 PK
     */
+    
+    
+    //select * from usedbook where location  like '서울%' and (book_title like '%회복%' or title like '%회복%');
+    // 검색을 책 제목과 글 제목으로만 함
+    @Query(
+            "select b from USEDBOOK b "
+            + " where b.location like ( :region || '%') "
+            + " and (b.bookTitle like ('%' || :keyword || '%') or b.title like ('%'|| :keyword || '%' ))"
+            + " order by b.modifiedTime desc"
+            )
+    List<UsedBook> searchM(@Param(value = "region") String region,@Param(value = "keyword") String keyword );
 }
+
