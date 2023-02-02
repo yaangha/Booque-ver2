@@ -30,5 +30,15 @@ function openTap(e, tapContent) {
     const btnDefault = document.querySelectorAll('.btnTap')[0];  // 첫번째 탭 열어 놓기
     btnDefault.click();
     
+
+
+// (모달 실험 중) 인기 리뷰 책표지 클릭시 모달 효과
+function onClick(element) {
+  document.getElementById("innerModalImage").src = element.src;
+  document.getElementById("modalImage").style.display = "block";
+  const innerModalText = document.getElementById("caption");
+  innerModalText.innerHTML = element.alt;
+} 
+    
     
     

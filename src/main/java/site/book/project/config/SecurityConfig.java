@@ -3,6 +3,7 @@ package site.book.project.config;
 import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -12,10 +13,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
-public class SecurityConfig {
+@EnableWebSocketMessageBroker
+public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
     @Bean // 스프링 컨텍스트에서 생성, 관리하는 객체 - 필요한 곳에 의존성 주입. <bean></bean>같은.
     // 암호화 알고리즘 객체 -> Spring Security에서는 비밀번호는 반드시 암호화를 해야 함. 암호화 안되면 오류!
     public PasswordEncoder passwordEncoder() {
@@ -95,6 +104,19 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
     
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        // setHeartbeatTime은 1/1000초 단위로 연결 상태 확인해 주는 역할(1000은 1초마다 확인하겠다는 뜻) -> 읽음/안읽음 표시 기능에 쓰일 수 있음
+        registry.addEndpoint("/chat").setAllowedOriginPatterns("*").withSockJS().setHeartbeatTime(1000);
+    }
+
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        // 메시지를 구독하는 요청 url prefix => 즉 메시지 받을 때 (subscribe, sub)
+        registry.enableSimpleBroker("/topic");
+
+        // 메시지를 발행하는 요청 url prefix => 즉 메시지 보낼 때 (publish, pub)
+        registry.setApplicationDestinationPrefixes("/app");
+    }
 }
