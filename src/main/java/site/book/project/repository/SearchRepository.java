@@ -301,6 +301,20 @@ public interface SearchRepository extends JpaRepository<Book, Integer> {
     )
     List<Book> researchOrderByAccuracy(@Param(value = "keyword") String keyword, 
                                         @Param(value = "orderType") String orderType);
+
+    // 저자(author) 검색
+    @Query(
+            "select b from BOOKS b"
+           + " where lower(b.author) like lower ('%' || :keyword || '%') order by b.author desc"
+    )
+    Page<Book> authorSerchByKeyword(@Param(value = "keyword") String keyword, Pageable pageable);
+    
+    
+    @Query(
+    		"select b from BOOKS b "
+    		+ " where b.isbn like ('%' || :keyword || '%') order by b.isbn desc"
+    		)
+	Page<Book> isbnSearchByKeyword(@Param(value="keyword") String keyword, Pageable pageable);
     
     
 }

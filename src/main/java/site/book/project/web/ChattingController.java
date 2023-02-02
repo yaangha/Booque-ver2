@@ -32,9 +32,7 @@ public class ChattingController {
         log.info("sendMessage(to={}, chat={})", userName, chat);
         boolean isExists = UserChatLog.getInstance().getUsers().contains(userName);
         if (isExists) {
-            log.info("존재하는지 안하는지 알고싶다!!, {}", isExists);
             simpMessagingTemplate.convertAndSend("/topic/messages/" + userName, chat);
-            log.info("짜증나,, {}, {}", userName, chat);
             
         }
     }

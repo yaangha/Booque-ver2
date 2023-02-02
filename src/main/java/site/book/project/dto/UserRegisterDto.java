@@ -20,6 +20,7 @@ public class UserRegisterDto {
     
     public User toEntity() {
 
+
         return User.builder().username(username).password(password).email(email).nickName(nickname).name(name).phone(phone)
                 .build()
                 .addRole(UserRole.USER);
