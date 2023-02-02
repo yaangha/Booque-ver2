@@ -91,6 +91,13 @@ public class UsedBook extends BaseTimeEntity {
         
         return this;
     }
+    
+    // (하은) 조회수 증가
+    public UsedBook updateHits() {
+        this.hits++;
+        
+        return this;
+    }
 
         
 }

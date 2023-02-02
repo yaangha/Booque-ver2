@@ -134,10 +134,13 @@ public class UsedBookService {
      * @param response
      * @return
      */
-    /*
-    public int updateHits(Integer id, HttpServletRequest request, HttpServletResponse response) {
+    public void updateHits(Integer usedBookId, HttpServletRequest request, HttpServletResponse response) {
+        UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
+        //log.info("조회수 확인할 usedBookId = {}", usedBookId);
+        
         Cookie oldCookie = null;
-        Cookie[] cookies = request.getCookies();
+        Cookie[] cookies = request.getCookies(); // 현재 쿠키들 배열
+                
         if (cookies != null) { // 이미 쿠키들이 있을 때 usedBookView 쿠키가 존재유무 체크
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("usedBookView")) {
@@ -147,24 +150,25 @@ public class UsedBookService {
         }
         
         if (oldCookie != null) {
-            if (!oldCookie.getValue().contains("[" + id.toString() + "]")) { // 해당 쿠키가 없을시
-                usedBookRepository.updateHits(id); // 조회수 증가
-                oldCookie.setValue(oldCookie.getValue() + "[" + id + "]");
+            if (!oldCookie.getValue().contains("[" + usedBookId.toString() + "]")) { // 해당 쿠키가 없을시
+                usedBook = usedBook.updateHits();                
+                usedBookRepository.save(usedBook);
+                
+                oldCookie.setValue(oldCookie.getValue() + "[" + usedBookId + "]");
                 oldCookie.setPath("/");
-                oldCookie.setMaxAge(60 * 60 * 24);
+                oldCookie.setMaxAge(60 * 30);
                 response.addCookie(oldCookie);
             }
         } else {
-            usedBookRepository.updateHits(id);
-            Cookie newCookie = new Cookie("usedBookView", "[" + id + "]");
+            usedBook = usedBook.updateHits(); // usedBookView가 없으면 조회수 1 증가             
+            usedBookRepository.save(usedBook);
+            Cookie newCookie = new Cookie("usedBookView", "[" + usedBookId + "]"); // 쿠키 생성
             newCookie.setPath("/");
-            newCookie.setMaxAge(60 * 60 * 24);
+            newCookie.setMaxAge(60 * 30);
             response.addCookie(newCookie);
         }
         
-        return usedBookRepository.updateHits(id);
-    } */
-	
+    }
     
     
 }

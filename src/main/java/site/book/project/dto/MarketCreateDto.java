@@ -29,4 +29,6 @@ public class MarketCreateDto {
 	private String title;
 	private String contents;  // 따로 저장되어야함. 
 	private LocalDateTime modifiedTime;
+	private Integer hits;
+	private Integer wishCount;
 }
