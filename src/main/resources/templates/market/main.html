@@ -57,8 +57,7 @@
         </div>
         <div class="float-end" style="display: inline-block;">
             <a class="btn btn-success" th:href="@{ /market/create }">상품등록</a>
-            <a th:if="${userNickname} != null" class="btn btn-danger" style="margin-right: 40px;" th:href="@{ /market/mypage?userNickname={userNickname} (userNickname = ${ userNickname })}">마이부끄</a>
-            
+            <a class="btn btn-danger" style="margin-right: 40px;" th:href="@{ /market/mypage?userNickname={userNickname} (userNickname = ${ userNickname }) }">마이부끄</a>            
         </div>
     </div><!-- 상단 div end -->
     
