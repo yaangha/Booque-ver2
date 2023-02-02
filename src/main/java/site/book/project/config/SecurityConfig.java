@@ -108,7 +108,7 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // setHeartbeatTime은 1/1000초 단위로 연결 상태 확인해 주는 역할(1000은 1초마다 확인하겠다는 뜻) -> 읽음/안읽음 표시 기능에 쓰일 수 있음
-        registry.addEndpoint("/chat").setAllowedOrigins("*").withSockJS().setHeartbeatTime(1000);
+        registry.addEndpoint("/chat").setAllowedOriginPatterns("*").withSockJS().setHeartbeatTime(1000);
     }
 
     @Override

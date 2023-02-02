@@ -10,7 +10,7 @@ import lombok.ToString;
 public class Chatting {
     
     private String message;
-    private String fromLogin;
+    private String sender;
     
     
 

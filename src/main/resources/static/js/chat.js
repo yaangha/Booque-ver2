@@ -17,10 +17,10 @@ window.addEventListener('DOMContentLoaded', () => {
             console.log("connected to:"+ frame);
             stompClient.subscribe("/topic/messages/"+ userName, function (response){
                 let data = JSON.parse(response.body);
-                 if (toChatUser === data.fromLogin) {
-                render(data.message, data.fromLogin);
+                 if (toChatUser == data.sender) {
+                render(data.message, data.sender);
                 } else {
-                newMessages.set(data.fromLogin, data.message);
+                newMessages.set(data.sender, data.message);
                 }
             });
         });
@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // 기본 메세지 보내는 로직(보내는사람, 내용) stompClient(받는사람)
     function sendChat(from, text){
         stompClient.send("/app/chat/" + toChatUser, {}, JSON.stringify({
-            fromLogin: from,
+            sender: from,
             message: text
         }))
     };
