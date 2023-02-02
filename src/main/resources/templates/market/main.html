@@ -46,7 +46,9 @@
     
     <div style="margin-bottom: 80px;"><!-- 상단 div(검색, 판매글, 마이페이지 이동 등) -->
         <div style="margin-left:280px; display:inline-block;">
-        <form id="formSearchL" action="/market/mainSearch" method="get">
+        
+        
+                <form id="formSearchL" action="/market/mainSearch" method="get">
             <select name="region" id="selectLocation" style="width:180px; height: 40px; display: inline-block; border: none;">
                 <option value="">지역을 선택하세요</option>
                 <option value="서울">서울특별시</option>
@@ -68,7 +70,7 @@
                 <option value="제주특별자치도">제주특별자치도</option>
             </select>
             <input id="searchInput" name="mainKeyword" type="text" placeholder="검색어를 입력하세요!" />
-            <button id="btnSearchL"> </button>
+            <button id="btnSearchL"><i class="bi bi-search" style="font-size: 2rem;"></i> </button>
         </form>
             
         </div>
@@ -91,9 +93,10 @@
         </select>
     </div>
         
-    <div th:each="marketCreateDto : ${ list }" style="width:200px; margin:40px; display:inline-block;"><!-- content 1개 -->
-        <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ marketCreateDto.usedBookId }) }">
-            <div id="img" class="border" style="height:250px; width:200px; margin-bottom:10px; background-color: silver;"></div>
+
+    <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:40px; display:inline-block;"><!-- content 1개 -->
+        <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ marketCreateDto.usedBookId }) }" th:myname="${ marketCreateDto.usedBookId }" onclick="usedBookHits(this.getAttribute('myname'))">
+            <div id="img" class="border" style="height:350px; width:350px; margin-bottom:10px; background-color: silver;"></div>
             <div class="text-truncate" th:text="${ marketCreateDto.title }" style="font-weight: bold; font-size: 20px;"></div>
             <div th:text="|${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold; font-size: 25px; color:red;"></div>
             <div th:text="${ marketCreateDto.location }" style="display: inline-block;"></div>
@@ -102,7 +105,10 @@
             <div style="color: gray;">업로드(수정) 
                 <small style="color: gray;" th:text="${ #temporals.format(marketCreateDto.modifiedTime, 'yyyy/MM/dd HH:mm') }"></small>
             </div>
-            <div style="font-weight: bold; font-size:20px; display: inline-block;">♡</div>
+            <div class="align-middle" style="color:gray;">
+                <i class="bi bi-heart-fill" style="font-size:12px;"></i> 관심 <span id="wishCount" th:text="${ marketCreateDto.wishCount }"></span> 
+                <i class="bi bi-eye" style="font-size:17px; margin-left:8px;"></i> 조회 <span th:text="${ marketCreateDto.hits }"></span>
+            </div>
         </a>
     </div>
 
@@ -128,9 +134,21 @@
     	
     })
     
+    </script>
     
+    <script> // (하은) 조회수 증가
+    function usedBookHits(usedBookId) {
+    	axios.get('/market/usedBookHitCount', { params: { usedBookId : usedBookId }})
+    	   .then(response => {
+    		   console.log(response);
+    	   })
+    	   .catch(err => {
+    		   console.log(err);
+    	   })
+    }
     
     </script>
+    
 </body>
 </div>
 </html>

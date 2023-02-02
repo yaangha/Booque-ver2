@@ -3,6 +3,10 @@ package site.book.project.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import java.util.ArrayList;
 
 import org.springframework.http.ResponseEntity;
@@ -59,7 +63,7 @@ public class MarketController {
                     .usedBookId(ub.getId())
                     .userId(user.getId()).username(user.getUsername())
                     .bookTitle(book.getBookName()).price(ub.getPrice())
-                    .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime())
+                    .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime()).hits(ub.getHits()).wishCount(ub.getWishCount())
                     .build();
             list.add(dto);
         }
@@ -124,6 +128,7 @@ public class MarketController {
                 otherUsedBookListFinal.add(u);
             }
         }
+        
         // 로그인 한 사람이 하트를 누름, 하트가 저장됨. 근데 하트가 하트가,,! 
         model.addAttribute("wish", wish);
         model.addAttribute("book", book);
@@ -131,8 +136,14 @@ public class MarketController {
         model.addAttribute("usedBookPost", usedBookPost);
         model.addAttribute("usedBook", usedBook);
         model.addAttribute("otherUsedBookListFinal", otherUsedBookListFinal);
-            
     }
+    
+    // (하은) 조회수 증가
+    @GetMapping("/usedBookHitCount")
+        public void usedBookHitCount(Integer usedBookId, HttpServletRequest request, HttpServletResponse response) {
+            usedBookService.updateHits(usedBookId, request, response);
+        }
+    
     
     
     
