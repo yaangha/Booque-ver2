@@ -109,14 +109,19 @@ public class MarketController {
         User user = userRepository.findById(usedBook.getUserId()).get(); // 작성자의 정보
         Book book = bookRepository.findById(usedBook.getBookId()).get();
         
+        double bookPrice = book.getPrices();
+        double usedPrice = usedBook.getPrice();
+        
+        double sale =  (1-usedPrice/bookPrice)*100;
+        
+        log.info(" 할인율 ?? {} ", sale);
+        
+        
         UsedBookWish wish = null;
         // 로그인 한 사람의 정보를 통해 내것도 하트 누를 수 있음!
         // userId, usedBookId가 있으니
         if(userDto != null) {
-            log.info("여기 보이긴 하니~~~~~~~~~~~~~~~~~~~~~");
             wish = usedBookWishRepository.findByUserIdAndUsedBookId(userDto.getId(), usedBookId);
-            log.info("찾을 수 있니?? 널이니?? {}", wish);
-            
         }
         
         // 판매하는 책과 동일한 책(다른 중고책) 리스트
@@ -130,6 +135,7 @@ public class MarketController {
         }
         
         // 로그인 한 사람이 하트를 누름, 하트가 저장됨. 근데 하트가 하트가,,! 
+        model.addAttribute("sale", sale);
         model.addAttribute("wish", wish);
         model.addAttribute("book", book);
         model.addAttribute("user", user); // userName만 보낼 수 있게 수정(?)
@@ -147,19 +153,7 @@ public class MarketController {
     
     
     
-//    /**
-//     * ajax를 이용해서 키워드 받고 검색하기
-//     * @param keyword 검색할 단어(isbn은 아직은 제외됨)
-//     * @return
-//     */
-//    @GetMapping("/search")
-//    @ResponseBody
-//    public ResponseEntity<List<Book>> bookList(String keyword){
-//        log.info("확인 해야지 키워드가 잘 넘어갔는지{}   ",keyword);
-//        
-//        List<Book> searhList = searchRepository.unifiedSearchByKeyword(keyword);
-//        return ResponseEntity.ok(searhList);
-//    }
+
     
     /**
      * UsedBook 테이블에 userId, bookId 먼저 저장하기
@@ -243,7 +237,7 @@ public class MarketController {
                     .usedBookId(ub.getId())
                     .userId(user.getId()).username(user.getUsername())
                     .bookTitle(book.getBookName()).price(ub.getPrice())
-                    .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime())
+                    .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime()).hits(ub.getHits()).wishCount(ub.getWishCount())
                     .build();
             list.add(dto);
         }
