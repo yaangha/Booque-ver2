@@ -4,11 +4,13 @@
     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="utf-8">
-<title>SignUp Page</title>
+<title>SignIn Page</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/signinStyle.css">
 <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
 <style>
     .img {
         border-radius: 5%
@@ -18,52 +20,77 @@
         background-color : black;
         background-repeat : no-repeat;
         background-size : cover;
+        color : white;
       }
     html {
         font-family: sans-serif;
       }
+    .form-control {
+        background-color : black;
+        border: 0;
+    }
+    
+    .form-control:focus {
+        background-color: black;
+        outline: none;
+        box-shadow: none;
+    }
+    
+    .form-group {
+        margin : 1rem;
+        padding-bottom: 0.3rem;
+        border-bottom: 1rem;
+    }
+    
+    .icon {
+        margin-left : 0.3rem;
+        color : white;
+    }
+    
 </style>
 </head>
 <body>
     <section class="ftco-section">
         <div class="container" align="center">
             <div class="row justify-content-center">
-                <div class="col-md-6 text-center mt-3">
-                    <h2 class="heading-section">BOOQUE</h2>
+                <div class="col-md-6 text-center mt-4">
+                    <h2 class="mt-2 mb-1" style="color: white;">BOOQUE</h2>
                 </div>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-6 col-lg-4">
-                    <div class="login-wrap py-2">
+                    <div class="login-wrap py-4">
                 <a href="http://localhost:8888"><img src="/images/logo_black.png"
                     alt="logo_black.png" class="img d-flex align-items-center justify-content-center"
                     style="height: 180px; width: 180px;"></a>
-                <h3 class="text-center mb-0">회원가입</h3>
+                <h3 class="text-center my-3">회원가입</h3>
                 <p class="text-center">회원가입할 사용자 정보를 입력해주세요!</p>
                 <form id="registerForm" method="post" th:action="@{/user/signup}">
-                    <div class="form-group">
-                        <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-user"></span></div>
-                        <input type="text" id="signupUsername" name="username" class="signupData form-control" placeholder="아이디" autofocus required >
-                    </div>
-                    <!--
-                    <div class="my-2 d-none" id="nameok">
+                            <div class="form-group" style="border-bottom: 1px solid white;">
+                                <div
+                                    class="icon d-flex align-items-center justify-content-center">
+                                    <span class="fa fa-user fa-lg"></span>
+                                
+                                <input type="text" id="signupUsername" name="username"
+                                    class="signupData form-control" placeholder="아이디" autofocus
+                                    required>
+                                    </div>
+                            </div>
+                            <div class="my-2 d-none" id="nameok">
                                 <!-- d = display. 화면에 보여주지 않겠다. -->
-                                <!--
-                                <p class="text-success">사용할 수 있는 아이디</p>
+                                <p class="text-success">사용할 수 있는 아이디 입니다 :)</p>
                             </div>
                             <div class="my-2 d-none" id="namenok">
                                 <!-- d = display. 화면에 보여주지 않겠다. -->
-                                <!--
-                                <p class="text-danger">사용할 수 없는 아이디</p>
+                                <p class="text-danger">사용할 수 없는 아이디 입니다 :(</p>
                             </div>
-                            -->
-                <div class="form-group">
-                    <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-lock"></span></div>
-                  <input type="password" id="signupPassword" name="password" class="form-control" placeholder="비밀번호" required>
+                            <div class="form-group" style="border-bottom: 1px solid white;">
+                    <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-lock fa-lg"></span>
+                  <input type="password" id="signupPassword" name="password" class="form-control" placeholder="비밀번호" required></div>
                 </div>
-                <div class="form-group">
-                    <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-envelope-open-o"></span></div>
-                  <input type="email" id="signupEmail" name="email" class="form-control" placeholder="이메일" required>
+                <div class="form-group" style="border-bottom: 1px solid white;">
+                    <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-envelope-open-o fa-lg"></span>
+                  <input type="email" id="signupEmail" name="email" class="form-control" placeholder="이메일" required></div>
                 </div>
                 <!--
                 <div class="my-2 d-none" id="emailok">
@@ -77,17 +104,17 @@
                                 <p class="text-danger">사용할 수 없는 이메일</p>
                             </div>
                             -->
-                <div class="form-group">
-                    <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-user-o"></span></div>
-                  <input type="text" id="signupName" name="name" class="form-control" placeholder="이름" required>
+                <div class="form-group" style="border-bottom: 1px solid white;">
+                    <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-user-o fa-lg"></span>
+                  <input type="text" id="signupName" name="name" class="form-control" placeholder="이름" required></div>
                 </div>
-                <div class="form-group">
-                    <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-phone"></span></div>
-                  <input type="text" id="signupPhone" name="phone" class="form-control" placeholder="핸드폰번호" required>
+                <div class="form-group" style="border-bottom: 1px solid white;">
+                    <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-phone fa-lg"></span>
+                  <input type="text" id="signupPhone" name="phone" class="form-control" placeholder="핸드폰번호" required></div>
                 </div>
-                <div class="form-group">
-                    <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-user-secret"></span></div>
-                  <input type="text" id="signupNickname" name="nickname" class="form-control" placeholder="닉네임" required>
+                <div class="form-group" style="border-bottom: 1px solid white;">
+                    <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-user-secret fa-lg"></span>
+                  <input type="text" id="signupNickname" name="nickname" class="form-control" placeholder="닉네임" required></div>
                 </div>
                 <!--
                 <div class="my-2 d-none" id="nickok">
@@ -106,7 +133,8 @@
                     -->
                     <div class="form-group">
                     <button type="submit" id="registerConfirmBtn"
-                    class="signupBtn btn form-control btn-primary rounded submit px-3">
+                    class="signupBtn btn form-control btn-primary rounded submit px-3"
+                    style="background-color: white; color: black;">
                     회원가입!</button>
                 </div>
                 </form>
@@ -117,5 +145,34 @@
     </section>
 </body>
 <script>
+    window.addEventListener('DOMContentLoaded', function(){
+        
+        const usernameInput = document.querySelector('#signupUsername')
+        const nameok = document.querySelector('#nameok')
+        const namenok = document.querySelector('#namenok')
+        
+        usernameInput.addEventListener('change', function() {
+            
+            const username = usernameInput.value;
+            axios
+            .get('/user/checkid?username=' + username)
+            .then(response => {displayCheckResult(response.data)})
+            .catch(err => { console.log(err); })
+        
+        })
+        
+        function displayCheckResult(data) {
+            if (data == 'ok'){
+                nameok.className = 'my-2';
+                namenok.className = 'my-2 d-none';
+                btnSubmit.classList.remove('disabled');
+            } else {
+                nameok.className = 'my-2 d-none';
+                namenok.className = 'my-2';
+                btnSubmit.classList.add('disabled')
+            }
+        }
+        
+    });
 </script>
 </html>

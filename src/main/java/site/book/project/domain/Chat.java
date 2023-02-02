@@ -18,27 +18,24 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-@Entity(name = "USEDBOOKPOST")
-@SequenceGenerator(name = "USEDBOOKPOST_SEQ_GEN", sequenceName = "USEDBOOKPOST_SEQ", allocationSize = 1)
-public class UsedBookPost {
-    
+@Entity(name = "CHAT")
+@SequenceGenerator(name = "CHAT_SEQ_GEN", sequenceName = "CHAT_SEQ", initialValue = 1, allocationSize = 1)
+public class Chat extends BaseTimeEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USEDBOOKPOST_SEQ_GEN")
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CHAT_SEQ_GEN")
+    private Integer chatRoomId;
+    
+    @Column(nullable = false)
+    private Integer sellerId;
+    
+    @Column(nullable = false)
+    private Integer buyerId;
     
     @Column(nullable = false)
     private Integer usedBookId;
     
-
-    
     @Column(nullable = false)
-    private String content;
-    
-    
-    public UsedBookPost update(String content) {
-        this.content = content;
-        
-        return this;
-    }
+    private String fileName;
     
 }

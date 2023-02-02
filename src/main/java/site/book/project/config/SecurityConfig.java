@@ -13,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -83,7 +86,7 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
         
 
        http.authorizeHttpRequests() // 요청에 따른 권한 설정 시작.
-            .antMatchers("/post/create", "/post/modify", "/cart", "/cart/add",  "/myPage", "/book/wishList" ,"/orderFromDetail", "/search/cart", "/search/order") // "/post", "/api/reply" 로 시작하는 모든 경로           .hasRole("USER") // USER 권하능ㄹ 가지고 있는 사용자만 접근 가능
+            .antMatchers("/post/create", "/post/modify", "/cart", "/cart/add",  "/myPage", "/book/wishList" ,"/orderFromDetail", "/search/cart", "/search/order", "/market/create", "/market/mypage") // "/post", "/api/reply" 로 시작하는 모든 경로           .hasRole("USER") // USER 권하능ㄹ 가지고 있는 사용자만 접근 가능
             .hasRole("USER")
 
             .anyRequest() // 그 이외의 모든 요청
@@ -104,17 +107,16 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
     
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat").setAllowedOrigins("*").withSockJS();
+        // setHeartbeatTime은 1/1000초 단위로 연결 상태 확인해 주는 역할(1000은 1초마다 확인하겠다는 뜻) -> 읽음/안읽음 표시 기능에 쓰일 수 있음
+        registry.addEndpoint("/chat").setAllowedOrigins("*").withSockJS().setHeartbeatTime(1000);
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // 메시지를 구독하는 요청 url => 즉 메시지 받을 때
+        // 메시지를 구독하는 요청 url prefix => 즉 메시지 받을 때 (subscribe, sub)
         registry.enableSimpleBroker("/topic");
 
-        // 메시지를 발행하는 요청 url => 즉 메시지 보낼 때
+        // 메시지를 발행하는 요청 url prefix => 즉 메시지 보낼 때 (publish, pub)
         registry.setApplicationDestinationPrefixes("/app");
     }
-
-    
 }

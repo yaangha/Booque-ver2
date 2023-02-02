@@ -220,9 +220,13 @@
         if(sum>=30000){
             delivery.innerText='3만원 이상 구매, 무료 배송입니다.'
             totalPrice.innerText = total.innerText;
-        }else {
+        }else if(sum>0) {
             delivery.innerText = '3,000원'
             totalPrice.innerText =(sum+3000).toLocaleString();
+        }else {
+            delivery.innerText = '0원'
+            totalPrice.innerText ='0'
+            
         }
         
     }    

@@ -4,6 +4,7 @@ package site.book.project.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import site.book.project.domain.User;
+import site.book.project.domain.UserRole;
 
 @NoArgsConstructor
 @Data
@@ -19,7 +20,10 @@ public class UserRegisterDto {
     
     public User toEntity() {
 
-        return User.builder().username(username).password(password).email(email).nickName(nickname).name(name).phone(phone).build();
+
+        return User.builder().username(username).password(password).email(email).nickName(nickname).name(name).phone(phone)
+                .build()
+                .addRole(UserRole.USER);
 
         // addRole(MemberRole.USER) = 어드민이 아닌 USER 권한을 부여하겠다.
     }
