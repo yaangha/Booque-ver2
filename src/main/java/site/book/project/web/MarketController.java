@@ -180,7 +180,6 @@ public class MarketController {
     @GetMapping("/mypage") // /market/mypage 판매글작성자&마이페이지 이동
     public void mypage(String userNickname,Model model) {
         
-        log.info("언제 나와{}", userNickname);
         model.addAttribute("user", userNickname);
         
     }
