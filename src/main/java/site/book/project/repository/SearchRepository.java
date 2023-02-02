@@ -69,7 +69,7 @@ public interface SearchRepository extends JpaRepository<Book, Integer> {
                     + " where b.bookgroup = :orderType"
                     + " and (lower(b.bookName) like lower ('%' || :keyword || '%')"
                     + " or lower(b.author) like lower ('%' || :keyword || '%')"
-                    + " or lower(b.publisher) like lower ('%' || :keyword || '%'))"
+                    + " or lower(b.publisher) like lower ('%' || :keyword || '%')) order by b.prices desc"
 //                    + " or lower(b.bookIntro) like lower ('%' || :keyword || '%')) order by b.prices desc"
     )
     Page<Book> researchOrderByHighPrice(@Param(value = "keyword") String keyword, 
@@ -81,7 +81,7 @@ public interface SearchRepository extends JpaRepository<Book, Integer> {
             "select b from BOOKS b"
                     + " where lower(b.bookName) like lower ('%' || :keyword || '%')"
                     + " or lower(b.author) like lower ('%' || :keyword || '%')"
-                    + " or lower(b.publisher) like lower ('%' || :keyword || '%')"
+                    + " or lower(b.publisher) like lower ('%' || :keyword || '%') order by b.prices asc"
 //                    + " or lower(b.bookIntro) like lower ('%' || :keyword || '%') order by b.prices asc"
             )
     Page<Book> researchOrderAllByLowPrice(@Param(value = "keyword") String keyword, Pageable pageable);
@@ -101,7 +101,7 @@ public interface SearchRepository extends JpaRepository<Book, Integer> {
             "select b from BOOKS b"
                     + " where lower(b.bookName) like lower ('%' || :keyword || '%')"
                     + " or lower(b.author) like lower ('%' || :keyword || '%')"
-                    + " or lower(b.publisher) like lower ('%' || :keyword || '%')"
+                    + " or lower(b.publisher) like lower ('%' || :keyword || '%') order by b.publishedDate desc"
 //                    + " or lower(b.bookIntro) like lower ('%' || :keyword || '%') order by b.publishedDate desc"
             )
     Page<Book> researchOrderAllByPublishedDate(@Param(value = "keyword") String keyword, Pageable pageable);
@@ -121,7 +121,7 @@ public interface SearchRepository extends JpaRepository<Book, Integer> {
             "select b from BOOKS b"
                     + " where lower(b.bookName) like lower ('%' || :keyword || '%')"
                     + " or lower(b.author) like lower ('%' || :keyword || '%')"
-                    + " or lower(b.publisher) like lower ('%' || :keyword || '%')"
+                    + " or lower(b.publisher) like lower ('%' || :keyword || '%') order by b.bookScore desc"
 //                    + " or lower(b.bookIntro) like lower ('%' || :keyword || '%') order by b.bookScore desc"
             )
     Page<Book> researchOrderAllByhighScore(@Param(value = "keyword") String keyword, Pageable pageable);
@@ -141,7 +141,7 @@ public interface SearchRepository extends JpaRepository<Book, Integer> {
             "select b from BOOKS b"
                     + " where lower(b.bookName) like lower ('%' || :keyword || '%')"
                     + " or lower(b.author) like lower ('%' || :keyword || '%')"
-                    + " or lower(b.publisher) like lower ('%' || :keyword || '%')"
+                    + " or lower(b.publisher) like lower ('%' || :keyword || '%') order by b.bookName desc"
 //                    + " or lower(b.bookIntro) like lower ('%' || :keyword || '%') order by b.bookName desc"
             )
     Page<Book> researchOrderAllByAccuracy(@Param(value = "keyword") String keyword, Pageable pageable);
