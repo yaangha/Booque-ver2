@@ -77,7 +77,7 @@ public class SecurityConfig {
         
 
        http.authorizeHttpRequests() // 요청에 따른 권한 설정 시작.
-            .antMatchers("/post/create", "/post/modify", "/cart", "/cart/add",  "/myPage", "/book/wishList" ,"/orderFromDetail", "/search/cart", "/search/order") // "/post", "/api/reply" 로 시작하는 모든 경로           .hasRole("USER") // USER 권하능ㄹ 가지고 있는 사용자만 접근 가능
+            .antMatchers("/post/create", "/post/modify", "/cart", "/cart/add",  "/myPage", "/book/wishList" ,"/orderFromDetail", "/search/cart", "/search/order", "/market/create", "/market/mypage") // "/post", "/api/reply" 로 시작하는 모든 경로           .hasRole("USER") // USER 권하능ㄹ 가지고 있는 사용자만 접근 가능
             .hasRole("USER")
 
             .anyRequest() // 그 이외의 모든 요청
