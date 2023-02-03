@@ -1,5 +1,6 @@
 package site.book.project.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -168,6 +169,43 @@ public class UsedBookService {
             response.addCookie(newCookie);
         }
         
+    }
+
+    public List<UsedBook> searchBookList(String region, String mainKeyword, String orderSlt, String status) {
+        // 지역별, 검색을 한다.
+        // 순서를 정할 수 있다.
+        // 상태를 선택할 수 있다.
+        // 전체 지역에서, 검색어를 최신순으로 구매가능한 것만   함.
+        
+        List<UsedBook> usedBookList = new ArrayList<>();
+        
+        if(status.equals("all")) {
+            if(orderSlt == null  || orderSlt.equals("최신순")) {
+                usedBookList = usedBookRepository.searchM(region, mainKeyword);
+            } else if(orderSlt.equals("최저가순")) {
+                usedBookList = usedBookRepository.searchPrice(region, mainKeyword);
+            } else if(orderSlt.equals("최고가순")) {
+                usedBookList = usedBookRepository.searchPriceDesc(region, mainKeyword);
+            }
+            
+        }else {
+            if(orderSlt == null  || orderSlt.equals("최신순")) {
+                usedBookList = usedBookRepository.searchM2(region, mainKeyword);
+            } else if(orderSlt.equals("최저가순")) {
+                usedBookList = usedBookRepository.searchPrice2(region, mainKeyword);
+            } else if(orderSlt.equals("최고가순")) {
+                usedBookList = usedBookRepository.searchPriceDesc2(region, mainKeyword);
+            }
+            
+        }
+        
+        
+        
+        
+        
+        
+        
+        return usedBookList;
     }
     
     

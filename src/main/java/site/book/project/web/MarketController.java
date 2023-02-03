@@ -51,8 +51,20 @@ public class MarketController {
     private final UsedBookWishRepository usedBookWishRepository;
     
     @GetMapping("/main") // /market/main 부끄마켓 메인 페이지 이동
-    public void main(@AuthenticationPrincipal UserSecurityDto userDto, Model model) {
-        List<UsedBook> usedBookList = usedBookRepository.findAll();
+    public void main(@AuthenticationPrincipal UserSecurityDto userDto,String orderSlt,   Model model) {
+//        List<UsedBook> usedBookList = usedBookRepository.findByOrderByModifiedTimeDesc();
+        
+        
+        List<UsedBook> usedBookList = new ArrayList<>();
+        // 서비스로 넘겨야 할까? 
+        if(orderSlt==null || orderSlt.equals("최신순")) {
+            usedBookList = usedBookRepository.findByOrderByModifiedTimeDesc();
+        }else if(orderSlt.equals("인기순")) {
+            usedBookList = usedBookRepository.findByOrderByHitsDesc();
+            
+        }
+        
+
         
         List<MarketCreateDto> list = mainList(usedBookList);
         
@@ -62,6 +74,7 @@ public class MarketController {
         }
         
         model.addAttribute("list", list);
+        model.addAttribute("orderSlt", orderSlt);
         
     }
     
@@ -211,16 +224,20 @@ public class MarketController {
     
     
     @GetMapping("/mainSearch")
-    public void mainSearch(@AuthenticationPrincipal UserSecurityDto userDto ,String region, String mainKeyword, Model model ) {
+    public void mainSearch(@AuthenticationPrincipal UserSecurityDto userDto ,String region, String mainKeyword, Model model,
+                            String orderSlt , String status) {
         
-        List<UsedBook> usedBookList = usedBookRepository.searchM(region, mainKeyword);
         
-        List<MarketCreateDto> list = mainList(usedBookList);
+        List<UsedBook> takeList = usedBookService.searchBookList(region, mainKeyword, orderSlt, status);
+        
+        List<MarketCreateDto> list = mainList(takeList);
         
         if(userDto != null) {
             model.addAttribute("userNickname", userDto.getNickName());       
         }
         
+        model.addAttribute("status", status);
+        model.addAttribute("orderSlt", orderSlt);
         model.addAttribute("list", list);
         model.addAttribute("region", region);
         model.addAttribute("mainKeyword", mainKeyword);
@@ -231,7 +248,11 @@ public class MarketController {
     
     
     
-    
+    /**
+     * main에서 사용함
+     * @param usedBookList
+     * @return
+     */
     private List<MarketCreateDto> mainList(List<UsedBook> usedBookList) {
         
         List<MarketCreateDto> list = new ArrayList<>();
