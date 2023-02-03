@@ -84,7 +84,32 @@
         
         
         <div class="float-end" style="display: inline-block;">
-            <a class="btn btn-success" th:href="@{ /market/create }">상품등록</a>
+            <!-- <a class="btn btn-success" th:href="@{ /market/create }">상품등록</a> -->
+            <a class="btn btn-success" id="checkStorage">상품등록</a>
+
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">상품등록</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">상품등록</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        작성하시던 글이 있습니다. 이어서 작성하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-secondary" th:href="@{ /market/storage }">이어서 작성</a>
+        <a class="btn btn-primary" th:href="@{ /market/create }">새로 작성</a>
+      </div>
+    </div>
+  </div>
+</div>
+            
+            
+            
             <a class="btn btn-danger" style="margin-right: 40px;" th:href="@{ /market/mypage?userNickname={userNickname} (userNickname = ${ userNickname }) }">마이부끄</a>            
         </div>
     </div><!-- 상단 div end -->
@@ -156,8 +181,16 @@
     		   console.log(err);
     	   })
     }
+    </script>
+    
+    <script>
+    const checkStorage = document.querySelector('#checkStorage');
+    checkStorage.addEventListener('click', function() {
+    	
+    })
     
     </script>
+    
     
 </body>
 </div>

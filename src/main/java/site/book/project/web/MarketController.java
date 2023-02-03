@@ -79,7 +79,7 @@ public class MarketController {
     }
     
 
-    @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동 -> 임시저장 목록 불러오기
+    @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동
     public void create(@AuthenticationPrincipal UserSecurityDto userDto, Model model) {
        
     }
@@ -94,6 +94,18 @@ public class MarketController {
     	usedBookService.create( usedBookId, dto );
     	
     	return "redirect:/market/detail?usedBookId="+usedBookId;
+    }
+    
+    @GetMapping("/storage") // 메인화면 -> 상품등록에서 작성하던 글 이어서 작성하기 버튼 눌렀을 때!
+    public void storage(@AuthenticationPrincipal UserSecurityDto userDto) {
+        // (1) 사용자 글에서 임시저장 목록 뽑기
+        // List<UsedBook> usedBookList = usedBookRepository.findByUserIdOrderByModifiedTimeDesc(userDto.getId());
+        
+        // log.info("하은 임시저장 목록 불러오기 위한 usedBook 목록 확인 = {}", usedBookList);
+        
+        
+        // (2) 제일 최근 글 데이터 넘기기
+        
     }
     
     @PostMapping("/storage")
