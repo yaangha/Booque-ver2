@@ -146,6 +146,7 @@
     
 <!-- script 부분 -->
 
+
 <script th:src="@{ /js/marketCreate.js }" ></script>
 <!-- (하은) 판매글 등록시 주소 없으면 alert 창 뜨게 -->
 <script>
@@ -153,6 +154,7 @@ const btnSubmit = document.querySelector('#btnSubmit');
 const formCreate = document.querySelector('#formCreate');
 
 btnSubmit.addEventListener('click', function () {
+
 	const sample3_address = document.querySelector('#sample3_address').value;
 	const title = document.querySelector('#title').value;
 	const price = document.querySelector('#price').value;
@@ -179,6 +181,7 @@ btnSaveYet.addEventListener('click', function() {
 })
 
 </script>
+
 
 <!-- (하은) 주소 API -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>

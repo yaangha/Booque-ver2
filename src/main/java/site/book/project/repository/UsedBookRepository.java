@@ -31,5 +31,56 @@ public interface UsedBookRepository extends JpaRepository<UsedBook, Integer> {
             + " order by b.modifiedTime desc"
             )
     List<UsedBook> searchM(@Param(value = "region") String region,@Param(value = "keyword") String keyword );
+    
+    @Query(
+            "select b from USEDBOOK b "
+                    + " where b.location like ( :region || '%') "
+                    + " and (b.bookTitle like ('%' || :keyword || '%') or b.title like ('%'|| :keyword || '%' ))"
+                    + " order by b.price"
+            )
+    List<UsedBook> searchPrice(@Param(value = "region") String region,@Param(value = "keyword") String keyword );
+    @Query(
+            "select b from USEDBOOK b "
+                    + " where b.location like ( :region || '%') "
+                    + " and (b.bookTitle like ('%' || :keyword || '%') or b.title like ('%'|| :keyword || '%' ))"
+                    + " order by b.price desc"
+            )
+    List<UsedBook> searchPriceDesc(@Param(value = "region") String region,@Param(value = "keyword") String keyword );
+    
+    /**
+     * 판매중인 상품만 보여주기
+     * @param region
+     * @param keyword
+     * @return
+     */
+    @Query(
+            "select b from USEDBOOK b "
+                    + " where b.location like ( :region || '%') "
+                    + " and b.status = '판매중' "
+                    + " and (b.bookTitle like ('%' || :keyword || '%') or b.title like ('%'|| :keyword || '%' ))"
+                    + " order by b.modifiedTime desc"
+            )
+    List<UsedBook> searchM2(@Param(value = "region") String region,@Param(value = "keyword") String keyword );
+    
+    @Query(
+            "select b from USEDBOOK b "
+                    + " where b.location like ( :region || '%') "
+                    + " and b.status = '판매중' "
+                    + " and (b.bookTitle like ('%' || :keyword || '%') or b.title like ('%'|| :keyword || '%' ))"
+                    + " order by b.price"
+            )
+    List<UsedBook> searchPrice2(@Param(value = "region") String region,@Param(value = "keyword") String keyword );
+    @Query(
+            "select b from USEDBOOK b "
+                    + " where b.location like ( :region || '%') "
+                    + " and b.status = '판매중' "
+                    + " and (b.bookTitle like ('%' || :keyword || '%') or b.title like ('%'|| :keyword || '%' ))"
+                    + " order by b.price desc"
+            )
+    List<UsedBook> searchPriceDesc2(@Param(value = "region") String region,@Param(value = "keyword") String keyword );
+    
+    
+    List<UsedBook> findByOrderByModifiedTimeDesc();
+    List<UsedBook> findByOrderByHitsDesc();
 }
 

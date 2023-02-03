@@ -48,6 +48,15 @@
     
         <div style="margin-left:280px; display:inline-block;">
         <form id="formSearchL" action="/market/mainSearch" method="get">
+
+        <label for="statusAll" style="margin-right: 20px"> 
+        <input onchange="searchOrderby()" checked name="status" id="statusAll" 
+        type="radio" value="all" style="padding: 10px;"> 전체</label> 
+        <label for="statusAble" style="margin-right: 20px">
+        <input onchange="searchOrderby()" name="status" id="statusAble" 
+        th:checked ="${ status } == able " type="radio" value="able"> 구매가능</label>
+        
+    
             <select name="region" id="selectLocation" style="width:180px; height: 40px; display: inline-block; border: none;">
                 <option  value="">지역을 선택하세요</option>
                 <option th:selected="${ region } == 서울" value="서울">서울특별시</option>
@@ -73,7 +82,17 @@
             <button id="btnSearchL" style="border: none; background-color: white;">
                 <i class="bi bi-search" style="font-size: 2rem;"></i>
             </button>
+        <div style="margin-top:15px; margin-bottom:15px;">
+        <select id="orderSlt" onchange="changeStatus()" name="orderSlt" class="form-select float-end" style="width:120px; height: 40px; margin-right:40px; display: inline-block;">
+            <option th:selected ="${ orderSlt } == 최신순" >최신순</option>
+            <option th:selected ="${ orderSlt } == 최저가순" >최저가순</option>
+            <option th:selected ="${ orderSlt } == 최고가순" >최고가순</option>
+        </select>
+        </div>    
+        
         </form>
+            
+            
             
         </div>
         
@@ -88,11 +107,7 @@
     
     <div style="margin-top:15px; margin-bottom:15px;">
         <div style="font-weight: bold; font-size:25px; margin-left: 40px; display:inline-block;">부끄마켓 중고거래</div>
-        <select class="form-select float-end" style="width:120px; height: 40px; margin-right:40px; display: inline-block;">
-            <option>인기순</option>
-            <option>최신순</option>
-            <option>오래된순</option>
-        </select>
+
     </div>
         
     <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:40px; display:inline-block;"><!-- content 1개 -->
@@ -125,6 +140,7 @@
     
     const btnSearch = document.querySelector('#btnSearchL')
 
+    const formOrder= document.querySelector('#formSearchL')
     
     btnSearch.addEventListener('click', function(){
     	
@@ -135,6 +151,14 @@
     	
     })
     
+    function changeStatus(){
+        formOrder.submit();
+    }
+    
+    function searchOrderby(){
+        formOrder.submit();
+    	
+    }
 
     
     
