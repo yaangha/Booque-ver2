@@ -54,19 +54,9 @@ public class MarketController {
     public void main(@AuthenticationPrincipal UserSecurityDto userDto, Model model) {
         List<UsedBook> usedBookList = usedBookRepository.findAll();
         
-        List<MarketCreateDto> list = new ArrayList<>();
+        List<MarketCreateDto> list = mainList(usedBookList);
         
-        for (UsedBook ub : usedBookList) {
-            User user = userRepository.findById(ub.getUserId()).get();
-            Book book = bookRepository.findById(ub.getBookId()).get();
-            MarketCreateDto dto = MarketCreateDto.builder()
-                    .usedBookId(ub.getId())
-                    .userId(user.getId()).username(user.getUsername())
-                    .bookTitle(book.getBookName()).price(ub.getPrice())
-                    .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime()).hits(ub.getHits()).wishCount(ub.getWishCount())
-                    .build();
-            list.add(dto);
-        }
+        
         if(userDto != null) {
             model.addAttribute("userNickname", userDto.getNickName());       
         }
@@ -222,10 +212,27 @@ public class MarketController {
     
     @GetMapping("/mainSearch")
     public void mainSearch(@AuthenticationPrincipal UserSecurityDto userDto ,String region, String mainKeyword, Model model ) {
-        log.info("보이니니니ㅣㄴ???");
-        log.info("이것도 알려줘 {}   {}", region, mainKeyword);
         
         List<UsedBook> usedBookList = usedBookRepository.searchM(region, mainKeyword);
+        
+        List<MarketCreateDto> list = mainList(usedBookList);
+        
+        if(userDto != null) {
+            model.addAttribute("userNickname", userDto.getNickName());       
+        }
+        
+        model.addAttribute("list", list);
+        model.addAttribute("region", region);
+        model.addAttribute("mainKeyword", mainKeyword);
+        
+        
+        
+    }
+    
+    
+    
+    
+    private List<MarketCreateDto> mainList(List<UsedBook> usedBookList) {
         
         List<MarketCreateDto> list = new ArrayList<>();
         
@@ -240,16 +247,9 @@ public class MarketController {
                     .build();
             list.add(dto);
         }
-        if(userDto != null) {
-            model.addAttribute("userNickname", userDto.getNickName());       
-        }
-        
-        model.addAttribute("list", list);
-        model.addAttribute("region", region);
-        model.addAttribute("mainKeyword", mainKeyword);
         
         
-        
+        return list;
     }
     
     
