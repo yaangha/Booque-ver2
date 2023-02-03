@@ -76,10 +76,10 @@ public class MarketController {
     }
     
 
-    @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동
-    public void create(Model model) {
-
-    }
+//    @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동 -> 임시저장 목록 불러오기
+//    public void create(@AuthenticationPrincipal UserSecurityDto userDto, Model model) {
+//       
+//    }
     
     @PostMapping("/create")
     public String createPost( @AuthenticationPrincipal UserSecurityDto userDto, MarketCreateDto dto,
@@ -87,18 +87,22 @@ public class MarketController {
     	// 총 세개의 테이블을 크리에이트 해야함
     	
     	dto.setUserId(userDto.getId());
-    	
+    	dto.setStorage(1); // storage 값을 1(저장)로 변경 => 디폴트 값은 0(임시저장)
     	usedBookService.create( usedBookId, dto );
     	
     	return "redirect:/market/detail?usedBookId="+usedBookId;
     }
     
-    
-
-    
-    
-    
-    
+    @PostMapping("/storage")
+    public String storage(@AuthenticationPrincipal UserSecurityDto userDto, MarketCreateDto dto, Integer usedBookId) {
+        
+        dto.setUserId(userDto.getId());
+        dto.setStorage(0);
+        usedBookService.create(usedBookId, dto);
+        
+        return "redirect:/market/main";
+    }
+        
     @GetMapping("/detail") // /market/detail 중고판매글 상세 페이지 이동
     public void detail(@AuthenticationPrincipal UserSecurityDto userDto ,Integer usedBookId, Model model) {
         // 책 정보 불러오기(bookId) -> postId로 bookId 찾기

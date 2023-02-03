@@ -31,4 +31,5 @@ public class MarketCreateDto {
 	private LocalDateTime modifiedTime;
 	private Integer hits;
 	private Integer wishCount;
+	private Integer storage;
 }

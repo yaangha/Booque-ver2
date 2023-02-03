@@ -100,9 +100,15 @@
     <div id="profile"> <!-- profile -->
     	<a th:href="@{ /market/mypage(id=${ user.id }) }"><!-- 작성자 부끄마켓 개인 페이지로 이동 -->
             <img style="width:80px; height:80px; display:inline-block; margin-right: 10px;" th:src="${ user.userImage }">
-        	<div class="align-middle" style="display: inline-block;">
-    	    	<div style="font-weight: bold; font-size:21px;" th:text="${ user.nickName }"></div>
-                <input type="text" id="usedLocation" th:value="${ usedBook.location }" style="width: 300px; border: none;" />
+        	<div class="align-middle" style="display: inline-block; padding-right: 20px; margin-right: 30px;">
+    	    	<div style="font-weight: bold; font-size:23px; display:inline-block" th:text="${ user.nickName + '(' + user.username + ')' }"></div>
+                <div class="border rounded-2 bg-success border-success" style="height: 21px; display:inline-block; padding: 1px; text-align: center;">
+                    <i class="bi bi-droplet-half" style="font-size: 13px;"></i>
+                    <small th:text="${ user.booqueLevel }" ></small>
+                    <small th:text="${ user.booqueScore + 'P' }"></small>
+                </div>
+                <div th:text="${ usedBook.location }"></div>
+                <input type="hidden" id="usedLocation" th:value="${ usedBook.location }"/>
                 <div class="align-middle" style="color:gray;">
                     <i class="bi bi-heart-fill" style="font-size:12px;"></i> 관심 <span id="wishCount" th:text="${ usedBook.wishCount }"></span> 
                     <i class="bi bi-person-circle" style="font-size:14px; margin-left:8px;"></i> 채팅 <span  th:text="${ usedBook.chats }"></span>
@@ -110,8 +116,7 @@
                 </div>
         	</div>
         </a>
-        <span th:text="${ user.booqueLevel }"></span>
-        <span th:text="${ user.booqueScore }"></span> point
+        
     	<div class="align-middle float-end" style="display: inline-block;" th:if="${ user.username } != ${ #authentication.name }">
 	    	 <!-- 채팅하기 -->
              <!-- 새 창으로 뜨도록(채팅하는 동시에 부끄 사이트에서 다른 동작 수행 가능 -->
@@ -230,6 +235,7 @@
         }
         axios.post('/market/changeStatus', statusDto)
              .then(response =>{
+            	 alert(status + '(으)로 변경되었습니다!');
                  console.log(response)
              })
         
