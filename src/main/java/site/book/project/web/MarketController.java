@@ -79,10 +79,10 @@ public class MarketController {
     }
     
 
-//    @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동 -> 임시저장 목록 불러오기
-//    public void create(@AuthenticationPrincipal UserSecurityDto userDto, Model model) {
-//       
-//    }
+    @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동 -> 임시저장 목록 불러오기
+    public void create(@AuthenticationPrincipal UserSecurityDto userDto, Model model) {
+       
+    }
     
     @PostMapping("/create")
     public String createPost( @AuthenticationPrincipal UserSecurityDto userDto, MarketCreateDto dto,
