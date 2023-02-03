@@ -32,7 +32,7 @@ public class ChatService {
     String fileUploadPath; 
     
     // DB의 Chat 테이블에 새 데이터 행 생성
-    // fileName 컬럼은 일단 null인 듯?
+    // fileName 컬럼은 일단 null로 비워 둠
     public void createChat(Integer usedBookId, Integer sellerId, Integer buyerId) throws IOException {
         
         Chat chat = Chat.builder().usedBookId(usedBookId).sellerId(sellerId).buyerId(buyerId).build();
