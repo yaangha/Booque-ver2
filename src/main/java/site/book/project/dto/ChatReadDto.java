@@ -1,7 +1,5 @@
 package site.book.project.dto;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,12 +11,15 @@ import lombok.ToString;
 @Getter
 @ToString
 @Setter
-public class ChatDto {
-    
-    private Integer chatRoomId;
-    private Integer UsedBookId;
+public class ChatReadDto {
+
+
+    //    private Integer chatRoomId;
+    //    private Integer UsedBookId;
     private String sender;
     private String message;
-    private LocalDateTime sendTime;
-
+    private String sendTime;
+    
+    public ChatReadDto() {
+    }
 }
