@@ -1,6 +1,8 @@
 package site.book.project.web;
 
 
+
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,9 +43,9 @@ import site.book.project.service.UsedBookService;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/market")
-public class MarketRestController {
-
+@RequestMapping("/api")
+public class imageTestController {
+    
     private final UsedBookService usedBookService;
     private final UsedBookRepository usedBookRepository;
     private final SearchRepository searchRepository;
@@ -72,7 +74,8 @@ public class MarketRestController {
 //        
 //        return ResponseEntity.ok(dto);
 //    }
-    @PostMapping("/api/upload")
+    
+    @PostMapping("/upload")
     public ResponseEntity<List<FileUploadResultDto>> upload(FileUploadDto dto){
         
         log.info("떨린다,,, 사진 !!! {}",dto);
@@ -110,13 +113,13 @@ public class MarketRestController {
 //            file.transferTo(path);
             file.transferTo(dest);
             
-            if (file.getContentType().startsWith("image")) {
-                image = true;
-                String thumbnailTarget = "s_" + target;
-                File thumbnailDest = new File(uploadPath, thumbnailTarget);
-                Thumbnailator.createThumbnail(dest, thumbnailDest, 200, 200);
-                
-            }
+//            if (file.getContentType().startsWith("image")) {
+//                image = true;
+//                String thumbnailTarget = "s_" + target;
+//                File thumbnailDest = new File(uploadPath, thumbnailTarget);
+//                Thumbnailator.createThumbnail(dest, thumbnailDest, 200, 200);
+//                
+//            }
             
             result = FileUploadResultDto.builder()
                     .uuid(uuid)
@@ -131,7 +134,7 @@ public class MarketRestController {
         return result;
     }
     
-    @GetMapping("/api/view/{fileName}")
+    @GetMapping("/view/{fileName}")
     public ResponseEntity<Resource> viewFile(@PathVariable String fileName) {
         log.info("viewFile(fileName={})", fileName);
         
@@ -152,59 +155,5 @@ public class MarketRestController {
         
         return ResponseEntity.ok().headers(headers).body(resource);
     }
-    
-    
-    
-    
-    /**
-     * ajax를 이용해서 키워드 받고 검색하기
-     * @param keyword 검색할 단어(isbn은 아직은 제외됨)
-     * @return
-     */
-    @GetMapping("/search")
-    @ResponseBody
-    public ResponseEntity<List<Book>> bookList(String keyword){
-        log.info("확인 해야지 키워드가 잘 넘어갔는지{}   ",keyword);
-        
-        List<Book> searhList = searchRepository.unifiedSearchByKeyword(keyword);
-        return ResponseEntity.ok(searhList);
-    }
-    
-    
-    
-    // (은정)
-    @GetMapping("/api/usedBookWish")
-    public Map<String, Object> saveUsedBookWish(Integer usedBookId, @AuthenticationPrincipal UserSecurityDto userSecurityDto) {
-        
-        Integer result =usedBookService.addUsedBookWish(usedBookId, userSecurityDto.getId());
-        Integer count = 0;
-        if(result==0) {
-            count= usedBookService.minusWishCount(usedBookId);
-        }else {
-            count = usedBookService.addWishCount(usedBookId);
-            
-        }
-        
-        Map<String, Object> map = new HashMap<>();
-         
-        map.put("check", result);
-        map.put("count", count);
-        return map;
-    }
-    
-    //(은정)
-    @PostMapping("/changeStatus")
-    public void changeStatus(@RequestBody UsedBookStatus status) {
-        Integer usedBookId = status.getUsedBookId();
-        String selectStatus = status.getStatus();
-        
-        UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
-        usedBook = usedBook.updateStauts(selectStatus);
-        usedBookRepository.save(usedBook);
-        
-    }
-    
-    
-    
     
 }
