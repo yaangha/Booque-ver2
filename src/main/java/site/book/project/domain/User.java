@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import site.book.project.dto.UserModifyDto;
 
@@ -55,9 +56,11 @@ public class User {
     @Column(length = 1000)
     private String userImage;
     
+    @Setter
     @Column(length = 1000)
     private String fileName;
     
+    @Setter
     @Column(length = 1000)
     private String filePath;
     
@@ -95,12 +98,6 @@ public class User {
         return this;
 }
     
-    public User updateImage(String fileName, String filePath) {
-        this.fileName =fileName;
-        this.filePath = filePath;
-        
-        return this;
-    }
     
     public User updateProfile(UserModifyDto user) {
         this.nickName = user.getNickName();
