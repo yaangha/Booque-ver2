@@ -53,6 +53,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String nickName;
     
+    @Setter
     @Column(length = 1000)
     private String userImage;
     
@@ -70,6 +71,7 @@ public class User {
     @Builder.Default
     private String grade = "0"; 
     
+    @Setter
     private String postIntro;
     
     @Builder.Default

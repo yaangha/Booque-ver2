@@ -28,6 +28,7 @@ import site.book.project.dto.PostListDto;
 import site.book.project.dto.PostReadDto;
 import site.book.project.dto.PostUpdateDto;
 import site.book.project.dto.UserSecurityDto;
+import site.book.project.repository.UserRepository;
 import site.book.project.service.BookService;
 import site.book.project.service.PostService;
 import site.book.project.service.ReplyService;
@@ -43,6 +44,7 @@ public class PostController {
     private final BookService bookService;
     private final UserService userService;
     private final ReplyService replyService;
+    private final UserRepository userRepository;
        
     
     @Transactional(readOnly = true)
@@ -221,5 +223,21 @@ public class PostController {
         return "redirect:"+urlTemp;  // 현재 페이지로 리다이렉트 
     }
 
+    @PostMapping("/postIntroUpdate")  // (예진) postIntro 수정
+    public String postIntroUpdate(Integer id, String postIntro, HttpServletRequest request) {
+         log.info("포스트인트로!={} : {}",id,postIntro);
+        
+         String referer = request.getHeader("referer");  
+         String urlTemp = referer.toString().substring(21);  
+        
+        User user = userService.read(id);
+        log.info("변경 전: 포스트인트로 ={}", user.getPostIntro());
+        user.setPostIntro(postIntro);
+        log.info("변경 후: 포스트인트로 ={}", user.getPostIntro());
+        
+        userRepository.save(user);
+        
+        return "redirect:"+urlTemp;
+    }
    
 }
