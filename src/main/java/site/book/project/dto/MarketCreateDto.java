@@ -19,6 +19,7 @@ public class MarketCreateDto {
 
 	private Integer userId;  // 이미저장이 되어 있는데 필요할까?
 	private String username;
+	private String nickName;
 	private Integer bookId;
 //	private Integer bookId;
     private Integer usedBookId;
@@ -31,4 +32,5 @@ public class MarketCreateDto {
 	private LocalDateTime modifiedTime;
 	private Integer hits;
 	private Integer wishCount;
+	private String userImage;
 }

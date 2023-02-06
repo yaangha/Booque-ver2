@@ -83,10 +83,13 @@
 //        }
         
         for (let r of data){
-            str += '<div class="card border-dark mb-3 w-100" style="text-align: left;">'
-            + '<div class="flex-shrink-0"><img class="rounded-circle" width="60" height="60" src="' + r.userImage + '" alt="..." /></div>'
+         str += '<div class="card border-dark mb-3 w-100" style="text-align: left;">'
+            + '<div class="flex-shrink-0">'
+            +`<a href="/post/list?postWriter=${r.replyWriter}">`
+            +'<img class="rounded-circle" width="60" height="60" src="' + r.userImage + '" alt="..." />'
 
-            + `<div class="fw-bold"><a href="/post/list?postWriter=${r.replyWriter}">${r.replyWriter}</a></div>`
+            + `<span class="fw-bold m-2">${r.nickName}</span></a></div>`
+         
                 + '<div class="card-body text-dark">'
                 + '<p class="card-text">' + r.replyContent + '</p>'
                 + '<div><small style="color:gray;"> 작성시간: ' + '<span id="commentDate">' + r.createdTime + '</span>' + '</small></div>'
