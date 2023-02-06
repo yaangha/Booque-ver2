@@ -41,5 +41,6 @@ public class UsedBookPost {
         this.storage = storage;
         return this;
     }
+
     
 }

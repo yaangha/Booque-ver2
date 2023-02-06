@@ -26,6 +26,7 @@ public class PostReadDto {
     private String title;
     private Integer postId;
     private String userImage;
+    private String nickName;
     
     // 작성 시간 안함. 여기에 댓글 수 넣음 되겠다! service에서 만들어서 사용 TODO
     
@@ -35,6 +36,8 @@ public class PostReadDto {
                 .title(entity.getTitle())
                 .bookId(entity.getBook().getBookId())
                 .writer(entity.getPostWriter())
+                .nickName(entity.getUser().getNickName())
+                .userImage(entity.getUser().getUserImage())
                 .content(entity.getPostContent())
                 .myScore(entity.getMyScore())
                 .createdTime(entity.getCreatedTime())

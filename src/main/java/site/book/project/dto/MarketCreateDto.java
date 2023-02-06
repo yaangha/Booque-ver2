@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import site.book.project.domain.UsedBook;
-import site.book.project.domain.UsedBookPost;
 
 @AllArgsConstructor
 @Builder
@@ -20,6 +18,7 @@ public class MarketCreateDto {
 
 	private Integer userId;  // 이미저장이 되어 있는데 필요할까?
 	private String username;
+	private String nickName;
 	private Integer bookId;
 //	private Integer bookId;
     private Integer usedBookId;
@@ -36,4 +35,6 @@ public class MarketCreateDto {
 	
 	private List<String> fileNames;
 	private Integer storage;
+	//
+	private String userImage;
 }
