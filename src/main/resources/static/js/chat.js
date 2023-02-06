@@ -8,6 +8,7 @@ window.addEventListener('DOMContentLoaded', () => {
         var buyerId = $('#buyerId').val();
         var usedBookId = $('#usedBookId').val();
         var sellerId = $('#sellerId').val();
+        var chatRoomId = $('#chatRoomId').val();
         
         // invoke when DOM(Documents Object Model; HTML(<head>, <body>...etc) is ready
         $(document).ready(connect());
@@ -15,7 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
         function connect() {
             // map URL using SockJS 
             var socket = new SockJS('/chat');
-            var url = '/user/' + id + '/queue/messages';
+            var url = '/user/' + chatRoomId + '/queue/messages';
             // webSocket 대신 SockJS을 사용하므로 Stomp.client()가 아닌 Stomp.over()를 사용함
             stompClient = Stomp.over(socket);
             
@@ -45,14 +46,14 @@ window.addEventListener('DOMContentLoaded', () => {
         function send() {
             var message = $('#message').val();
             sendChat({
-                // 'id': id,
+                'chatRoomId': chatRoomId,
                 // 'buyerName': buyerName, 
                 'message': message,
                 // 'sellerName': sellerName,
-                // 'buyerId': buyerId, 
-                // 'sellerId': sellerId,
-                // 'usedBookId': usedBookId,
-                'sender': sender
+                'buyerId': buyerId, 
+                'sellerId': sellerId,
+                'usedBookId': usedBookId,
+                // 'sender': sender
                 });
             $('#message').val("");
         }

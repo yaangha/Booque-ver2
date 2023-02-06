@@ -103,6 +103,9 @@ public class ChatService {
             }            
         }
         
+        br.close();
+        fr.close();
+        
         return chatHistory;
     }
     
