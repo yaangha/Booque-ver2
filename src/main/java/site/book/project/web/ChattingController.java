@@ -51,6 +51,7 @@ public class ChattingController {
  
         //append message to txtFile
         chatService.appendMessage(chatRoomId, dto);
+        log.info("텍스트파일에 챗기록 저장: chatService.appendMessage");
         
 //        Integer chatRoomId = dto.getChatRoomId();
         String url = "/user/" + chatRoomId + "/queue/messages";

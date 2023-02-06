@@ -81,9 +81,9 @@
                     <div id="content">
                         <div th:each="chat : ${chatHistory}">
                             <p>
-                                <span id="chatSender">${chat.sender}</span><br>
-                                <span id="chatMessage">${chat.message}</span><br>
-                                <span id="chatSendTime">${chat.sendTime}</span><br>
+                                <span id="chatSender" th:text="${chat.sender}"></span><br>
+                                <span id="chatMessage" th:text="${chat.message}"></span><br>
+                                <span id="chatSendTime" th:text="${chat.sendTime}"></span><br>
                             </p>    
                         </div>
                     </div>
@@ -93,10 +93,10 @@
                             <input type="text" placeholder="Message" id="message" class="form_control"/>
                             <div class="input_group_append">
                                 <button id="send" class="btn btn-primary" onclick="send()">보내기</button>
-                                <input type="hidden" value="${chatInfo.buyerId}" id="buyerId"/>
-                                <input type="hidden" value="${chatInfo.usedBookId}" id="usedBookId"/>
-                                <input type="hidden" value="${chatInfo.sellerId}" id="sellerId"/>
-                                <input type="hidden" value="${chatInfo.chatRoomId}" id="chatRoomId"/>                  
+                                <input type="text" th:value="${chatInfo.buyerId}" id="buyerId"/>
+                                <input type="text" th:value="${chatInfo.usedBookId}" id="usedBookId"/>
+                                <input type="text" th:value="${chatInfo.sellerId}" id="sellerId"/>
+                                <input type="text" th:value="${chatInfo.chatRoomId}" id="chatRoomId"/>                  
                             </div>                    
                         </div>                
                     </div>

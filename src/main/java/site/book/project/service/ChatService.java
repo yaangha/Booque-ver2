@@ -29,7 +29,7 @@ public class ChatService {
     
     private final ChatRepository chatRepository;
     
-    @Value("${file.upload-dir}.txt")
+    @Value("${file.upload-dir}")
     String fileUploadPath; 
     
     // DB의 Chat 테이블에 새 데이터 행 생성
