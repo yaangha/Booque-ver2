@@ -1,6 +1,7 @@
 package site.book.project.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,5 +32,8 @@ public class MarketCreateDto {
 	private LocalDateTime modifiedTime;
 	private Integer hits;
 	private Integer wishCount;
+	
+	
+	private List<String> fileNames;
 	private Integer storage;
 }

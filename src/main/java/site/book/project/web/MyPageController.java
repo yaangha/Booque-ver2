@@ -71,18 +71,7 @@ public class MyPageController {
         return "redirect:/myPage";
     }
     
-    // 못함
-    @PostMapping("/myPage/file")
-    public String filemodify(@AuthenticationPrincipal UserSecurityDto  userSecurityDto,
-                            @RequestParam("filePath") MultipartFile file) throws IllegalStateException, IOException {
-
-        userService.modifyUserImage(userSecurityDto.getId(), file);
-        
-        
-        
-        
-        return "redirect:/myPage";
-    }
+   
     
     // (은정) wish 삭제
     @PostMapping("/myPage/delete")

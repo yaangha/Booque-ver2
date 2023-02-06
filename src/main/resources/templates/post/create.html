@@ -35,8 +35,8 @@
 <div class="col-2"><!-- 프로필 블록 start -->
     <div class="card mx-2 my-2" style="width: 20rem; height:auto;">    
         <a th:href="@{ /myPage }"> <!-- 프로필 사진 클릭하면 마이페이지로 이동 -->
-           <img th:src="${ user.userImage }" width="220px" height="280" class="img-fluid rounded-start">
-        </a>       
+           <img th:src="${user.userImage}" width=200px; /><!-- (예진) 프로필 이미지-->
+        </a>         
          
          
         <div class="card-body" style="text-align: left;">
@@ -117,6 +117,7 @@
 </div>
 </div><!-- main block end -->
 </div><!-- 메인 블록 end -->
+
 
 <!-- bootstrap -->
         <script

@@ -69,6 +69,24 @@
             </div>
         </li>
         <li>
+                    <h2>사진 첨부 부분</h2>
+    
+    <input type="file" name="files" class="form-control" multiple />
+    <button type="button" id="btnModalUpload" 
+                            class="btn btn-primary">Upload</button>    
+    
+    
+                            <div id="uploadResults" class="container-fluid d-flex"
+                                    style="flex-wrap: wrap;">
+                            </div>
+        <div id="uploads"></div> 
+        
+        
+        </li>
+        
+        
+        
+        <li>
             <div class="contents">책 이미지<span style="color: red;">*</span><small style="font-size:14px; color: gray;">(0/5)</small></div>
             <div>                
                 <ul>
@@ -129,6 +147,8 @@
 
 <!-- (하은) 주소 API -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script th:src="@{ /js/imgCreate.js }" ></script>
+
 <script>
     // 우편번호 찾기 찾기 화면을 넣을 element
     var element_wrap = document.getElementById('wrap');

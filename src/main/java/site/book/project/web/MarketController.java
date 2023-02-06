@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Book;
 import site.book.project.domain.UsedBook;
+import site.book.project.domain.UsedBookImage;
 import site.book.project.domain.UsedBookPost;
 import site.book.project.domain.UsedBookWish;
 import site.book.project.domain.User;
@@ -29,6 +31,7 @@ import site.book.project.dto.MarketCreateDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.BookRepository;
 import site.book.project.repository.SearchRepository;
+import site.book.project.repository.UsedBookImageRepository;
 import site.book.project.repository.UsedBookPostRepository;
 import site.book.project.repository.UsedBookRepository;
 import site.book.project.repository.UsedBookWishRepository;
@@ -49,6 +52,9 @@ public class MarketController {
     private final UsedBookPostRepository usedBookPostRepository;
     private final UserRepository userRepository;
     private final UsedBookWishRepository usedBookWishRepository;
+    private final UsedBookImageRepository usedBookImageRepository;
+    
+    
     
     @GetMapping("/main") // /market/main 부끄마켓 메인 페이지 이동
     public void main(@AuthenticationPrincipal UserSecurityDto userDto,String orderSlt,   Model model) {
@@ -81,10 +87,12 @@ public class MarketController {
         }
         
         List<MarketCreateDto> list = mainList(usedBookList);
-                
+
         if(userDto != null) {
             model.addAttribute("userNickname", userDto.getNickName());       
         }
+        
+        log.info("임시저장~~~~~~~~~~~~~~~~~~~~~~~~~~~~{}", usedBookPost);
         
         model.addAttribute("list", list);
         model.addAttribute("orderSlt", orderSlt);
@@ -99,9 +107,14 @@ public class MarketController {
     
     @PostMapping("/create")
     public String createPost( @AuthenticationPrincipal UserSecurityDto userDto, MarketCreateDto dto,
-    							Integer usedBookId) {
+    							Integer usedBookId, MultipartFile files) {
     	// 총 세개의 테이블을 크리에이트 해야함
-    	
+        
+        // 리스트 먼저 확인해야함. 
+        log.info("사진~~~~~ 어떤 형태로 넘어 오니?? {} ",dto.getFileNames());
+        
+        usedBookService.createImg(usedBookId, dto.getFileNames());
+        
     	dto.setUserId(userDto.getId());
     	dto.setStorage(1); // storage 값을 1(저장)로 변경 => 디폴트 값은 0(임시저장)
     	usedBookService.create( usedBookId, dto );
@@ -156,6 +169,9 @@ public class MarketController {
         User user = userRepository.findById(usedBook.getUserId()).get(); // 작성자의 정보
         Book book = bookRepository.findById(usedBook.getBookId()).get();
         
+        List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(usedBookId);
+        
+        
         double bookPrice = book.getPrices();
         double usedPrice = usedBook.getPrice();
         
@@ -179,19 +195,17 @@ public class MarketController {
                 otherUsedBookListFinal.add(u);
             }
         }
+        log.info("사진이 안보이나?? 엥?? {} ", imgList);
         
-        // 로그인 한 사람이 하트를 누름, 하트가 저장됨. 근데 하트가 하트가,,! 
+        
+        model.addAttribute("imgList", imgList);
         model.addAttribute("sale", sale);
         model.addAttribute("wish", wish);
         model.addAttribute("book", book);
         model.addAttribute("user", user); // userName만 보낼 수 있게 수정(?)
         model.addAttribute("usedBookPost", usedBookPost);
         model.addAttribute("usedBook", usedBook);
-        model.addAttribute("otherUsedBookListFinal", otherUsedBookListFinal);
-        
-        // (하은) 테스트용 삭제할것!!!!!!
-        List<UsedBook> test = usedBookService.readOtherUsedBook(usedBook.getBookId());
-        model.addAttribute("test", test);        
+        model.addAttribute("otherUsedBookListFinal", otherUsedBookListFinal);     
     }
     
     // (하은) 조회수 증가
@@ -246,7 +260,9 @@ public class MarketController {
         Book book = bookRepository.findById(usedBook.getBookId()).get();
         User user = userRepository.findById(usedBook.getUserId()).get();
         
+        List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(usedBookId);
         
+        model.addAttribute("imgList", imgList);
         model.addAttribute("usedBook", usedBook);
         model.addAttribute("usedBookPost", usedBookPost);
         model.addAttribute("book", book);
