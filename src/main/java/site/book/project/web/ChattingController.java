@@ -1,5 +1,6 @@
 package site.book.project.web;
 
+import java.io.IOException;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import oracle.net.aso.l;
+import site.book.project.domain.Chat;
 import site.book.project.domain.Chatting;
 import site.book.project.domain.UserChatLog;
+import site.book.project.dto.ChatReadDto;
+import site.book.project.service.ChatService;
 
 @RestController
 @Slf4j
@@ -27,16 +31,32 @@ public class ChattingController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
     
+    @Autowired
+    private ChatService chatService;
+    
     // 메시지 컨트롤러
-    @MessageMapping("/chat/{userName}")
-    public void sendMessage (@DestinationVariable String userName, Chatting chat) {
-        log.info("sendMessage(to={}, chat={})", userName, chat);
-        boolean isExists = UserChatLog.getInstance().getUsers().contains(userName);
-        if (isExists) {
-            simpMessagingTemplate.convertAndSend("/topic/messages/" + userName, chat);
-            
-        }
+//    @MessageMapping("/chat/{userName}")
+//    public void sendMessage (@DestinationVariable String userName, Chatting chat) {
+//        log.info("sendMessage(to={}, chat={})", userName, chat);
+//        boolean isExists = UserChatLog.getInstance().getUsers().contains(userName);
+//        if (isExists) {
+//            simpMessagingTemplate.convertAndSend("/topic/messages/" + userName, chat);
+//            
+//        }
+//    }
+    
+    // (지혜)
+    @MessageMapping("/chat/{chatRoomId}")
+    public void send(@DestinationVariable Integer chatRoomId, ChatReadDto dto) throws IOException {
+ 
+        //append message to txtFile
+        chatService.appendMessage(chatRoomId, dto);
+        
+//        Integer chatRoomId = dto.getChatRoomId();
+        String url = "/user/" + chatRoomId + "/queue/messages";
+        simpMessagingTemplate.convertAndSend(url, new ChatReadDto(dto.getSender(), dto.getMessage(), dto.getSendTime())); 
     }
+
     
     // 채팅 로그 사용자 등록
     @CrossOrigin

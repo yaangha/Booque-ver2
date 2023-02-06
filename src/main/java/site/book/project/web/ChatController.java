@@ -26,12 +26,12 @@ import site.book.project.service.ChatService;
 public class ChatController {
     
     // 채팅 view 접속하기
-    @GetMapping("/chat")
-    public String onChatting(String withChatUsername, Model model) {
-        log.info("withChatUsername={}", withChatUsername);
-        model.addAttribute("firstConnectUser", withChatUsername);
-        return "chat";
-    }
+//    @GetMapping("/chat")
+//    public String onChatting(String withChatUsername, Model model) {
+//        log.info("withChatUsername={}", withChatUsername);
+//        model.addAttribute("firstConnectUser", withChatUsername);
+//        return "chat";
+//    }
     
     // 
     @GetMapping("message")
@@ -40,60 +40,49 @@ public class ChatController {
         return message;
     }
     
-    
-    
-    
-    // (지혜) 아래 구현 중
-    /*
-    
-    @Autowired
-    private SimpMessagingTemplate simpMessage;
-    
+    // (지혜)
     @Autowired
     private ChatService chatService;
     
     @Autowired
     private ChatRepository chatRepository;
  
-    //채팅으로 거래하기(productInfo 화면)
-    @GetMapping("/chatMessage")
+    // 중고판매글에서 '채팅하기' 버튼 클릭시
+    @GetMapping("/chat")
     public String getWebSocketWithSockJs(Model model, HttpSession session, 
             @ModelAttribute("chat") Chat chat) throws IOException {
         
         //중고판매글 detail 화면에서 Chat화면에 전달해줄 parameter
-        User buyer = (User) session.getAttribute("login");
-        Integer buyerId = buyer.getId();
-        chat.setBuyerId(buyerId);
+//        User buyer = (User) session.getAttribute("loginUser");
+//        Integer buyerId = buyer.getId();
+//        chat.setBuyerId(buyerId);
+//        
+//        User seller = (User) session.getAttribute("firstConnectUser");
+//        Integer sellerId = seller.getId();
+//        chat.setSellerId(sellerId);
+//        
+//        Integer usedBookId = (Integer) session.getAttribute("usedBookId");
+//        chat.setUsedBookId(usedBookId);
         
         
         //이미 chat이 만들어져있는지 확인
-        if (chatRepository.findByUsedBookIdAndBuyerId(usedBookId, buyerId))
-        
-        
-        if (chatService.countByChatId(chat.getPr_id(), chat.getBuyerId()) > 0) {
-            //get ChatRoomInfo
-            Chat chatTemp = chatService.findByChatId(chat.getPr_id(), chat.getBuyerId());
-            //load existing chat history
-            List<ChatReadDto> chatHistory = chatService.readChatHistory(chatTemp);
-            //transfer chatHistory Model to View
+        Chat chatExistsOrNot = chatRepository.findByUsedBookIdAndBuyerId(chat.getUsedBookId(), chat.getBuyerId());
+        if (chatExistsOrNot != null) {
+            // 이미 채팅을 하고 있다면
+            // chatHistory 불러 오기
+            List<ChatReadDto> chatHistory = chatService.readChatHistory(chatExistsOrNot);
+            //chatHistory Model -> View
             model.addAttribute("chatHistory", chatHistory);
-            
         } else {
-            //chat 생성            
-            chatService.createChat(chat);            
-            //text file 생성
-            chatService.createFile(chat.getPr_id(), chatService.getId(chat.getPr_id(), chat.getBuyerId()));                                
+            // 새로운 채팅 시작이라면
+            // chat 생성 (+ txt 파일 생성)       
+            chatService.createChat(chat.getUsedBookId(), chat.getSellerId(), chat.getBuyerId());                               
         }
- 
-            //chat Add 시 생성될 chatId
-            chat.setId(chatService.getId(chat.getPr_id(), chat.getBuyerId()));
             
-            //chatRoom 객체 Model에 저장해 view로 전달
-            model.addAttribute("chatRoomInfo", chat);
+            // Chat 객체 Model에 저장해 view로 전달
+            model.addAttribute("chatInfo", chat);
         
-        return "chatBroadcastProduct";
-    
-    */
-    
-    
+        return "chat";
+        
+    }
 }

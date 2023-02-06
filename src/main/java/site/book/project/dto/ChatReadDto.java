@@ -14,7 +14,7 @@ import lombok.ToString;
 public class ChatReadDto {
 
 
-    //    private Integer chatRoomId;
+//        private Integer chatRoomId;
     //    private Integer UsedBookId;
     private String sender;
     private String message;
@@ -22,4 +22,10 @@ public class ChatReadDto {
     
     public ChatReadDto() {
     }
+    
+//    public ChatReadDto(String sender, String message, String sendTime) {
+//        this.sender = sender;
+//        this.message = message;
+//        this.sendTime = sendTime;
+//    }
 }

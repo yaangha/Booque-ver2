@@ -4,6 +4,7 @@ package site.book.project.service;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -107,6 +108,38 @@ public class ChatService {
     
     
     
+    // txt 파일에 새로운 채팅 기록 추가(append)
+    public void appendMessage(Integer chatRoomId, ChatReadDto dto) throws IOException {
+        
+//        Integer chatRoomId = dto.getChatRoomId();
+        
+        Chat chatAppend = chatRepository.findByChatRoomId(chatRoomId);
+                
+        String pathName = fileUploadPath + chatAppend.getFileName();
+        
+        // 파일에 쓰기(append)
+        FileOutputStream fos = new FileOutputStream(pathName, true);
+        String message = dto.getMessage();
+        String sender = dto.getSender();
+        String sendTime = dto.getSendTime();
+        System.out.println("print:" + message);
+        
+        String writeContent = sender + "\n" + message + "\n" + "[" +  sendTime + "]" + "\n";
+        
+        byte[] b = writeContent.getBytes();
+        
+        fos.write(b);
+        fos.close();
+        
+        // 읽음 여부 표시 기능 (TODO)
+        /*
+        if (senderId.equals(chat.getSellerId())) {
+            updateChatReadBuy(chat.getId(), 0);
+        } else {
+            updateChatReadSell(chat.getId(), 0);
+        } */
+        
+    }
 
 
 
