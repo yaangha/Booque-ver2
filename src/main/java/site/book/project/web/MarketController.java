@@ -54,20 +54,38 @@ public class MarketController {
     public void main(@AuthenticationPrincipal UserSecurityDto userDto,String orderSlt,   Model model) {
 //        List<UsedBook> usedBookList = usedBookRepository.findByOrderByModifiedTimeDesc();
         
+        List<UsedBook> usedBookList = new ArrayList<>(); // 메인에 넘길 리스트
         
-        List<UsedBook> usedBookList = new ArrayList<>();
         // 서비스로 넘겨야 할까? 
         if(orderSlt==null || orderSlt.equals("최신순")) {
-            usedBookList = usedBookRepository.findByOrderByModifiedTimeDesc();
+            List<UsedBook> storageChk = usedBookRepository.findByOrderByModifiedTimeDesc();            
+            for (UsedBook u : storageChk) {
+                UsedBookPost post = usedBookPostRepository.findByUsedBookId(u.getId());
+                if (post.getStorage() == 1) {
+                    usedBookList.add(u);
+                }
+            }
         }else if(orderSlt.equals("인기순")) {
-            usedBookList = usedBookRepository.findByOrderByHitsDesc();
-            
+            List<UsedBook> storageChk = usedBookRepository.findByOrderByHitsDesc();
+            for (UsedBook u : storageChk) {
+                UsedBookPost post = usedBookPostRepository.findByUsedBookId(u.getId());
+                if (post.getStorage() == 1) {
+                    usedBookList.add(u);
+                }
+            }
         }
-        
-
         
         List<MarketCreateDto> list = mainList(usedBookList);
         
+        // (하은) 임시저장 존재유무 확인용
+        List<UsedBookPost> usedBookPost = new ArrayList<>(); // storage가 0인 목록을 저장할 리스트
+        
+        for (UsedBook u : usedBookList) { // pk로 UsedBookPost에서 0인 목록 찾기 -> 먼저 나오는 값이 최신 순
+            UsedBookPost post = usedBookPostRepository.findByUsedBookId(u.getId());
+            if (post.getStorage() == 0) {
+                usedBookPost.add(post);
+            }
+        }
         
         if(userDto != null) {
             model.addAttribute("userNickname", userDto.getNickName());       
@@ -75,9 +93,9 @@ public class MarketController {
         
         model.addAttribute("list", list);
         model.addAttribute("orderSlt", orderSlt);
+        model.addAttribute("usedBookPost", usedBookPost);
         
     }
-    
 
     @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동
     public void create(@AuthenticationPrincipal UserSecurityDto userDto, Model model) {
@@ -97,18 +115,33 @@ public class MarketController {
     }
     
     @GetMapping("/storage") // 메인화면 -> 상품등록에서 작성하던 글 이어서 작성하기 버튼 눌렀을 때!
-    public void storage(@AuthenticationPrincipal UserSecurityDto userDto) {
-        // (1) 사용자 글에서 임시저장 목록 뽑기
-        // List<UsedBook> usedBookList = usedBookRepository.findByUserIdOrderByModifiedTimeDesc(userDto.getId());
+    public void storage(@AuthenticationPrincipal UserSecurityDto userDto, Model model) {
+        // (1) 사용자 글에서 임시저장 목록 뽑기 -> userid로 작성한 글 리스트업(내림차순) -> [0]번째 글 저장 -> marketcreatedto 사용해서 데이터 넘기기?
+        List<UsedBook> usedBookList = usedBookRepository.findByUserIdOrderByModifiedTimeDesc(userDto.getId());
         
-        // log.info("하은 임시저장 목록 불러오기 위한 usedBook 목록 확인 = {}", usedBookList);
+        List<UsedBookPost> usedBookPost = new ArrayList<>(); // storage가 0인 목록을 저장할 리스트
         
+        for (UsedBook u : usedBookList) { // pk로 UsedBookPost에서 0인 목록 찾기 -> 먼저 나오는 값이 최신 순
+            UsedBookPost post = usedBookPostRepository.findByUsedBookId(u.getId());
+            if (post.getStorage() == 0) {
+                usedBookPost.add(post);
+            }
+        }
         
-        // (2) 제일 최근 글 데이터 넘기기
+        // usedBookPost[0]가 제일 최신순
+        UsedBook usedBook = usedBookRepository.findById(usedBookPost.get(0).getUsedBookId()).get();
+        Book book = bookRepository.findById(usedBook.getBookId()).get();
+        MarketCreateDto dto = MarketCreateDto.builder()
+                .usedBookId(usedBook.getId()).bookTitle(book.getBookName()).price(usedBook.getPrice()).location(usedBook.getLocation())
+                .level(usedBook.getBookLevel()).title(usedBook.getTitle()).contents(usedBookPost.get(0).getContent())
+                .build();
         
+        model.addAttribute("dto", dto);    
+        model.addAttribute("book", book);
+        model.addAttribute("usedBook", usedBook);
     }
     
-    @PostMapping("/storage")
+    @PostMapping("/storage") // 임시저장 완료 후 부끄마켓 메인 페이지로 이동
     public String storage(@AuthenticationPrincipal UserSecurityDto userDto, MarketCreateDto dto, Integer usedBookId) {
         
         dto.setUserId(userDto.getId());

@@ -83,6 +83,9 @@ public interface UsedBookRepository extends JpaRepository<UsedBook, Integer> {
     
     List<UsedBook> findByOrderByModifiedTimeDesc();
     List<UsedBook> findByOrderByHitsDesc();
+
+    // (하은) userId, storage로 임시저장 목록 찾기
+    List<UsedBook> findByUserIdOrderByModifiedTimeDesc(Integer id);
     
     
     // select * from USEDBOOK ub inner join USEDBOOKPOST p
@@ -93,7 +96,5 @@ public interface UsedBookRepository extends JpaRepository<UsedBook, Integer> {
 //            "select * from USEDBOOK ub inner join USEDBOOKPOST p on ub.id = p.usedBookId where p.storage = 0 and ub.userId = :userId order by ub.modifiedTime desc"
 //            )
 //    List<MarketCreateDto> storageList(@Param(value = "userId") Integer userId);
-    
-    // List<UsedBook> findByUserIdOrderByModifiedTimeDesc(Integer id); // (하은) 사용자별 작성목록 -> 수정시간 내림차순
 }
 
