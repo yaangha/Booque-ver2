@@ -365,7 +365,7 @@
         <div class="carousel-inner w3-border" style="margin-top: 50px;  padding-top:60px; padding-bottom:60px;  padding-left:30px; padding-right:30px;">
             <div class="carousel-item active">
                 <div class="w3-quarter">
-                     <img class="w3-card"  th:src="${ hotReviewPostList[0].getBookImage }" style="height:250px; width:auto;" />
+                     <img class="w3-card"  th:src="${ hotReviewPostList[0].getBookImage }" onclick="onClick(this)" style="height:250px; width:auto;" />
                 </div>
                 <div class="w3-quarter" style="text-align:left;">
                     <a class="h3 reviewTitle" 
@@ -376,7 +376,7 @@
                     th:text="${ hotReviewPostList[0].getPostContent }"style="padding-top:50px;"></a>
                 </div>
                 <div class="w3-quarter">
-                    <img class="w3-card" th:src="${ hotReviewPostList[1].getBookImage }" style="height: 250px; width:auto;" />
+                    <img class="w3-card" th:src="${ hotReviewPostList[1].getBookImage }" onclick="onClick(this)" style="height: 250px; width:auto;" />
                 </div>
                 <div class="w3-quarter" style="text-align:left;">
                     <a class="h3 reviewTitle" 
@@ -389,7 +389,7 @@
             </div>
              <div class="carousel-item">
                 <div class="w3-quarter">
-                     <img class="w3-card"  th:src="${ hotReviewPostList[2].getBookImage }" style="height:250px; width:auto;" />
+                     <img class="w3-card"  th:src="${ hotReviewPostList[2].getBookImage }" onclick="onClick(this)" style="height:250px; width:auto;" />
                 </div>
                 <div class="w3-quarter" style="text-align:left;">
                     <a class="h3 reviewTitle" 
@@ -400,7 +400,7 @@
                     th:text="${ hotReviewPostList[2].getPostContent }"style="padding-top:50px;"></a>
                 </div>
                 <div class="w3-quarter">
-                    <img class="w3-card" th:src="${ hotReviewPostList[3].getBookImage }" style="height: 250px; width:auto;" />
+                    <img class="w3-card" th:src="${ hotReviewPostList[3].getBookImage }" onclick="onClick(this)" style="height: 250px; width:auto;" />
                 </div>
                 <div class="w3-quarter" style="text-align:left;">
                     <a class="h3 reviewTitle" 
@@ -423,7 +423,21 @@
     </div>
             
 </div>
-    
+
+
+<!-- (모달 실험 중) 인기 리뷰 책표지 클릭시 모달 뜨도록 --> 
+<div id="modalImage" class="w3-modal w3-black" style="padding-top:0" onclick="this.style.display='none'">
+    <span class="w3-button w3-black w3-xxlarge w3-display-topright">×</span>
+    <div class="w3-modal-content w3-half w3-transparent w3-padding-64">
+      <img id="innerModalImage" class="w3-image">
+      <p id="caption"></p>
+    </div>
+    <div class="w3-modal-content w3-half w3-transparent w3-padding-64">
+        <p>판매글 제목</p>
+        <br/>
+        <p>판매글 본문</p>
+    </div>
+</div>
     
     
     

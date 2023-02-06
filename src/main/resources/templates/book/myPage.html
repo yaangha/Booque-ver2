@@ -31,21 +31,13 @@
         <div class="col-2 m-4 p-2" style="height:800px;">
                 <div class="card" align="left" style="margin:20px; width: 200px; "><!-- 프로필  -->
 
-                    <div>
-                         <img th:src="${ user.userImage}"  alt="..."  width="200px" height="280px" class="img-fluid rounded-start">
-                    </div>
-                    <form name="userimageModify" id="userimageModify" enctype="multipart/form-data"  action="/myPage/file" method="post">
-                         <label for="filePath" class="btn btn-light">
-                            <span>프로필</span>
-                            <img style="width: 15px; height: 15px;" alt="" th:src="@{ https://cdn-icons-png.flaticon.com/512/738/738853.png }">
-                         </label >
-                         <input type="file" id="filePath" name="filePath"  style="display: none;" accept="image/jpg, image/png" > 
-                         
-                         <label for="imageModify" class="btn btn-light">
-                            <img style="width: 15px; height: 15px;" alt="" th:src="@{ https://cdn-icons-png.flaticon.com/512/738/738853.png }">
-                         </label >
-                         <input  type="button" id="imageModify" name="imageModify" style="display: none;"  > 
-
+                  <div id="divProfileImage"></div><!-- (예진)프로필 이미지 -->
+                  
+                    <!--(예진) 프로필 이미지 업로드 폼 -->
+                    <form id="profileForm" enctype="multipart/form-data" method="post" action="/post/profile/imageUpdate">
+                         <input type="hidden" id="id" name="id" th:value="${ user.id }"/>
+                         <input type="file" id="userImage" name="file" /> 
+                         <button class="col-7 mx-1 btn border rounded-4" id="btnProfileUpdate">프로필수정</button> 
                     </form>
                     
               <a class="btn btn-outline-secondary" th:href="@{ /post/list?postWriter={postWriter} (postWriter = ${ user.username })}">내 블로그
@@ -88,13 +80,11 @@
                 <li class="list-group-item text-secondary">공지사항</li>
                 <br/><br/>
             </ul>
-            
-            
-            
-            
-                   
+                            
         </div> <!-- col end -->
 
+
+        
 
         <div class="col-8 container">
 
@@ -310,27 +300,12 @@
 </div>
     
       
-    
-    
-    
-    
-    
-
-    
-    
-    
-
-    
-
-
-
+  
+     <script th:src="@{ /js/imageUpload.js }"></script>
     <script type="text/javascript">
     
     
-    
-    
-    
-    
+
     
     
     const b = document.querySelectorAll('#bookTotal')
@@ -386,43 +361,7 @@
     
     
     
-    
-    
-    
-    
-    
-    const formFile = document.querySelector('#userimageModify')
-    const btnModifyFile = document.querySelector('#imageModify')
-    btnModifyFile.addEventListener('click', e => {
-        const result = confirm('사진 변경?')
-        if(result){
-            formFile.action='/myPage/file';
-            formFile.method='post';
-            formFile.submit();
-            
-        }
-        
-    })
-    
-    
-    
-    
-    
-    
-    const formP = document.querySelector('#profileM')
-    const btnModify = document.querySelector('#modify')
-    
-    btnModify.addEventListener('click', e => {
-        const result = confirm('회원정보 변경?')
-        if(result){
-            formP.action='/myPage/modify';
-            formP.method='post';
-            formP.submit();
-            
-        }
-        
-        
-    })
+   
     
 
     

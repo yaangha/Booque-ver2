@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
@@ -94,10 +97,18 @@ public class PostController {
         // (하은) post에 있는 bookId로 책 정보 넘기기
         List<Book> books = new ArrayList<>();
         
-        for ( PostListDto p : postList) {
+        if(postList.size() > 4 ) {
+            for(int i=0; i < 4 ; i++) {
+                Book book = bookService.read(postList.get(i).getBookId());
+                books.add(book);
+            }
             
-            Book book = bookService.read(p.getBookId());
-            books.add(book);
+        } else {
+            for ( PostListDto p : postList) {
+                
+                Book book = bookService.read(p.getBookId());
+                books.add(book);
+            }
         }
             
         
@@ -117,7 +128,7 @@ public class PostController {
         log.info("create(dto ={})", dto);   
       
         Post entity = postService.create(dto); 
-        
+        log.info("과연 유저 id는 대체 어디서 들어온것? {}", dto.getUserId());
         // (홍찬) 리뷰순에서 사용할 것 - 글이 등록되기 전에
         // BookID에 해당하는 포스트 글이 1 증가시켜주기
         postService.countUpPostByBookId(dto.getBookId());
@@ -194,6 +205,20 @@ public class PostController {
         model.addAttribute("list", list);
        
         return "/post/list"; // list.html 파일
+    }
+    
+    // (예진) 프로필 이미지 업로드
+    @PostMapping("/profile/imageUpdate")  
+    public String profileImageUpdate(Integer id, MultipartFile file, HttpServletRequest request) throws Exception{
+        
+        String referer = request.getHeader("referer");  // 현재 페이지 주소
+        log.info("CurrentUrl ={}", referer);
+        String urlTemp = referer.toString().substring(21);  // localhost:8888 뒷 부분만 잘라냄
+        log.info("urlTemp ={}", urlTemp);  
+        
+        userService.write(id, file);
+        
+        return "redirect:"+urlTemp;  // 현재 페이지로 리다이렉트 
     }
 
    

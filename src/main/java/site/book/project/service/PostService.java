@@ -29,12 +29,11 @@ public class PostService {
     private final PostRepository postRepository;
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
-    private final BookService bookService;
     private final ReplyService replyService;
     private final UserService userService;
     
     
-    // Post 리스트 전체  TODO 유저별 전체리스트 ? 
+
     @Transactional(readOnly = true)
     public List<Post> read(){
         log.info("read()");
