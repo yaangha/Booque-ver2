@@ -39,21 +39,26 @@ window.addEventListener('DOMContentLoaded', () => {
         // WebSocket broker 경로로 JSON 타입 메시지데이터를 전송함
         function sendChat(json) {
             
-            stompClient.send("/app/chat", {}, JSON.stringify(json));
+            stompClient.send("/app/chat/"+ chatRoomId, {}, JSON.stringify(json));
         }
         
         // 보내기 버튼 클릭시 실행되는 메서드
+        const btnSend = document.querySelector('#btnSend');
+        btnSend.addEventListener('click', send);
+        
+        const date = new Date();
+            
         function send() {
             var message = $('#message').val();
             sendChat({
-                'chatRoomId': chatRoomId,
-                // 'buyerName': buyerName, 
+                // 'chatRoomId': chatRoomId,
+                // 'message': message,
+                // 'buyerId': buyerId, 
+                // 'sellerId': sellerId,
+                // 'usedBookId': usedBookId,
+                'sender': buyerId,
                 'message': message,
-                // 'sellerName': sellerName,
-                'buyerId': buyerId, 
-                'sellerId': sellerId,
-                'usedBookId': usedBookId,
-                // 'sender': sender
+                'sendTime': date.toLocaleString('ko-kr')
                 });
             $('#message').val("");
         }
@@ -87,7 +92,7 @@ window.addEventListener('DOMContentLoaded', () => {
         // HTML 형태의 메시지를 화면에 출력해줌
         // 해당되는 id 태그의 모든 하위 내용들을 message가 추가된 내용으로 갱신해줌
         function showBroadcastMessage(message) {
-            $("#message").html($("#message").html() + message);
+            $("#content").html($("content").html() + message);
         }
         
 });

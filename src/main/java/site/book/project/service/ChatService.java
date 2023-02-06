@@ -34,12 +34,14 @@ public class ChatService {
     
     // DB의 Chat 테이블에 새 데이터 행 생성
     // fileName 컬럼은 일단 null로 비워 둠
-    public void createChat(Integer usedBookId, Integer sellerId, Integer buyerId) throws IOException {
+    public Integer createChat(Integer usedBookId, Integer sellerId, Integer buyerId) throws IOException {
         
         Chat chat = Chat.builder().usedBookId(usedBookId).sellerId(sellerId).buyerId(buyerId).build();
         
         chatRepository.save(chat);
         createFile(chat.getChatRoomId(), usedBookId);
+        
+        return chat.getChatRoomId();
     }
     
     // 로컬 저장소(D:\\study\\chat-txt/)에 txt 파일 생성

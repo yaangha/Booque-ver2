@@ -48,10 +48,11 @@ public class ChattingController {
     // (지혜)
     @MessageMapping("/chat/{chatRoomId}")
     public void send(@DestinationVariable Integer chatRoomId, ChatReadDto dto) throws IOException {
- 
+        
         //append message to txtFile
         chatService.appendMessage(chatRoomId, dto);
-        log.info("텍스트파일에 챗기록 저장: chatService.appendMessage");
+        log.info("텍스트파일에 메시지 내용 추가: " + dto);
+        
         
 //        Integer chatRoomId = dto.getChatRoomId();
         String url = "/user/" + chatRoomId + "/queue/messages";

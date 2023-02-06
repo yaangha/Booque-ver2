@@ -90,13 +90,16 @@
                     <!-- 메시지 입력창과 보내기 버튼 -->
                     <div class="row_3">
                         <div class="input_group" id="sendMessage">
-                            <input type="text" placeholder="Message" id="message" class="form_control"/>
+                            <input type="text" placeholder="메시지를 입력해 주세요." id="message" class="form_control"/>
                             <div class="input_group_append">
-                                <button id="send" class="btn btn-primary" onclick="send()">보내기</button>
-                                <input type="text" th:value="${chatInfo.buyerId}" id="buyerId"/>
-                                <input type="text" th:value="${chatInfo.usedBookId}" id="usedBookId"/>
-                                <input type="text" th:value="${chatInfo.sellerId}" id="sellerId"/>
-                                <input type="text" th:value="${chatInfo.chatRoomId}" id="chatRoomId"/>                  
+                                <button id="btnSend" class="btn btn-primary">보내기</button>
+                            </div>
+                            <div>
+                                <br/>
+                                구매자(로그인유저):  <input type="text" th:value="${chatInfo.buyerId}" id="buyerId"/><br/>
+                                중고글id:  <input type="text" th:value="${chatInfo.usedBookId}" id="usedBookId"/><br/>
+                                판매자(작성자):  <input type="text" th:value="${chatInfo.sellerId}" id="sellerId"/><br/>
+                                chatRoomId:  <input type="text" th:value="${chatInfo.chatRoomId}" id="chatRoomId"/>                  
                             </div>                    
                         </div>                
                     </div>

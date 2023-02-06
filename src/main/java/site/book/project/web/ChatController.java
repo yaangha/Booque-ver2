@@ -36,11 +36,11 @@ public class ChatController {
 //    }
     
     // 
-    @GetMapping("message")
-    @SendTo("/chat/message")
-    public String getMessage(String message) {
-        return message;
-    }
+//    @GetMapping("message")
+//    @SendTo("/chat/message")
+//    public String getMessage(String message) {
+//        return message;
+//    }
     
     // (지혜)
     @Autowired
@@ -54,20 +54,10 @@ public class ChatController {
     public String getWebSocketWithSockJs(@AuthenticationPrincipal UserSecurityDto userDto, Integer sellerId, Integer usedBookId, Model model, 
             @ModelAttribute("chat") Chat chat) throws IOException {
         
-        //중고판매글 detail 화면에서 Chat화면에 전달해줄 parameter
         Integer buyerId = userDto.getId();
-        chat.setBuyerId(buyerId);
-        
-//        User seller = (User) session.getAttribute("firstConnectUser");
-//        Integer sellerId = seller.getId();
-        chat.setSellerId(sellerId);
-        
-//        Integer usedBookId = (Integer) session.getAttribute("usedBookId");
-        chat.setUsedBookId(usedBookId);
-        
         
         //이미 chat이 만들어져있는지 확인
-        Chat chatExistsOrNot = chatRepository.findByUsedBookIdAndBuyerId(chat.getUsedBookId(), chat.getBuyerId());
+        Chat chatExistsOrNot = chatRepository.findByUsedBookIdAndBuyerId(usedBookId, buyerId);
         if (chatExistsOrNot != null) {
             // 이미 채팅을 하고 있다면
             log.info("이미 채팅 중입니다!");
@@ -75,12 +65,21 @@ public class ChatController {
             List<ChatReadDto> chatHistory = chatService.readChatHistory(chatExistsOrNot);
             //chatHistory Model -> View
             model.addAttribute("chatHistory", chatHistory);
+            chat.setChatRoomId(chatExistsOrNot.getChatRoomId());
         } else {
             // 새로운 채팅 시작이라면
             log.info("새 채팅을 시작합니다!");
             // chat 생성 (+ txt 파일 생성)       
-            chatService.createChat(chat.getUsedBookId(), chat.getSellerId(), chat.getBuyerId());                               
+            Integer newChatRoomId = chatService.createChat(usedBookId, sellerId, buyerId);       
+            chat.setChatRoomId(newChatRoomId);
         }
+        
+        
+      //중고판매글 detail 화면에서 Chat화면에 전달해줄 parameter
+        
+        chat.setBuyerId(buyerId);
+        chat.setSellerId(sellerId);
+        chat.setUsedBookId(usedBookId);
             
             // Chat 객체 Model에 저장해 view로 전달
             model.addAttribute("chatInfo", chat);
