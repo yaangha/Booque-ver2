@@ -7,12 +7,14 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.UsedBook;
+import site.book.project.domain.UsedBookImage;
 import site.book.project.domain.UsedBookPost;
 import site.book.project.domain.UsedBookWish;
 import site.book.project.domain.User;
@@ -34,6 +36,9 @@ public class UsedBookService {
 	private final UsedBookPostRepository postRepository;
 	private final UsedBookImageRepository imgRepository;
 	private final UsedBookWishRepository usedBookWishRepository;
+	
+    @Value("${com.example.upload.path}")
+    private String uploadPath;
 	
 	/**(은정)
 	 * 책 검색 후 바로 UsedBook테이블에 저장하여 UsedBookPost와 UsedBookImage에 연결할 수 있는
@@ -74,8 +79,27 @@ public class UsedBookService {
 		
 		
 	}
+	
+	@Transactional
+	public void createImg(Integer usedBookId, List<String> fileNames) {
+	    
+	    UsedBookImage entity = null;
+	    
+	    for(String f : fileNames) {
+	        
+	        entity = UsedBookImage.builder().usedBookId(usedBookId).fileName("/market/api/view/"+f).filePath(uploadPath+f).build();
+	        imgRepository.save(entity);
+	    }
+	    
+	    
+	    
+	}
+	
+	
+	
+	
+	
 
-	// (하은) 코드 수정 필요!! 지금 실패함!! 찜하기 누르면 usedBookWish DB에 create
 	public Integer addUsedBookWish(Integer usedBookId, Integer userId) {
 	// 사용자 정보가 있으면 값을 바꾸고, 없으면 만들기 
 	    UsedBookWish wish = usedBookWishRepository.findByUserIdAndUsedBookId(userId, usedBookId);
@@ -199,14 +223,11 @@ public class UsedBookService {
             
         }
         
-        
-        
-        
-        
-        
-        
         return usedBookList;
     }
+    
+    
+    
     
     
 }

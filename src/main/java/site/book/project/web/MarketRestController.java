@@ -51,27 +51,7 @@ public class MarketRestController {
     @Value("${com.example.upload.path}")
     private String uploadPath;
     
-//    @PostMapping("/api/upload")
-//    public ResponseEntity<FileUploadDto>> upload(FileUploadDto dto){
-//        
-//        log.info("떨린다,,, 사진 !!! {}",dto);
-//        
-//        List<MultipartFile> files = dto.getFiles();
-//        if (files == null) {
-//            return ResponseEntity.noContent().build();
-//        }
-//        
-//        List<FileUploadResultDto> list = new ArrayList<>();
-//        files.forEach(mutipartFile -> {
-////            log.info(mutipartFile.getOriginalFilename());
-////            log.info(mutipartFile.getContentType());
-////            log.info("size = {}", mutipartFile.getSize());
-//             FileUploadResultDto result = saveFile(mutipartFile);
-//             list.add(result);
-//        });
-//        
-//        return ResponseEntity.ok(dto);
-//    }
+    
     @PostMapping("/api/upload")
     public ResponseEntity<List<FileUploadResultDto>> upload(FileUploadDto dto){
         

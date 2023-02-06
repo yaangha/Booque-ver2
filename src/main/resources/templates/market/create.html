@@ -47,23 +47,6 @@
     <div class="w-70 container">
     <h1>상품 등록 페이지</h1>
     
-    <div class="contents" >
-    
-    <h2>사진 첨부 부분</h2>
-    
-    <input type="file" name="files" class="form-control" multiple />
-    <button type="button" id="btnModalUpload" 
-                            class="btn btn-primary">Upload</button>    
-    
-    
-                            <div id="uploadResults" class="container-fluid d-flex"
-                                    style="flex-wrap: wrap;">
-                            </div>
-    
-    </div>
-    
-    
-    
     
     
     <!-- 진행 순서 보여주기 -->
@@ -97,8 +80,22 @@
     <form id="formCreate">
     <div id="usedId"></div>
     <ul id="info">
-
+    
         <li>
+        
+            <h2>사진 첨부 부분</h2>
+    
+    <input type="file" name="files" class="form-control" multiple />
+    <button type="button" id="btnModalUpload" 
+                            class="btn btn-primary">Upload</button>    
+    
+    
+                            <div id="uploadResults" class="container-fluid d-flex"
+                                    style="flex-wrap: wrap;">
+                            </div>
+        <div id="uploads"></div>       
+        
+        
             <div class="contents">책 이미지<span style="color: red;">*</span><small style="font-size:14px; color: gray;">(0/5)</small></div>
             <div>                
                 <ul>
@@ -176,6 +173,18 @@ btnSubmit.addEventListener('click', function () {
 		alert('필수항목을 모두 채워주세요!');
 		return;
 	}
+	
+    const uploads = document.querySelector('#uploads');
+    const files = uploadResults.querySelectorAll('img');
+    let htmlStr = '';
+    files.forEach(x => {
+        const imgLink = x.getAttribute('data-src');
+        //console.log(imgLink);
+        htmlStr += `<input name="fileNames" value="${imgLink}" />`;
+    });
+    uploads.innerHTML = htmlStr;
+	console.log(uploads)
+	
 	
 	const result = confirm('등록하시겠습니까?');
 	if (result) {

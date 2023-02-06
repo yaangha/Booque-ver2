@@ -30,7 +30,7 @@
         
         console.log('컨트롤러로 보냄 upload')
         
-        axios.post('/api/upload', formData)
+        axios.post('/market/api/upload', formData)
             .then(getUploaded)
             .catch(err => { console.log(err)})
         
@@ -43,7 +43,7 @@
                 //console.log(data);
                 // 이미지 파일이 아닌 경우, 디폴트 썸네일 이미지를 사용하도록.
                 let img = '';
-                    img = `<img src="/api/view/${x.link}" data-src="${x.uuid + '_' + x.fileName}" />`;
+                    img = `<img src="/market/api/view/${x.link}" data-src="${x.uuid + '_' + x.fileName}" />`;
 
                 const htmlStr = `
 <div class="card my-2">
