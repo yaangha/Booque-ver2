@@ -41,25 +41,36 @@
 
 <div class="col-2"><!-- 프로필 블록 start -->
 
-    <div class="card mx-2 my-2" style="width: 20rem; height:auto;">
+     <div class="card mx-2 my-2" style="width: 20rem; height:auto;">    
         <a th:href="@{ /myPage }"> <!-- 프로필 사진 클릭하면 마이페이지로 이동 -->
-           <img th:src="${ user.userImage }" width="200" height="280" class="img-fluid rounded-start">
-        </a>
+          <img th:src="${user.userImage}" width=200px; /><!-- (예진) 프로필 이미지-->
+        </a>       
         
         <div class="card-body" style="text-align: left;">
-            <div class="border-bottom mb-2 border-dark">
-                <span class="card-title" th:text="${ '&nbsp;&nbsp;'+ user.nickName }" style="font-weight: bold;"></span>
-                <span style="font-size: 16px;" th:text="${ '('+ user.username +')' }"></span>
-            </div>
-            <div class="mb-4">
-                <span th:text="${user.postIntro}" ></span>
-            </div>
-            <!-- <span style="color:gray;">전체 리뷰수</span>
-            <span class="h4"><strong style="color:red;">리뷰수 합쳐야함</strong></span> -->
-             <br/><br/>
-             
-            
-        </div>
+                <div class="border-bottom mb-2 border-dark">
+                    <span class="card-title" th:text="${ '&nbsp;&nbsp;'+ user.nickName }" style="font-weight: bold;"></span>
+                    <span style="font-size: 16px;" th:text="${ '('+ user.username +')' }"></span>
+                    
+                    <!-- (예진) 프로필 사진 업데이트 버튼 -->
+                    <span th:if="${ user.username } == ${ #authentication.name }" >
+                        <img onclick="imagePop()" src="/images/im.png" width=22px; align="right" />
+                    </span>
+                    
+                </div>
+                <div class="mb-4">
+                    <span th:text="${user.postIntro}" ></span>
+                </div>
+                <!-- -<span style="color:gray;">전체 리뷰수</span>
+                <span class="h4"><strong style="color:red;">리뷰수 합쳐야함</strong></span> -->
+              
+               <!-- (예진) 포스트 인트로 업데이트 버튼 -->
+                <span th:if="${ user.username } == ${ #authentication.name }" >
+                   <img onclick="pop()" src="/images/pen.png" width=22px; align="right" />
+                </span>
+    
+          <br/><br/>
+          
+       </div>
         
     
 
@@ -149,6 +160,7 @@
     <div id="replies"></div>
     
     <br/>
+
     <!-- 댓글 작성폼 & 리스트 폼 -->
     <section>
         <div class="h5 pb-2 border-bottom border-3 border-dark" style="text-align: left;"><strong>댓글 작성</strong></div>
@@ -258,21 +270,66 @@
     <div>
          
     </div>
-    <div>오늘 주문하면 내일 도착</div>                  
+    <div>오늘 주문하면 내일 도착</div>
+                  <!-- (하은) 장바구니 페이지 갈지말지 -->
+                  
                   
     <!-- Button trigger modal -->
-    <button type="button" class="w-50 btn btn-dark"  id="btnGoCart">장바구니</button>
     
+    <button type="button" class="w-50 btn btn-dark"  id="btnGoCart">장바구니</button>
     </div>
 </div>
 <!-- 도서 정보 블록 end -->
 
 </div>
 
+<!-- 프사 이미지 변경 모달 -->
+        <div class="modal" id ="imageModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                     <div class="modal-header">
+                          <h5 class="modal-title">프로필 이미지</h5>
+                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="profileForm" enctype="multipart/form-data" method="post" action="/post/profile/imageUpdate">
+                           <input type="hidden" id="id" name="id" th:value="${ user.id }"/>
+                           <input type="file" name="file" id="file"/>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                         <button type="button" id="btnProfileUpdate" class="btn btn-primary">수정하기</button>
+                    </div>
+                 </div>
+            </div>
+        </div>
+        
+        
+          <!-- 포스트 인트로 변경 모달 -->
+          <div class="modal" id="introModal" tabindex="-1">
+              <div class="modal-dialog">
+                 <div class="modal-content">
+                      <div class="modal-header">
+                         <h5 class="modal-title">블로그 한 줄 소개</h5>
+                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                     <div class="modal-body">
+                        <form id="mForm">
+                              <input type="hidden" id="id" name="id" th:value="${ user.id }"/>
+                              <label  id="postIntro" >블로그 한 줄 소개</label>
+                              <input type="text" id="postIntro" name="postIntro" />
+                        </form>
+                     </div>
+                     <div class="modal-footer">
+                       <button type="button" id="btnM" class="btn btn-primary">수정하기</button>
+                     </div>
+                 </div>
+            </div>
+        </div>
 
 </div> <!-- row end -->
 </div>
-
+    <script th:src="@{ /js/imageUpload.js }"></script>
     <script th:src="@{ /js/post.js }"></script>
     
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
@@ -285,13 +342,50 @@
     const loginUser = document.querySelector('#rWriter').value;
     </script>
     
+
+    <script>
+    
+    const imModal = document.querySelector('#imageModal');
+    const imgModal = new bootstrap.Modal(imModal);
+    function imagePop() {
+        imgModal.show();
+    }
+    
+    const inModal = document.querySelector('#introModal');
+    const itrModal = new bootstrap.Modal(inModal);
+    function pop() {
+        itrModal.show();
+    }
+    
+    
+    const mForm = document.querySelector('#mForm');
+    const btnM = document.querySelector('#btnM');
+    
+    btnM.addEventListener('click', e => {
+        event.preventDefault();
+        
+        const id= document.querySelector('#id').value;
+        const postIntro = document.querySelector('#postIntro').value;
+        
+        const result = confirm('변경?')
+        if(result){
+            mForm.action='/post/postIntroUpdate';
+            mForm.method='post';
+            mForm.submit();
+            
+        }
+        
+        
+    });
+    </script>
+
   <script>
 
   
-  // (하은수정) 장바구니 가기 - action = '/cart/postAdd' -> '/cart'로 수정
+  // 장바구니 가기
   const btnGoCart = document.querySelector('#btnGoCart');
-  btnGoCart.addEventListener('click', function () {  
-      addCartInfo.action = '/cart';
+  btnGoCart.addEventListener('click', function () {           
+      addCartInfo.action = '/cart/postAdd';
       addCartInfo.method = 'post';
       addCartInfo.submit();
   })
@@ -349,7 +443,6 @@
            });
     }
     </script>
-    
   </div><!-- layout:fragment="content" : END -->
 
 

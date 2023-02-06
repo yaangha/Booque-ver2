@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ import site.book.project.dto.PostListDto;
 import site.book.project.dto.PostReadDto;
 import site.book.project.dto.PostUpdateDto;
 import site.book.project.dto.UserSecurityDto;
+import site.book.project.repository.UserRepository;
 import site.book.project.service.BookService;
 import site.book.project.service.PostService;
 import site.book.project.service.ReplyService;
@@ -40,6 +44,7 @@ public class PostController {
     private final BookService bookService;
     private final UserService userService;
     private final ReplyService replyService;
+    private final UserRepository userRepository;
        
     
     @Transactional(readOnly = true)
@@ -203,6 +208,36 @@ public class PostController {
        
         return "/post/list"; // list.html 파일
     }
+    
+    // (예진) 프로필 이미지 업로드
+    @PostMapping("/profile/imageUpdate")  
+    public String profileImageUpdate(Integer id, MultipartFile file, HttpServletRequest request) throws Exception{
+        
+        String referer = request.getHeader("referer");  // 현재 페이지 주소
+        log.info("CurrentUrl ={}", referer);
+        String urlTemp = referer.toString().substring(21);  // localhost:8888 뒷 부분만 잘라냄
+        log.info("urlTemp ={}", urlTemp);  
+        
+        userService.write(id, file);
+        
+        return "redirect:"+urlTemp;  // 현재 페이지로 리다이렉트 
+    }
 
+    @PostMapping("/postIntroUpdate")  // (예진) postIntro 수정
+    public String postIntroUpdate(Integer id, String postIntro, HttpServletRequest request) {
+         log.info("포스트인트로!={} : {}",id,postIntro);
+        
+         String referer = request.getHeader("referer");  
+         String urlTemp = referer.toString().substring(21);  
+        
+        User user = userService.read(id);
+        log.info("변경 전: 포스트인트로 ={}", user.getPostIntro());
+        user.setPostIntro(postIntro);
+        log.info("변경 후: 포스트인트로 ={}", user.getPostIntro());
+        
+        userRepository.save(user);
+        
+        return "redirect:"+urlTemp;
+    }
    
 }
