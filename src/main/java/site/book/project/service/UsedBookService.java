@@ -36,6 +36,7 @@ public class UsedBookService {
 	private final UsedBookPostRepository postRepository;
 	private final UsedBookImageRepository imgRepository;
 	private final UsedBookWishRepository usedBookWishRepository;
+	private final UsedBookPostRepository usedBookPostRepository;
 	
     @Value("${com.example.upload.path}")
     private String uploadPath;
@@ -50,6 +51,9 @@ public class UsedBookService {
 	public Integer create(Integer bookId, Integer userId) {
 		
 		UsedBook usedBook = usedBookRepository.save(UsedBook.builder().userId(userId).bookId(bookId).build());
+		
+		// (하은) UsedBookPost에도 같이 저장 - 임시저장용
+		postRepository.save(UsedBookPost.builder().usedBookId(usedBook.getId()).build());
 		
 		return usedBook.getId();
 	}
@@ -71,9 +75,9 @@ public class UsedBookService {
 		UsedBookPost content = postRepository.findByUsedBookId(usedBookId);
 		
 		if(content != null) {
-		    content.update(dto.getContents());
+		    content.update(dto.getContents(), dto.getStorage());
 		}else {
-		    postRepository.save(UsedBookPost.builder().usedBookId(usedBookId).content(dto.getContents()).build());
+		    postRepository.save(UsedBookPost.builder().usedBookId(usedBookId).content(dto.getContents()).storage(dto.getStorage()).build());
 		    
 		}
 		

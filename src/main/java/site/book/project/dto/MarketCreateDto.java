@@ -35,4 +35,5 @@ public class MarketCreateDto {
 	
 	
 	private List<String> fileNames;
+	private Integer storage;
 }
