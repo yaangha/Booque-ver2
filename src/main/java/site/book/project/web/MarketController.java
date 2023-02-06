@@ -61,6 +61,7 @@ public class MarketController {
 //        List<UsedBook> usedBookList = usedBookRepository.findByOrderByModifiedTimeDesc();
         
         List<UsedBook> usedBookList = new ArrayList<>(); // 메인에 넘길 리스트
+        List<UsedBookPost> usedBookPost = new ArrayList<>(); // 임시저장된 리스트
         
         // 서비스로 넘겨야 할까? 
         if(orderSlt==null || orderSlt.equals("최신순")) {
@@ -69,6 +70,8 @@ public class MarketController {
                 UsedBookPost post = usedBookPostRepository.findByUsedBookId(u.getId());
                 if (post.getStorage() == 1) {
                     usedBookList.add(u);
+                } else {
+                    usedBookPost.add(post);                    
                 }
             }
         }else if(orderSlt.equals("인기순")) {
@@ -77,25 +80,14 @@ public class MarketController {
                 UsedBookPost post = usedBookPostRepository.findByUsedBookId(u.getId());
                 if (post.getStorage() == 1) {
                     usedBookList.add(u);
+                } else {
+                    usedBookPost.add(post);
                 }
             }
         }
         
         List<MarketCreateDto> list = mainList(usedBookList);
-        
-        // (하은) 임시저장 존재유무 확인용
-        List<UsedBook> usedBookList_2 = usedBookRepository.findByUserIdOrderByModifiedTimeDesc(userDto.getId());
 
-        List<UsedBookPost> usedBookPost = new ArrayList<>(); // storage가 0인 목록을 저장할 리스트
-        
-        for (UsedBook u : usedBookList_2) { // pk로 UsedBookPost에서 0인 목록 찾기 -> 먼저 나오는 값이 최신 순
-            UsedBookPost post = usedBookPostRepository.findByUsedBookId(u.getId());
-            if (post.getStorage() == 0) {
-                usedBookPost.add(post);
-            }
-        }
-        
-        
         if(userDto != null) {
             model.addAttribute("userNickname", userDto.getNickName());       
         }
