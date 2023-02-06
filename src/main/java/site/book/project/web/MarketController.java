@@ -188,6 +188,10 @@ public class MarketController {
         model.addAttribute("usedBookPost", usedBookPost);
         model.addAttribute("usedBook", usedBook);
         model.addAttribute("otherUsedBookListFinal", otherUsedBookListFinal);
+        
+        // (하은) 테스트용 삭제할것!!!!!!
+        List<UsedBook> test = usedBookService.readOtherUsedBook(usedBook.getBookId());
+        model.addAttribute("test", test);        
     }
     
     // (하은) 조회수 증가
