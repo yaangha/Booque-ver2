@@ -75,7 +75,6 @@ public class MarketRestController {
     @PostMapping("/api/upload")
     public ResponseEntity<List<FileUploadResultDto>> upload(FileUploadDto dto){
         
-        log.info("떨린다,,, 사진 !!! {}",dto);
         
         List<MultipartFile> files = dto.getFiles();
         if (files == null) {
