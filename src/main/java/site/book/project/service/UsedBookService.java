@@ -1,17 +1,20 @@
 package site.book.project.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.UsedBook;
+import site.book.project.domain.UsedBookImage;
 import site.book.project.domain.UsedBookPost;
 import site.book.project.domain.UsedBookWish;
 import site.book.project.domain.User;
@@ -33,6 +36,10 @@ public class UsedBookService {
 	private final UsedBookPostRepository postRepository;
 	private final UsedBookImageRepository imgRepository;
 	private final UsedBookWishRepository usedBookWishRepository;
+	private final UsedBookPostRepository usedBookPostRepository;
+	
+    @Value("${com.example.upload.path}")
+    private String uploadPath;
 	
 	/**(은정)
 	 * 책 검색 후 바로 UsedBook테이블에 저장하여 UsedBookPost와 UsedBookImage에 연결할 수 있는
@@ -44,6 +51,9 @@ public class UsedBookService {
 	public Integer create(Integer bookId, Integer userId) {
 		
 		UsedBook usedBook = usedBookRepository.save(UsedBook.builder().userId(userId).bookId(bookId).build());
+		
+		// (하은) UsedBookPost에도 같이 저장 - 임시저장용
+		postRepository.save(UsedBookPost.builder().usedBookId(usedBook.getId()).build());
 		
 		return usedBook.getId();
 	}
@@ -65,16 +75,35 @@ public class UsedBookService {
 		UsedBookPost content = postRepository.findByUsedBookId(usedBookId);
 		
 		if(content != null) {
-		    content.update(dto.getContents());
+		    content.update(dto.getContents(), dto.getStorage());
 		}else {
-		    postRepository.save(UsedBookPost.builder().usedBookId(usedBookId).content(dto.getContents()).build());
+		    postRepository.save(UsedBookPost.builder().usedBookId(usedBookId).content(dto.getContents()).storage(dto.getStorage()).build());
 		    
 		}
 		
 		
 	}
+	
+	@Transactional
+	public void createImg(Integer usedBookId, List<String> fileNames) {
+	    
+	    UsedBookImage entity = null;
+	    
+	    for(String f : fileNames) {
+	        
+	        entity = UsedBookImage.builder().usedBookId(usedBookId).fileName("/market/api/view/"+f).filePath(uploadPath+f).build();
+	        imgRepository.save(entity);
+	    }
+	    
+	    
+	    
+	}
+	
+	
+	
+	
+	
 
-	// (하은) 코드 수정 필요!! 지금 실패함!! 찜하기 누르면 usedBookWish DB에 create
 	public Integer addUsedBookWish(Integer usedBookId, Integer userId) {
 	// 사용자 정보가 있으면 값을 바꾸고, 없으면 만들기 
 	    UsedBookWish wish = usedBookWishRepository.findByUserIdAndUsedBookId(userId, usedBookId);
@@ -169,6 +198,40 @@ public class UsedBookService {
         }
         
     }
+
+    public List<UsedBook> searchBookList(String region, String mainKeyword, String orderSlt, String status) {
+        // 지역별, 검색을 한다.
+        // 순서를 정할 수 있다.
+        // 상태를 선택할 수 있다.
+        // 전체 지역에서, 검색어를 최신순으로 구매가능한 것만   함.
+        
+        List<UsedBook> usedBookList = new ArrayList<>();
+        
+        if(status.equals("all")) {
+            if(orderSlt == null  || orderSlt.equals("최신순")) {
+                usedBookList = usedBookRepository.searchM(region, mainKeyword);
+            } else if(orderSlt.equals("최저가순")) {
+                usedBookList = usedBookRepository.searchPrice(region, mainKeyword);
+            } else if(orderSlt.equals("최고가순")) {
+                usedBookList = usedBookRepository.searchPriceDesc(region, mainKeyword);
+            }
+            
+        }else {
+            if(orderSlt == null  || orderSlt.equals("최신순")) {
+                usedBookList = usedBookRepository.searchM2(region, mainKeyword);
+            } else if(orderSlt.equals("최저가순")) {
+                usedBookList = usedBookRepository.searchPrice2(region, mainKeyword);
+            } else if(orderSlt.equals("최고가순")) {
+                usedBookList = usedBookRepository.searchPriceDesc2(region, mainKeyword);
+            }
+            
+        }
+        
+        return usedBookList;
+    }
+    
+    
+    
     
     
 }

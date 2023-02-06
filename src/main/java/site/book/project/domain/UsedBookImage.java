@@ -29,13 +29,13 @@ public class UsedBookImage {
     @Column(nullable = false)
     private Integer usedBookId;
     
-    @Column(nullable = false)
+    @Column
     private String origFileName;
     
-    @Column(nullable = false)
+    @Column
     private String fileName;
     
-    @Column(nullable = false)
+    @Column
     private String filePath;
 
 }

@@ -56,46 +56,17 @@
     
     <div class="w-70 container">
     
-    <div class="w-75 container"> <!-- images -->
-        <div id="carouselExampleDark" class="carousel carousel-dark slide">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3" aria-label="Slide 4"></button>
-                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="4" aria-label="Slide 5"></button>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="rounded mx-auto d-block w-50 border" style="height: 500px;">test1</div>
-                    <!-- <img src="..." class="d-block w-100" alt="..."> -->
-                </div>
-                <div class="carousel-item">
-                    <div class="rounded mx-auto d-block w-50 border" style="height:500px;">test2</div>
-                        <!-- <img src="..." class="d-block w-100" alt="..."> -->
-                </div>
-                <div class="carousel-item">
-                    <div class="rounded mx-auto d-block w-50 border" style="height:500px;">test3</div>
-                    <!-- <img src="..." class="d-block w-100" alt="..."> -->
-                </div>
-                <div class="carousel-item">
-                    <div class="rounded mx-auto d-block w-50 border" style="height:500px;">test4</div>
-                    <!-- <img src="..." class="d-block w-100" alt="..."> -->
-                </div>
-                <div class="carousel-item">
-                    <div class="rounded mx-auto d-block w-50 border" style="height:500px;">test5</div>
-                    <!-- <img src="..." class="d-block w-100" alt="..."> -->
-                </div>
-            </div>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
+    
+    <div th:each="imgList: ${ imgList }" id="uploadResults" class="container-fluid d-flex" style="flex-wrap: wrap;">
+<div class="card my-2">
+    <div class="card-header d-flex justify-content-center">
+        <button class="btnDelete btn-close" aria-label="Close"
+            data-uuid="${x.uuid}" data-fname="${imgList.fileName}"></button>
+    </div>
+    <div class="card-body">
+        <img alt="" th:src="${ imgList.fileName }" style="width: 250px;">
+    </div>
+</div>
     </div>
     
     <div id="profile"> <!-- profile -->

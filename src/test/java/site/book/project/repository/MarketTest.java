@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.UsedBook;
+import site.book.project.domain.UsedBookImage;
 
 @Slf4j
 @SpringBootTest
@@ -25,18 +26,15 @@ public class MarketTest {
     
     @Test
     public void test() {
-        Assertions.assertNotNull(usedBookRepository);
+        Assertions.assertNotNull(imageRe);
         
-        List<UsedBook> list = usedBookRepository.searchM("", "회복");
+        List<UsedBookImage> img = imageRe.findByUsedBookId(76);
         
-        for(UsedBook u : list) {
+        for(UsedBookImage i :img) {
+            log.info("보여줘~! {}",i);
             
-            log.info(" 함 읽어보자 ~!{}", u);
             
         }
-        
-        log.info("읽어온 리스트의 길이 {}", list.size());
-        
     }
     
     
