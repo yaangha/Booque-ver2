@@ -82,8 +82,10 @@
                 + '<div class="card my-2">'
                 + '<div class="card-header">'
            +  '<div class="my-2"> '
-           +  `<a href="/post/detail?postId=${r.postId}&bookId=${r.bookId}&username=${r.writer}" onclick="postHitCountUp(${r.postId}, ${username});">` 
-                + '<h5>' + r.writer + '</h5>'
+           +  `<a href="/post/detail?postId=${r.postId}&bookId=${r.bookId}&username=${r.writer}" onclick="postHitCountUp(${r.postId}, ${username});">`
+                  // (예진) 리뷰 작성자 닉네임 + 유저이미지 
+                + '<img class="rounded-circle" width="40" height="40" src="' + r.userImage + '" />'
+                + '<span class="fw-bold m-2">' + r.nickName + '</span>'
            +   '   </a> '
            + '  </div> '
            

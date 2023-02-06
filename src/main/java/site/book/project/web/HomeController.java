@@ -2,6 +2,9 @@ package site.book.project.web;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Book;
 import site.book.project.domain.Post;
 import site.book.project.dto.HomeTopFiveListDto;
+import site.book.project.dto.UserSecurityDto;
 import site.book.project.service.HomeService;
 
 @Slf4j
@@ -19,9 +23,10 @@ import site.book.project.service.HomeService;
 public class HomeController {
 
     private final HomeService homeService;
+  
     
     @GetMapping("/")
-    public String home(Model model) {
+    public String home(Model model, @AuthenticationPrincipal UserSecurityDto userSecurityDto) {
         log.info("home()");
         
         // 전체 책 별점순 1~8위
@@ -97,6 +102,13 @@ public class HomeController {
           log.info("id={},score={},bookname={}", b.getPostId(), b.getHit(), b.getBookName());
         }
         
+        // (예진) 홈 오른쪽 위 ooo님 => username을 nickName으로 교체
+        String nick = null;
+        if(userSecurityDto != null) {
+           nick = userSecurityDto.getNickName();
+           model.addAttribute("nick", nick); 
+        }
+        
         model.addAttribute("top4ScoreList", list);                     // 전체 책 별점순 1~8위
         model.addAttribute("top4ReviewList", postList);                // 전체 책 리뷰많은순 1~8위
         model.addAttribute("economyScoreList", economyScoreList);       // 경제/경영(별점)
@@ -111,6 +123,8 @@ public class HomeController {
         model.addAttribute("selpHelpPostList", selpHelpPostList);       // 자기계발(리뷰순)
         model.addAttribute("hotReviewPostList", hotReviewPostList);     // 댓글 많이 달린 Top 1~5위 리뷰글
         model.addAttribute("bestHitPostList", bestHitPostList);         // 조회수 많은 Top 1~5위 베스트글
+         
+        
         return "home";
     }
 
