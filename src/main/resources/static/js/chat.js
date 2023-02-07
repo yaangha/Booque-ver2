@@ -18,14 +18,15 @@ window.addEventListener('DOMContentLoaded', () => {
             var url = '/user/' + chatRoomId + '/queue/messages';
             // webSocket 대신 SockJS을 사용하므로 Stomp.client()가 아닌 Stomp.over()를 사용함
             stompClient = Stomp.over(socket);
-            
             // connect(header, connectCallback(==연결에 성공하면 실행되는 메서드))
             stompClient.connect({}, function() {
+                autoScroll();
                 // url: 채팅방 참여자들에게 공유되는 경로
                 // callback(function()): 클라이언트가 서버(Controller broker)로부터 메시지를 수신했을 때(== STOMP send()가 실행되었을 때) 실행
                 stompClient.subscribe(url, function(output) {
                     // JSP <body>에 append할 메시지 contents
                     showBroadcastMessage(createTextNode(JSON.parse(output.body)));
+                    autoScroll();
                 });
                 }, 
                     // connect() 에러 발생 시 실행
@@ -37,22 +38,26 @@ window.addEventListener('DOMContentLoaded', () => {
         
         // WebSocket broker 경로로 JSON 타입 메시지데이터를 전송함
         function sendChat(json) {
-            stompClient.send("/app/chat", {}, JSON.stringify(json));
+            stompClient.send("/app/chat/"+ chatRoomId, {}, JSON.stringify(json));
         }
+        // 보내기 버튼 클릭시 실행되는 메서드
+        const btnSend = document.querySelector('#btnSend');
+        btnSend.addEventListener('click', send);
         
-        var sen = document.getElementById('send'); 
-        sen.addEventListener('click', send)
+        const date = new Date();
+            
         function send() {
             var message = $('#message').val();
+            autoScroll();
             sendChat({
-                'chatRoomId': chatRoomId,
-                // 'buyerName': buyerName, 
+                // 'chatRoomId': chatRoomId,
+                // 'message': message,
+                // 'buyerId': buyerId, 
+                // 'sellerId': sellerId,
+                // 'usedBookId': usedBookId,
+                'sender': buyerId,
                 'message': message,
-                // 'sellerName': sellerName,
-                'buyerId': buyerId, 
-                'sellerId': sellerId,
-                'usedBookId': usedBookId,
-                // 'sender': sender
+                'sendTime': getCurrentTime()
                 });
             $('#message').val("");
         }
@@ -70,11 +75,15 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
         
+        
+        // (홍찬) 현재 시간 출력(채팅 주고 받을 때 보낸 시각, 받은 시각 출력)
+        function getCurrentTime() {
+        return new Date().toLocaleString();
+        }
+        
         // 입력한 메시지를 HTML 형태로 가공
         function createTextNode(messageObj) {
-            console.log("createTextNode");
-            console.log("messageObj: " + messageObj.content);
-            return '<p><div class="row alert alert-info"><div class="col_8">' +
+            return '<p><div id="newHistory" class="row alert alert-info"><div class="col_8">' +
             messageObj.sender +
             '</div><div class="col_4 text-right">' +
             messageObj.message+
@@ -83,10 +92,18 @@ window.addEventListener('DOMContentLoaded', () => {
             ']</div></p>';
         }
         
+        
+        // (홍찬) 채팅칠 때 혹은 채팅받을 때 자동으로 스크롤 조절 해줌.
+        function autoScroll() {
+        $chatHistory = $('#content');
+        $chatHistory.scrollTop($chatHistory[0].scrollHeight);
+        }
+        
+        
         // HTML 형태의 메시지를 화면에 출력해줌
         // 해당되는 id 태그의 모든 하위 내용들을 message가 추가된 내용으로 갱신해줌
         function showBroadcastMessage(message) {
-            $("#message").html($("#message").html() + message);
+            $("#content").html($("#content").html() + message);
         }
         
 });

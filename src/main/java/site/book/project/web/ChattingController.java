@@ -50,10 +50,12 @@ public class ChattingController {
     public void send(@DestinationVariable Integer chatRoomId, ChatReadDto dto) throws IOException {
         //append message to txtFile
         chatService.appendMessage(chatRoomId, dto);
-        log.info("send{},{}",chatRoomId,dto);
+        // log.info("send{},{}",chatRoomId,dto);
+        log.info("텍스트파일에 메시지 내용 추가: " + dto);
 //        Integer chatRoomId = dto.getChatRoomId();
         String url = "/user/" + chatRoomId + "/queue/messages";
         simpMessagingTemplate.convertAndSend(url, new ChatReadDto(dto.getSender(), dto.getMessage(), dto.getSendTime())); 
+
     }
 
     
