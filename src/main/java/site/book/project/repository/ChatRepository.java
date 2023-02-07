@@ -11,4 +11,6 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
     // 중고판매글 id가 같으면 판매자 id도 같기 때문에, 판매자 id는 select문에 포함시키지 않음
     Chat findByUsedBookIdAndBuyerId(Integer usedBookId, Integer buyerId);
     
+    Chat findByChatRoomId(Integer chatRoomId);
+    
 }
