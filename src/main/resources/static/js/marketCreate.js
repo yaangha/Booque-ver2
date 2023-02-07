@@ -33,9 +33,10 @@ btnSubmit.addEventListener('click', function () {
     
     
 
-    const uploadResults = document.querySelector('#uploadResults');
+      const uploadResults = document.querySelector('#uploadResults');
     
     document.querySelector('#btnModalUpload').addEventListener('click', e =>{
+        console.log('btnModal 누름')
         
         const formData = new FormData();
         const fileInput =  document.querySelector('input[name="files"]');
