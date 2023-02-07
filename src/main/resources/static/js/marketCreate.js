@@ -8,27 +8,31 @@ const formCreate = document.querySelector('#formCreate');
 
 btnSubmit.addEventListener('click', function () {
 
-const sample3_address = document.querySelector('#sample3_address').value;
-const title = document.querySelector('#title').value;
-const price = document.querySelector('#price').value;
-const contents = document.querySelector('#contents').value;
-
-if (sample3_address == '' || title == '' || price == '' || contents == '') {
-    alert('필수항목을 모두 채워주세요!');
-    return;
-}
-
-
-
-
-const result = confirm('등록하시겠습니까?');
-if (result) {
-    formCreate.action = '/market/create';
-    formCreate.method = 'post';
-    formCreate.submit();
-}
+    const sample3_address = document.querySelector('#sample3_address').value;
+    const title = document.querySelector('#title').value;
+    const price = document.querySelector('#price').value;
+    const contents = document.querySelector('#contents').value;
+    
+    if (sample3_address == '' || title == '' || price == '' || contents == '') {
+        alert('필수항목을 모두 채워주세요!');
+        return;
+    }
+    
+    
+    
+    
+    const result = confirm('등록하시겠습니까?');
+    if (result) {
+        formCreate.action = '/market/create';
+        formCreate.method = 'post';
+        formCreate.submit();
+    }
 });
     
+    
+    
+    
+
     const uploadResults = document.querySelector('#uploadResults');
     
     document.querySelector('#btnModalUpload').addEventListener('click', e =>{
@@ -71,26 +75,44 @@ if (result) {
                     img = `<img src="/market/api/view/${x.link}" data-src="${x.uuid + '_' + x.fileName}" />`;
 
                 const htmlStr = `
-<div class="card my-2">
-    <div class="card-header d-flex justify-content-center">
-        ${x.fileName}
-        <button class="btnDelete btn-close" aria-label="Close"
-            data-uuid="${x.uuid}" data-fname="${x.fileName}"></button>
-    </div>
-    <div class="card-body">
-        ${img}
-    </div>
-</div>`;
+                                <div class="card my-2">
+                                    <div class="card-header d-flex justify-content-center">
+                                        ${x.fileName}
+                                        <button class="btnDelete btn-close" aria-label="Close"
+                                            data-uuid="${x.uuid}" data-fname="${x.fileName}"></button>
+                                    </div>
+                                    <div class="card-body">
+                                        ${img}
+                                    </div>
+                                </div>`;
                 
                 uploadResults.innerHTML += htmlStr;
                 
             });
+            
+            
+                const uploads = document.querySelector('#uploads');
+                const files = uploadResults.querySelectorAll('img');
+                let htmlStr = '';
+                files.forEach(x => {
+                    const imgLink = x.getAttribute('data-src');
+                    //console.log(imgLink);
+                    htmlStr += `<input type="hidden" name="fileNames" value="${imgLink}" />`;
+                });
+                uploads.innerHTML = htmlStr;
+            
+            
             document.querySelectorAll('.btnDelete').forEach(btn => {
                 btn.addEventListener('click', removeFileFromServer);
             });
             
         }
     }
+    
+    
+    
+    
+    
     
     
     

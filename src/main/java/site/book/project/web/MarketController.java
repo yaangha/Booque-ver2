@@ -168,15 +168,10 @@ public class MarketController {
         User user = userRepository.findById(usedBook.getUserId()).get(); // 작성자의 정보
         Book book = bookRepository.findById(usedBook.getBookId()).get();
         
-        List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(usedBookId);
-        
-        
         double bookPrice = book.getPrices();
         double usedPrice = usedBook.getPrice();
         
         double sale =  (1-usedPrice/bookPrice)*100;
-        
-        
         
         UsedBookWish wish = null;
         // 로그인 한 사람의 정보를 통해 내것도 하트 누를 수 있음!
@@ -194,9 +189,18 @@ public class MarketController {
                 otherUsedBookListFinal.add(u);
             }
         }
-        log.info("사진이 안보이나?? 엥?? {} ", imgList);
         
+        // (하은) 이미지 넘기기 -> 메인 1개 + 나머지 리스트
+        List<UsedBookImage> imgListAll = usedBookImageRepository.findByUsedBookId(usedBookId);
+        UsedBookImage firstImg = imgListAll.get(0); // 메인(처음에 보여질 이미지)
+        // imgList.remove(0);
         
+        List<UsedBookImage> imgList = new ArrayList<>(); // 메인을 제외한 나머지 이미지 리스트
+        for (int i = 1; i < imgListAll.size(); i++) {
+            imgList.add(imgListAll.get(i));
+        }
+        
+        model.addAttribute("firstImg", firstImg);
         model.addAttribute("imgList", imgList);
         model.addAttribute("sale", sale);
         model.addAttribute("wish", wish);
@@ -275,6 +279,8 @@ public class MarketController {
     public String modify(MarketCreateDto dto, String originLocation) {
         log.info("수정창에서 읽어오는 dto , {}", dto);
         log.info("주소 값을 안줄때는 원래 값을 읽어야 해! {}", originLocation);
+        
+        dto.setStorage(1);
         
         // 책 제목 null이 됨.. 
         if(dto.getLocation().equals("")) {

@@ -37,4 +37,6 @@ public class MarketCreateDto {
 	private Integer storage;
 	//
 	private String userImage;
+	
+	private String imgUsed;
 }
