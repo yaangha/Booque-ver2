@@ -48,10 +48,9 @@ public class ChattingController {
     // (지혜)
     @MessageMapping("/chat/{chatRoomId}")
     public void send(@DestinationVariable Integer chatRoomId, ChatReadDto dto) throws IOException {
- 
         //append message to txtFile
         chatService.appendMessage(chatRoomId, dto);
-        
+        log.info("send{},{}",chatRoomId,dto);
 //        Integer chatRoomId = dto.getChatRoomId();
         String url = "/user/" + chatRoomId + "/queue/messages";
         simpMessagingTemplate.convertAndSend(url, new ChatReadDto(dto.getSender(), dto.getMessage(), dto.getSendTime())); 

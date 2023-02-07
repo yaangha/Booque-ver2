@@ -9,7 +9,6 @@ window.addEventListener('DOMContentLoaded', () => {
         var usedBookId = $('#usedBookId').val();
         var sellerId = $('#sellerId').val();
         var chatRoomId = $('#chatRoomId').val();
-        
         // invoke when DOM(Documents Object Model; HTML(<head>, <body>...etc) is ready
         $(document).ready(connect());
         
@@ -38,11 +37,11 @@ window.addEventListener('DOMContentLoaded', () => {
         
         // WebSocket broker 경로로 JSON 타입 메시지데이터를 전송함
         function sendChat(json) {
-            
             stompClient.send("/app/chat", {}, JSON.stringify(json));
         }
         
-        // 보내기 버튼 클릭시 실행되는 메서드
+        var sen = document.getElementById('send'); 
+        sen.addEventListener('click', send)
         function send() {
             var message = $('#message').val();
             sendChat({

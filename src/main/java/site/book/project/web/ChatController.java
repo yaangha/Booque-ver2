@@ -53,7 +53,6 @@ public class ChatController {
     @GetMapping("/chat")
     public String getWebSocketWithSockJs(@AuthenticationPrincipal UserSecurityDto userDto, Integer sellerId, Integer usedBookId, Model model, 
             @ModelAttribute("chat") Chat chat) throws IOException {
-        
         //중고판매글 detail 화면에서 Chat화면에 전달해줄 parameter
         Integer buyerId = userDto.getId();
         chat.setBuyerId(buyerId);
@@ -75,13 +74,18 @@ public class ChatController {
             List<ChatReadDto> chatHistory = chatService.readChatHistory(chatExistsOrNot);
             //chatHistory Model -> View
             model.addAttribute("chatHistory", chatHistory);
+            for (ChatReadDto c : chatHistory) {
+                log.info("chathistory은뭐냐{}",c);
+            }
         } else {
             // 새로운 채팅 시작이라면
             log.info("새 채팅을 시작합니다!");
             // chat 생성 (+ txt 파일 생성)       
-            chatService.createChat(chat.getUsedBookId(), chat.getSellerId(), chat.getBuyerId());                               
-        }
+            chatService.createChat(chat.getUsedBookId(), chat.getSellerId(), chat.getBuyerId());
             
+        }
+            log.info("chat은뭐냐{}",chat);
+
             // Chat 객체 Model에 저장해 view로 전달
             model.addAttribute("chatInfo", chat);
         
