@@ -133,7 +133,9 @@
             <div class="text-truncate" th:text="${ marketCreateDto.title }" style="font-weight: bold; font-size: 20px;"></div>
             <div th:text="|${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold; font-size: 25px; color:red;"></div>
             <div th:text="${ marketCreateDto.location }" style="display: inline-block;"></div>
-            <div th:text="${ marketCreateDto.username }"></div>
+            <!-- (예진) 닉네임+유저이미지 -->
+            <div><img class="rounded-circle" width="40" height="40" th:src = "${ marketCreateDto.userImage }" /><span th:text="${ '&nbsp;&nbsp;'+marketCreateDto.nickName }"></span></div>
+            
             <span th:text="${ '<' + marketCreateDto.bookTitle + '>'}"></span>
             <div style="color: gray;">업로드(수정) 
                 <small style="color: gray;" th:text="${ #temporals.format(marketCreateDto.modifiedTime, 'yyyy/MM/dd HH:mm') }"></small>

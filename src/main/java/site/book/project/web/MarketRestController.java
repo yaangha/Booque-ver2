@@ -63,9 +63,6 @@ public class MarketRestController {
         
         List<FileUploadResultDto> list = new ArrayList<>();
         files.forEach(mutipartFile -> {
-//            log.info(mutipartFile.getOriginalFilename());
-//            log.info(mutipartFile.getContentType());
-//            log.info("size = {}", mutipartFile.getSize());
             FileUploadResultDto result = saveFile(mutipartFile);
             list.add(result);
         });
@@ -88,8 +85,6 @@ public class MarketRestController {
         try {
 //            file.transferTo(path);
             file.transferTo(dest);
-            
-
             
             result = FileUploadResultDto.builder()
                     .uuid(uuid)

@@ -92,7 +92,6 @@ public class MarketController {
             model.addAttribute("userNickname", userDto.getNickName());       
         }
         
-        log.info("임시저장~~~~~~~~~~~~~~~~~~~~~~~~~~~~{}", usedBookPost);
         
         model.addAttribute("list", list);
         model.addAttribute("orderSlt", orderSlt);
@@ -107,7 +106,7 @@ public class MarketController {
     
     @PostMapping("/create")
     public String createPost( @AuthenticationPrincipal UserSecurityDto userDto, MarketCreateDto dto,
-    							Integer usedBookId, MultipartFile files) {
+    							Integer usedBookId) {
     	// 총 세개의 테이블을 크리에이트 해야함
         
         // 리스트 먼저 확인해야함. 
@@ -327,6 +326,7 @@ public class MarketController {
             MarketCreateDto dto = MarketCreateDto.builder()
                     .usedBookId(ub.getId())
                     .userId(user.getId()).username(user.getUsername())
+                    .userImage(user.getUserImage()).nickName(user.getNickName())
                     .bookTitle(book.getBookName()).price(ub.getPrice())
                     .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime()).hits(ub.getHits()).wishCount(ub.getWishCount())
                     .build();

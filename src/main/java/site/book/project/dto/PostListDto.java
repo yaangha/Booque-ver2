@@ -26,6 +26,7 @@ public class PostListDto {
     private String postContent;
     private String bookImage;
     private String postWriter;
+    private String nickName;
     private LocalDateTime modifiedTime;
     private LocalDateTime createdTime;
     private int hit;
@@ -41,6 +42,7 @@ public class PostListDto {
                 .postId(p.getPostId())
                 .title(p.getTitle())
                 .postWriter(p.getPostWriter())
+                .nickName(p.getUser().getNickName())
                 .bookId(p.getBook().getBookId())
                 .bookImage(p.getBook().getBookImage()).modifiedTime(p.getModifiedTime()).createdTime(p.getCreatedTime())
                 .postContent(p.getPostContent())

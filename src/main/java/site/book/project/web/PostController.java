@@ -55,7 +55,6 @@ public class PostController {
      
 
         
-        
         User user = null; 
         List<PostListDto> postList = new ArrayList<>();
         
@@ -168,9 +167,13 @@ public class PostController {
             model.addAttribute("user", u);
         }
         
+        // (예진) 리플 작성칸 nickName 주기
+        String nick = userDto.getNickName();
+        
          model.addAttribute("recomList",recomList );    // 2)
          model.addAttribute("post", p);
          model.addAttribute("book", b);
+         model.addAttribute("nick", nick);
        
         
     }

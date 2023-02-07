@@ -76,7 +76,7 @@
     
 <!-- 이미지 슬라이드 연습(삭제 예정) - 하단에 스크립트도 추가됨 -->
 <div class="slider" style="overflow: hidden;">
-    <div class="imgGroup" style="display: flex;">
+    <div class="images" style="display: flex;">
         <div class="bg-success" style="width: 500px; height: 500px;"></div>
         <div class="bg-danger" style="width: 500px; height: 500px;"></div>
         <div class="bg-primary" style="width: 500px; height: 500px;"></div>
@@ -272,6 +272,50 @@
                  map.setCenter(coords);
              }
         });
+    </script>
+    
+    <script> // (하은) 이미지 슬라이드 연습용
+    let curPos = 0; // 가상의 인덱스
+    let postion = 0; 
+    const image_width = 500; // 이미지 사이즈 500px
+    
+    const btnPrev = document.querySelector(".prev");
+    const btnNext = document.querySelector(".next");
+    const images = document.querySelector('.images');
+    
+    function prev() {
+    	if (curPost > 0) {
+    		btnNext.removeAttribute("disabled")
+    		postion += image_width;
+    		images.style.transform = `translateX(${postion}px)`;
+    		curPos = curPos - 1;
+    	}
+    	
+    	if (curPos == 0) {
+    		btnPrev.setAttribute('disabled', 'true')
+    	}
+    }
+    
+    function next() {
+    	if (curPos < 2) {
+    		btnPrev.removeAttribute("disabled")
+    		postion -= image_width;
+    		images.style.transform = `translateX(${postion}px)`;
+    		curPos = curPos + 1;
+    	}
+    	
+    	if (curPos == 3) {
+    		btnNext.setAttribute('disabled', 'true')
+    	}
+    }
+    
+    function init() {
+    	btnPrev.setAttribute('disabled', 'true')
+    	btnPrev.addEventListener("click", prev)
+    	btnNext.addEventListener("click", next)
+    }
+    
+    init();
     </script>
     
 </body>

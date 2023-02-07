@@ -3,6 +3,31 @@
  */
  
  window.addEventListener('DOMContentLoaded', () => {
+    const btnSubmit = document.querySelector('#btnSubmit');
+const formCreate = document.querySelector('#formCreate');
+
+btnSubmit.addEventListener('click', function () {
+
+const sample3_address = document.querySelector('#sample3_address').value;
+const title = document.querySelector('#title').value;
+const price = document.querySelector('#price').value;
+const contents = document.querySelector('#contents').value;
+
+if (sample3_address == '' || title == '' || price == '' || contents == '') {
+    alert('필수항목을 모두 채워주세요!');
+    return;
+}
+
+
+
+
+const result = confirm('등록하시겠습니까?');
+if (result) {
+    formCreate.action = '/market/create';
+    formCreate.method = 'post';
+    formCreate.submit();
+}
+});
     
     const uploadResults = document.querySelector('#uploadResults');
     
