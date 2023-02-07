@@ -323,12 +323,15 @@ public class MarketController {
         for (UsedBook ub : usedBookList) {
             User user = userRepository.findById(ub.getUserId()).get();
             Book book = bookRepository.findById(ub.getBookId()).get();
+            List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(ub.getId());
+            
             MarketCreateDto dto = MarketCreateDto.builder()
                     .usedBookId(ub.getId())
                     .userId(user.getId()).username(user.getUsername())
                     .userImage(user.getUserImage()).nickName(user.getNickName())
                     .bookTitle(book.getBookName()).price(ub.getPrice())
                     .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime()).hits(ub.getHits()).wishCount(ub.getWishCount())
+                    .imgUsed(imgList.get(0).getFileName())
                     .build();
             list.add(dto);
         }

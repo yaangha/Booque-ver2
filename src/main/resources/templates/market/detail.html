@@ -65,8 +65,9 @@
             </button>
             <div th:each=" imgList : ${ imgList } " class="carousel-inner">
                 <div class="carousel-item active">
-                    <img th:src="${ imgList.fileName }" class="d-block w-100" alt="..."> 
+                    <img th:src="${ imgList.fileName }" class="d-block w-100" > 
                 </div>
+                
 
             </div>
             <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
@@ -119,7 +120,6 @@
             <a class="btn btn-success" th:href="@{ /market/modify?usedBookId={usedBookId} (usedBookId = ${ usedBook.id })}" style="width:120px; height:40px; margin-left: 20px;">수 정 하 기</a>
         </div>
     	<div class="align-middle float-end" style="display: inline-block;" >
-        <!-- 위치 우째함..  -->
             <div id="btnUsedBookWish">
                 <div th:if="${ wish==null  } ">
                     <img id="noWish" style="width: 25px; " src=" https://cdn-icons-png.flaticon.com/512/833/833300.png" /> 
