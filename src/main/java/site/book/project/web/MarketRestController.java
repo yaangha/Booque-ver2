@@ -86,14 +86,6 @@ public class MarketRestController {
 //            file.transferTo(path);
             file.transferTo(dest);
             
-//            if (file.getContentType().startsWith("image")) {
-//                image = true;
-//                String thumbnailTarget = "s_" + target;
-//                File thumbnailDest = new File(uploadPath, thumbnailTarget);
-//                Thumbnailator.createThumbnail(dest, thumbnailDest, 200, 200);
-//                
-//            }
-            
             result = FileUploadResultDto.builder()
                     .uuid(uuid)
                     .fileName(originalName)
