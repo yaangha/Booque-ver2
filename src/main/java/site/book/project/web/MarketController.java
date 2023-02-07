@@ -106,7 +106,7 @@ public class MarketController {
     
     @PostMapping("/create")
     public String createPost( @AuthenticationPrincipal UserSecurityDto userDto, MarketCreateDto dto,
-    							Integer usedBookId, MultipartFile files) {
+    							Integer usedBookId) {
     	// 총 세개의 테이블을 크리에이트 해야함
         
         // 리스트 먼저 확인해야함. 

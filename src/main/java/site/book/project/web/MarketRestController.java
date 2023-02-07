@@ -63,9 +63,6 @@ public class MarketRestController {
         
         List<FileUploadResultDto> list = new ArrayList<>();
         files.forEach(mutipartFile -> {
-//            log.info(mutipartFile.getOriginalFilename());
-//            log.info(mutipartFile.getContentType());
-//            log.info("size = {}", mutipartFile.getSize());
             FileUploadResultDto result = saveFile(mutipartFile);
             list.add(result);
         });
@@ -89,13 +86,13 @@ public class MarketRestController {
 //            file.transferTo(path);
             file.transferTo(dest);
             
-            if (file.getContentType().startsWith("image")) {
-                image = true;
-                String thumbnailTarget = "s_" + target;
-                File thumbnailDest = new File(uploadPath, thumbnailTarget);
-                Thumbnailator.createThumbnail(dest, thumbnailDest, 200, 200);
-                
-            }
+//            if (file.getContentType().startsWith("image")) {
+//                image = true;
+//                String thumbnailTarget = "s_" + target;
+//                File thumbnailDest = new File(uploadPath, thumbnailTarget);
+//                Thumbnailator.createThumbnail(dest, thumbnailDest, 200, 200);
+//                
+//            }
             
             result = FileUploadResultDto.builder()
                     .uuid(uuid)
