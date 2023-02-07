@@ -65,7 +65,7 @@
             </button>
             <div th:each=" imgList : ${ imgList } " class="carousel-inner">
                 <div class="carousel-item active">
-                    <img th:src="${ imgList.fileName }" class="d-block w-100" > 
+                    <img th:src="${ '/market/api/view/'+imgList.fileName }" class="d-block w-100" > 
                 </div>
                 
 

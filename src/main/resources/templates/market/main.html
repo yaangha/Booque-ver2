@@ -130,7 +130,7 @@
     <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:40px; display:inline-block;"><!-- content 1개 -->
         <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ marketCreateDto.usedBookId }) }" th:myname="${ marketCreateDto.usedBookId }" onclick="usedBookHits(this.getAttribute('myname'))">
             <div id="img" class="border" style="height:350px; width:350px; margin-bottom:10px; background-color: silver;">
-            <img alt="" th:src="${ marketCreateDto.imgUsed }"  style="height:350px; width:350px; margin-bottom:10px;">
+            <img alt="" th:src="${ '/market/api/view/'+marketCreateDto.imgUsed }"  style="height:350px; width:350px; margin-bottom:10px;">
             </div>
             
             <div class="text-truncate" th:text="${ marketCreateDto.title }" style="font-weight: bold; font-size: 20px;"></div>

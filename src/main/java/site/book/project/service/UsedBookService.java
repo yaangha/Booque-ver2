@@ -88,10 +88,13 @@ public class UsedBookService {
 	public void createImg(Integer usedBookId, List<String> fileNames) {
 	    
 	    UsedBookImage entity = null;
+	    log.info("사진 저장하는데 진짜 이름 뭔디???{}",usedBookId);
 	    
 	    for(String f : fileNames) {
+	        String orgFileName = f.split("_")[1];
+	        log.info("사진 저장하는데 진짜 이름 뭔디???{}",orgFileName);
 	        
-	        entity = UsedBookImage.builder().usedBookId(usedBookId).fileName("/market/api/view/"+f).filePath(uploadPath+f).build();
+	        entity = UsedBookImage.builder().usedBookId(usedBookId).fileName(f).filePath(uploadPath+f).origFileName(orgFileName).build();
 	        imgRepository.save(entity);
 	    }
 	    
