@@ -205,10 +205,24 @@ public class MarketController {
         model.addAttribute("sale", sale);
         model.addAttribute("wish", wish);
         model.addAttribute("book", book);
-        model.addAttribute("user", user); // userName만 보낼 수 있게 수정(?)
+        model.addAttribute("user", user); 
         model.addAttribute("usedBookPost", usedBookPost);
         model.addAttribute("usedBook", usedBook);
-        model.addAttribute("otherUsedBookListFinal", otherUsedBookListFinal);     
+        model.addAttribute("otherUsedBookListFinal", otherUsedBookListFinal);  
+        
+        
+        // (하은) 같은 책 다른 중고상품 수정
+        List<MarketCreateDto> otherUsedBookList2 = mainList(otherUsedBookList);
+        List<MarketCreateDto> otherUsedBookListFinal2 = new ArrayList<>();
+
+        for (MarketCreateDto m : otherUsedBookList2) {
+            if(usedBookId != m.getUsedBookId()) {
+                otherUsedBookListFinal2.add(m);
+            }
+        }
+        
+        model.addAttribute("otherUsedBookListFinal2", otherUsedBookListFinal2);
+        
     }
     
     // (하은) 조회수 증가
@@ -327,16 +341,22 @@ public class MarketController {
         List<MarketCreateDto> list = new ArrayList<>();
         
         for (UsedBook ub : usedBookList) {
-            User user = userRepository.findById(ub.getUserId()).get();
-            Book book = bookRepository.findById(ub.getBookId()).get();
-            MarketCreateDto dto = MarketCreateDto.builder()
-                    .usedBookId(ub.getId())
-                    .userId(user.getId()).username(user.getUsername())
-                    .userImage(user.getUserImage()).nickName(user.getNickName())
-                    .bookTitle(book.getBookName()).price(ub.getPrice())
-                    .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime()).hits(ub.getHits()).wishCount(ub.getWishCount())
-                    .build();
-            list.add(dto);
+            if(ub.getPrice() != null) {
+                User user = userRepository.findById(ub.getUserId()).get();
+                Book book = bookRepository.findById(ub.getBookId()).get();
+                List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(ub.getId());
+                
+                MarketCreateDto dto = MarketCreateDto.builder()
+                        .usedBookId(ub.getId())
+                        .userId(user.getId()).username(user.getUsername())
+                        .userImage(user.getUserImage()).nickName(user.getNickName())
+                        .bookTitle(book.getBookName()).price(ub.getPrice())
+                        .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime()).hits(ub.getHits()).wishCount(ub.getWishCount())
+                        .imgUsed(imgList.get(0).getFileName())
+                        .build();
+                list.add(dto);
+            }
+        
         }
         
         

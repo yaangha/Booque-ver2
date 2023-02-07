@@ -46,6 +46,10 @@
         a:hover {
             color: black;
         }
+        
+        #img {
+            box-shadow: 10px 10px 20px lightgrey;
+        }
                 		
 	</style>
   
@@ -60,13 +64,13 @@
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <div class="carousel-inner" style="height: 470px;">
+            <div class="carousel-inner" style="height: 500px;">
                 <div class="carousel-item active">
-                   <img th:src="${ firstImg.fileName }" class="rounded mx-auto d-block w-50" style="object-fit: cover;"> 
+                   <img id="img" th:src="${ '/market/api/view/'+firstImg.fileName }" class="mx-auto d-block w-50" style="width:500px; height: 500px; object-fit: cover;"> 
                 </div>
                 <div th:each=" imgList : ${ imgList } " class="carousel-inner">
                     <div class="carousel-item">
-                        <img th:src="${ imgList.fileName }" class="rounded mx-auto d-block w-50" style="object-fit: cover;"> 
+                        <img id="img" th:src="${ '/market/api/view/'+imgList.fileName }" class="mx-auto d-block w-50" style="width:500px; height: 500px; object-fit: cover;"> 
                     </div>
                 </div>
             </div>
@@ -100,8 +104,8 @@
     	<div class="align-middle float-end" style="display: inline-block;" th:if="${ user.username } != ${ #authentication.name }">
 	    	 <!-- 채팅하기 -->
              <!-- 새 창으로 뜨도록(채팅하는 동시에 부끄 사이트에서 다른 동작 수행 가능 -->
-            <button th:data-url="@{ /chat(withChatUsername=${user.username}) }" onclick="openWindow(this.getAttribute('data-url'))" 
-            type="button" class=" btn btn-primary" style="width:120px; height:40px;">채 팅 하 기</button>
+            <button th:data-url="@{ /chat(sellerId=${user.id}, usedBookId=${usedBook.id}) }" onclick="openWindow(this.getAttribute('data-url'))" 
+            type="button" class=" btn btn-primary" style="width:120px; height:40px; margin-left: 20px;">채 팅 하 기</button>
     	</div>
         
         <div class="align-middle float-end" style="display: inline-block;" th:unless="${ user.username } != ${ #authentication.name }">
@@ -124,8 +128,9 @@
     	</div>
     </div>
     
-    <div> <!-- content -->        
-        <div class="w-75 align-top" style="display: inline-block;"> <!-- content left -->
+    <div class="row"> <!-- content -->        
+        <!-- <div class="w-75 align-top" style="display: inline-block;"> content left -->
+        <div class="col-8"> <!-- content left -->
             <div th:if="${ user.username } == ${ #authentication.name }">
                 <select onchange="changeStatus()" id="selectStatus" name="selectStatus" class="form-select" style="width:120px; height: 40px; margin-bottom: 10px; display: inline-block;">
                     <option value="판매중" th:selected="${ usedBook.status } == '판매중'">판매중</option>
@@ -150,7 +155,8 @@
             <input type="text" id="usedLocation" th:value="${ usedBook.location }" style="width: 300px; border: none; margin-bottom:10px;" />
         </div> <!-- content left end -->
         
-        <div class="float-end" style="display: inline-block;"> <!-- content right -->
+        <!-- <div class="float-end" style="display: inline-block;"> content right -->
+        <div class="col" style="margin-left: 100px;"> <!-- content right -->
         <a th:href="@{ /detail(id=${ book.bookId }) }">
             <div class="card mx-2 my-2" style="width: 20rem;">    
                 <img th:src="${ book.bookImage }"  class="card-img-top" alt="..." />
@@ -173,19 +179,18 @@
     
     <div id="other"> <!-- 이 책의 다른 중고 상품은? -->
     	<h4><span>이 책</span>의 다른 중고 상품은?</h4>
-    	<div class="otherList align-middle" th:each="usedBook : ${ otherUsedBookListFinal }"> <!-- 다른 상품 나열 부분 -->
+    	<div class="otherList align-middle" th:each="marketCreateDto : ${ otherUsedBookListFinal2 }"> <!-- 다른 상품 나열 부분 -->
     		<div style="width:200px; height: 315px;"> <!-- 상품목록 1개 -->
-    		<a th:href="@{ /market/detail(usedBookId=${ usedBook.id }) }">
-    			<div class="border" style="width:200px; height: 200px; margin-bottom: 5px;"></div>
-    			<div class="text-truncate" th:text="${ usedBook.title }" style="font-size:17px;"></div>
-    			<div th:text="|${#numbers.formatInteger(usedBook.price, 0, 'COMMA')}원|" style="font-weight: bold;"></div>
-    			<span th:text="${ usedBook.bookLevel }" style="color:red; font-weight:bold;"></span>
-                <small th:text="${ usedBook.location }" style="display: block;"></small>
+    		<a th:href="@{ /market/detail(usedBookId=${ marketCreateDto.usedBookId }) }" th:myname="${ marketCreateDto.usedBookId }" onclick="usedBookHits(this.getAttribute('myname'))">
+                <img id="img" alt="" th:src="${ '/market/api/view/'+marketCreateDto.imgUsed }"  style="height:200px; width:200px; margin-bottom: 5px; object-fit: cover;">
+    			<div class="text-truncate" th:text="${ marketCreateDto.title }" style="font-size:17px;"></div>
+    			<div th:text="|${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold;"></div>
+    			<span th:text="${ marketCreateDto.level }" style="color:red; font-weight:bold;"></span>
+                <small class="text-truncate" th:text="${ marketCreateDto.location }" style="display: block;"></small>
                 <div class="align-middle" style="color:gray;">
                     <small>
-                    <i class="bi bi-heart-fill" style="font-size:10px;"></i> 관심 <span id="wishCount" th:text="${ usedBook.wishCount }"></span> 
-                    <i class="bi bi-person-circle" style="font-size:12px; margin-left:8px;"></i> 채팅 <span  th:text="${ usedBook.chats }"></span>
-                    <i class="bi bi-eye" style="font-size:13px; margin-left:8px;"></i> 조회 <span th:text="${ usedBook.hits }"></span>
+                    <i class="bi bi-heart-fill" style="font-size:10px;"></i> 관심 <span id="wishCount" th:text="${ marketCreateDto.wishCount }"></span> 
+                    <i class="bi bi-eye" style="font-size:13px; margin-left:8px;"></i> 조회 <span th:text="${ marketCreateDto.hits }"></span>
                 </small>
                 </div>
     		</a>
@@ -262,6 +267,18 @@
                  map.setCenter(coords);
              }
         });
+    </script>
+    
+    <script> // (하은) 조회수 증가
+    function usedBookHits(usedBookId) {
+        axios.get('/market/usedBookHitCount', { params: { usedBookId : usedBookId }})
+           .then(response => {
+               console.log(response);
+           })
+           .catch(err => {
+               console.log(err);
+           })
+    }
     </script>
     
 </body>

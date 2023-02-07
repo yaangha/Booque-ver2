@@ -33,7 +33,7 @@ btnSubmit.addEventListener('click', function () {
     
     
 
-    const uploadResults = document.querySelector('#uploadResults');
+      const uploadResults = document.querySelector('#uploadResults');
     
     document.querySelector('#btnModalUpload').addEventListener('click', e =>{
         console.log('btnModal 누름')
@@ -62,6 +62,9 @@ btnSubmit.addEventListener('click', function () {
         axios.post('/market/api/upload', formData)
             .then(getUploaded)
             .catch(err => { console.log(err)})
+        
+        const divEx = document.querySelector('#explain')
+        divEx.innerHTML ='';
         
         
     }

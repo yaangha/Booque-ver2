@@ -18,7 +18,7 @@ public class ChatRepositoryTest {
     @Test
     public void testSave() {
         
-        Chat chat1 = Chat.builder().usedBookId(1).sellerId(1).buyerId(2).fileName("chat1.txt").build();
+        Chat chat1 = Chat.builder().usedBookId(1).sellerId(1).buyerId(2).build();
         
         log.info("save 전 {} | {} | {}", chat1, chat1.getCreatedTime(), chat1.getModifiedTime());
         
