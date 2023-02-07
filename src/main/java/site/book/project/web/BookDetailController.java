@@ -1,6 +1,7 @@
 package site.book.project.web;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,8 @@ import site.book.project.domain.User;
 import site.book.project.dto.UserSecurityDto;
 
 import site.book.project.dto.BookWishDto;
+import site.book.project.dto.PostListDto;
+import site.book.project.dto.PostReadDto;
 import site.book.project.service.BookIntroService;
 import site.book.project.service.BookService;
 import site.book.project.service.BookWishService;
@@ -78,10 +81,14 @@ public class BookDetailController {
      
         // choi 책 한권에 대한 post 정보 받기
         List<Post> postList = postService.findBybookId(id);
+        
+        
         model.addAttribute("postList", postList );   
         
+        
+    
         // (지혜) 유저 정보 받기( [  ] 님이 보고 계신 책은...)
-//        String nickName = userService.read(userId).getNickName();
+//        String nickName = userService.read(d).getNickName();
 //        model.addAttribute("nickName", nickName);
         
         return "book/detail";
