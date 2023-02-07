@@ -42,7 +42,7 @@ public class ReplyService {
         for (PostReply r : list) {
             User u = userRepository.findByUsername(r.getReplyWriter()).get();
             ReplyReadDto dto = ReplyReadDto.builder().postId(r.getPost().getPostId())
-                    .replyId(r.getReplyId()).replyWriter(r.getReplyWriter()).nickName(u.getNickName())
+                    .replyId(r.getReplyId()).replyWriter(r.getReplyWriter())
                     .replyContent(r.getReplyContent()).userImage(u.getUserImage())
                     .createdTime(r.getCreatedTime()).modifiedTime(r.getModifiedTime()).build();
             
@@ -96,5 +96,10 @@ public class ReplyService {
     public void deletePostIdWithAllReply(Integer postId) {
         replyRepository.deletePostIdwithdAllReply(postId);
     }
+    
+    public PostReply readRep(Integer replyId) {
+       PostReply reply = replyRepository.findById(replyId).get();
+       
+       return reply;
+    }
 }
-
