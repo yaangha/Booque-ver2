@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.springframework.http.ResponseEntity;
@@ -68,7 +70,7 @@ public class MarketController {
             list.add(dto);
         }
         if(userDto != null) {
-            model.addAttribute("userNickname", userDto.getNickName());       
+            model.addAttribute("userId", userDto.getId());       
         }
         
         model.addAttribute("list", list);
@@ -182,9 +184,15 @@ public class MarketController {
      * @param model
      */
     @GetMapping("/mypage") // /market/mypage 판매글작성자&마이페이지 이동
-    public void mypage(String userNickname,Model model) {
+    public void mypage(Integer userId,Model model) {
+        User user = userRepository.findById(userId).get();
+        UsedBook usedBook = usedBookRepository.findById(userId).get();
+        Book book = bookRepository.findById(userId).get();
         
-        model.addAttribute("user", userNickname);
+    	
+        model.addAttribute("user", user);
+        model.addAttribute("usedBook", usedBook);
+        model.addAttribute("book", book);
         
     }
     
