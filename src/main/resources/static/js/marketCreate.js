@@ -62,6 +62,9 @@ btnSubmit.addEventListener('click', function () {
             .then(getUploaded)
             .catch(err => { console.log(err)})
         
+        const divEx = document.querySelector('#explain')
+        divEx.innerHTML ='';
+        
         
     }
     

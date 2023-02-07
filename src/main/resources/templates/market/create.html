@@ -85,18 +85,13 @@
         
             <h2>사진 첨부 부분</h2>
     
-    <input type="file" name="files" class="form-control" multiple />
-    <button type="button" id="btnModalUpload" 
-                            class="btn btn-primary">Upload</button>    
-    
-    
-                            <div id="uploadResults" class="container-fluid d-flex"
-                                    style="flex-wrap: wrap;">
-                            </div>
-        <div id="uploads"></div>       
         
         
             <div class="contents">책 이미지<span style="color: red;">*</span><small style="font-size:14px; color: gray;">(0/5)</small></div>
+                <input type="file" name="files" class="form-control" multiple />
+                <button type="button" id="btnModalUpload" class="btn btn-primary">Upload</button>    
+                <div id="uploadResults" class="container-fluid d-flex"style="flex-wrap: wrap;"></div>
+                <div id="uploads"></div>       
             <div>                
                 <ul>
                     <li style="border-top: none; padding: 0px; padding-bottom: 10px;">
@@ -105,7 +100,7 @@
                 </ul>
                 
 
-                <div style="color: blue; font-size: 13px;">
+                <div id="explain" style="color: blue; font-size: 13px;">
                     * 이미지는 상품 등록 시 정사각형으로 잘려서 등록됩니다.<br>
                     * 첫 번째 업로드한 파일이 대표 이미지로 설정됩니다.<br>
                     * 큰 이미지일 경우 이미지가 깨지는 경우가 발생할 수 있습니다.
