@@ -28,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.coobird.thumbnailator.Thumbnailator;
 import site.book.project.domain.Book;
 import site.book.project.domain.UsedBook;
 import site.book.project.domain.UsedBookImage;

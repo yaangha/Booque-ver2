@@ -37,10 +37,12 @@ public class ChatService {
     public Integer createChat(Integer usedBookId, Integer sellerId, Integer buyerId) throws IOException {
         
         Chat chat = Chat.builder().usedBookId(usedBookId).sellerId(sellerId).buyerId(buyerId).build();
-        
+
         chatRepository.save(chat);
         createFile(chat.getChatRoomId(), usedBookId);
         
+        Chat dto = chatRepository.findByUsedBookIdAndBuyerId(usedBookId, buyerId);
+        // return dto;
         return chat.getChatRoomId();
     }
     

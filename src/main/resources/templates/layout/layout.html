@@ -108,9 +108,13 @@
         </th:block>
         <!-- 로그인 한 상태 -->
         <th:block sec:authorize="isAuthenticated()">
+        
+            <!-- 알림 버튼 -->
+            <a th:href="@{ / }" class="w3-bar-item w3-button  w3-right" id="btnAlarm" style="color:white; margin-top:18px; margin-right:30px;">
+            <i class="fa fa-bell-o"></i></a>
 
             <!-- 채팅 버튼(내 채팅 모아보기-새 창) -->
-            <button th:data-url="@{ /chat }" onclick="openWindow(this.getAttribute('data-url'))"  class="w3-bar-item w3-button  w3-right" id="btnChat" style="margin-top:18px; margin-right:30px;">
+            <button th:data-url="@{ /chat }" onclick="openWindow(this.getAttribute('data-url'))"  class="w3-bar-item w3-button  w3-right" id="btnChat" style="margin-top:18px; margin-right:25px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chat-right-dots" viewBox="0 0 16 16">
                   <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1H2zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z"/>
                   <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
@@ -125,11 +129,13 @@
                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
                     </svg>
                 </button>
-                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="top:66px; right:5px;">
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="top:66px; right:86px;">
                     <a th:href="@{ /myPage }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">마이페이지</a>
                     <a th:href="@{ /post/list }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">내 블로그</a>
+                    <a th:href="@{ /market/mypage?userNickname={userNickname} (userNickname = ${ userNickname }) }" class="w3-bar-item w3-button" 
+                    style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">마이부끄</a>
                     <a th:href="@{ /logout }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">로그아웃</a>
                 </div>
