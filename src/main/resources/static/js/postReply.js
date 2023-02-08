@@ -92,15 +92,17 @@
         let str ='';
         
          for (let x of data){
-             str += `<div><a href="/post/detail?postId=${ x.postId }&bookId=${ x.bookId }">`
+             str += `<div class="btn"><a href="/post/detail?postId=${ x.postId }&bookId=${ x.bookId }"  onclick="deleteNotice()">`
+                  +`<input type="hidden" id="noticeBtn" data-nid="${x.noticeId}" th:value="${ x.noticeId }" />`
                   +'<img class="rounded-circle" width="25" height="25" src="' + x.userImage + '" />'
                   +`<span class="fw-bold m-1">${x.nickName}</span>님의 새 댓글!</a></div>`;
         }
         
         divNo.innerHTML = str;
-    }
     
-
+    }
+  
+  
     // 댓글 목록 함수
     function readAllReplies(){
         const postId = document.querySelector('#postId').value;

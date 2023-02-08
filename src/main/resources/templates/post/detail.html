@@ -347,6 +347,26 @@
 
     <script>
     
+    const noticeBtn = document.querySelectorAll('#noticeBtn');
+    noticeBtn.forEach(btn => {btn.addEventListener('click', deleteNotice);});
+    
+    function deleteNotice(event){
+        const noticeId = event.target.getAttribute('data-nid');
+        console.log('삭제노티스?');
+        alert(noticeId);
+         
+        const result = confirm('알림 확인?');
+        if(result) {
+        axios
+        .delete('/deleteNotice/' + noticeId) 
+        .then(response => {
+            alert(`# 알림 삭제!`);
+            showNotice();
+         })
+        .catch(err => { console.log(err) }) 
+    };
+    }
+    
     const imModal = document.querySelector('#imageModal');
     const imgModal = new bootstrap.Modal(imModal);
     function imagePop() {

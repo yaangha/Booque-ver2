@@ -63,4 +63,12 @@ public class NoticeService {
         return noticeList;
     }
 
+
+    public Integer delete(Integer noticeId) {
+     
+        noticeRepository.deleteById(noticeId);
+        
+        return noticeId;
+    }
+
 }
