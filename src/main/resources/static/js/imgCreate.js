@@ -43,10 +43,10 @@
                 //console.log(data);
                 // 이미지 파일이 아닌 경우, 디폴트 썸네일 이미지를 사용하도록.
                 let img = '';
-                    img = `<img src="/market/api/view/${x.link}" data-src="${x.uuid + '_' + x.fileName}" />`;
+                    img = `<img src="/market/api/view/${x.link}" data-src="${x.uuid + '_' + x.fileName}" class="card-img-bottom"/>`;
 
                 const htmlStr = `
-                                <div class="card my-2">
+                                <div class="card" style="width:300px; margin: 5px;">
                                     <div class="card-header d-flex justify-content-center">
                                         ${x.fileName}
                                         <button class="btnDelete btn-close" aria-label="Close"
