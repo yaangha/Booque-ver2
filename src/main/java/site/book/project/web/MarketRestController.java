@@ -70,6 +70,15 @@ public class MarketRestController {
         return ResponseEntity.ok(list);
     }
     
+    @PostMapping("/api")
+    public ResponseEntity<FileUploadResultDto> a(FileUploadDto dto){
+        List<MultipartFile> files = dto.getFiles(); // 파일을 꺼내옴, 근데 왜 한번에는 안됐을까?
+        
+        
+        
+        return null;
+    }
+    
     
     private FileUploadResultDto saveFile(MultipartFile file) {
         FileUploadResultDto result = null;
@@ -81,7 +90,7 @@ public class MarketRestController {
         log.info(target);
         
 //        Path path = Paths.get(uploadPath, target);
-        File dest = new File(uploadPath, target);
+        File dest = new File(uploadPath, target);   // 새로운 파일을 저장하는것?
         try {
 //            file.transferTo(path);
             file.transferTo(dest);

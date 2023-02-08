@@ -3,7 +3,7 @@
  */
  
  window.addEventListener('DOMContentLoaded', () => {
-    const btnSubmit = document.querySelector('#btnSubmit');
+const btnSubmit = document.querySelector('#btnSubmit');
 const formCreate = document.querySelector('#formCreate');
 
 btnSubmit.addEventListener('click', function () {
@@ -75,8 +75,8 @@ btnSubmit.addEventListener('click', function () {
                 //console.log(data);
                 // 이미지 파일이 아닌 경우, 디폴트 썸네일 이미지를 사용하도록.
                 let img = '';
-                    img = `<img src="/market/api/view/${x.link}" data-src="${x.uuid + '_' + x.fileName}" />`;
-
+                    img = `<img src="/market/api/view/${x.link}" style="width:250px;" data-src="${x.uuid + '_' + x.fileName}" />`;
+    console.log(x)
                 const htmlStr = `
                                 <div class="card my-2">
                                     <div class="card-header d-flex justify-content-center">

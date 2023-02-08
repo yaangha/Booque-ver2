@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +51,7 @@ public class ChatController {
     private ChatRepository chatRepository;
  
     // 중고판매글에서 '채팅하기' 버튼 클릭시
-    @GetMapping("/chat")
+    @PostMapping("/chat")
     public String getWebSocketWithSockJs(@AuthenticationPrincipal UserSecurityDto userDto, Integer sellerId, Integer usedBookId, Model model, 
             @ModelAttribute("chat") Chat chat) throws IOException {
         
@@ -84,7 +85,13 @@ public class ChatController {
             // Chat 객체 Model에 저장해 view로 전달
             model.addAttribute("chatInfo", chat);
         
-        return "chat";
+        return "redirect:/chat?"+chat.getChatRoomId();
         
+    }
+    
+    @GetMapping("/chat")
+    public String a(@AuthenticationPrincipal UserSecurityDto dto, Integer chatRoomId) {
+        log.info("제가 보이시나요~~~~ 채팅 {}", chatRoomId);
+        return "chat";
     }
 }

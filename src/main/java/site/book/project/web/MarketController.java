@@ -109,9 +109,9 @@ public class MarketController {
     							Integer usedBookId) {
     	// 총 세개의 테이블을 크리에이트 해야함
         
-        // 리스트 먼저 확인해야함. 
-        log.info("사진~~~~~ 어떤 형태로 넘어 오니?? {} ",dto.getFileNames());
-        
+        if(dto.getFileNames().isEmpty()) {
+            log.info("뭘가??? {}",dto.getFileNames().isEmpty());
+        }
         usedBookService.createImg(usedBookId, dto.getFileNames());
         
     	dto.setUserId(userDto.getId());
@@ -151,6 +151,7 @@ public class MarketController {
     @PostMapping("/storage") // 임시저장 완료 후 부끄마켓 메인 페이지로 이동
     public String storage(@AuthenticationPrincipal UserSecurityDto userDto, MarketCreateDto dto, Integer usedBookId) {
         
+        usedBookService.createImg(usedBookId, dto.getFileNames());
         dto.setUserId(userDto.getId());
         dto.setStorage(0);
         usedBookService.create(usedBookId, dto);
@@ -318,7 +319,7 @@ public class MarketController {
     
     
     /**
-     * main에서 사용함
+     * main, 리스트 불러올때 사용함. 
      * @param usedBookList
      * @return
      */
@@ -327,7 +328,6 @@ public class MarketController {
         List<MarketCreateDto> list = new ArrayList<>();
         
         for (UsedBook ub : usedBookList) {
-            if(ub.getPrice() != null) {
                 User user = userRepository.findById(ub.getUserId()).get();
                 Book book = bookRepository.findById(ub.getBookId()).get();
                 List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(ub.getId());
@@ -341,7 +341,6 @@ public class MarketController {
                         .imgUsed(imgList.get(0).getFileName())
                         .build();
                 list.add(dto);
-            }
         
         }
         
