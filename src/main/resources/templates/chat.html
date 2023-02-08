@@ -67,6 +67,9 @@
     overflow-y: scroll;
     height: 375px;
 }
+:root {
+    --chatalign-text-right: right;
+}
 </style>
 </head>
 
@@ -79,7 +82,7 @@
             <div class="row">
                     <!-- chatHistory와 member가 실시간 입력하는 메시지 출력 -->
                     <div id="content" class="chat-history">
-                        <div th:each="chat : ${chatHistory}">
+                        <div th:each="chat : ${chatHistory}" th:classappend="${chat.sender == 1} ? 'chatalign' : ''">
                             <p>
                                 <span id="chatSender" th:text="${chat.sender}"></span><br>
                                 <span id="chatMessage" th:text="${chat.message}"></span><br>
@@ -88,7 +91,7 @@
                         </div>
                     </div>
                     <!-- 메시지 입력창과 보내기 버튼 -->
-                    <div class="row_3">
+                    <div class="flex-grow-0 py-3 px-4 border-top">
                         <div class="input_group" id="sendMessage">
                             <input type="text" placeholder="메시지를 입력해 주세요." id="message" class="form_control"/>
                             <div class="input_group_append">

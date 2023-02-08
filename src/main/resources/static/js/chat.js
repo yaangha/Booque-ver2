@@ -83,6 +83,15 @@ window.addEventListener('DOMContentLoaded', () => {
         
         // 입력한 메시지를 HTML 형태로 가공
         function createTextNode(messageObj) {
+            if(messageObj.sender == buyerId){
+                return '<p><div align="right" id="newHistory" class="row"><div class="col_8">' +
+            messageObj.sender +
+            '</div><div class="col_4 text-right">' +
+            messageObj.message+
+            '</div><div>[' +
+            messageObj.sendTime +
+            ']</div></p>';
+            } else {
             return '<p><div id="newHistory" class="row alert alert-info"><div class="col_8">' +
             messageObj.sender +
             '</div><div class="col_4 text-right">' +
@@ -90,6 +99,7 @@ window.addEventListener('DOMContentLoaded', () => {
             '</div><div>[' +
             messageObj.sendTime +
             ']</div></p>';
+            }
         }
         
         
@@ -99,6 +109,10 @@ window.addEventListener('DOMContentLoaded', () => {
         $chatHistory.scrollTop($chatHistory[0].scrollHeight);
         }
         
+        // (홍찬) 메세지 보낼때/받을 때 대화목록 refresh
+        //$('.input_group').on('focusin',function(){
+        //   $('.chat-history').load(location.href+' .chat-history');
+        //});
         
         // HTML 형태의 메시지를 화면에 출력해줌
         // 해당되는 id 태그의 모든 하위 내용들을 message가 추가된 내용으로 갱신해줌
