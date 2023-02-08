@@ -75,10 +75,10 @@ btnSubmit.addEventListener('click', function () {
                 //console.log(data);
                 // 이미지 파일이 아닌 경우, 디폴트 썸네일 이미지를 사용하도록.
                 let img = '';
-                    img = `<img src="/market/api/view/${x.link}" data-src="${x.uuid + '_' + x.fileName}" />`;
+                    img = `<img src="/market/api/view/${x.link}" data-src="${x.uuid + '_' + x.fileName}" class="card-img-bottom"/>`;
 
                 const htmlStr = `
-                                <div class="card my-2">
+                                <div class="card" style="width:300px; margin: 5px;">
                                     <div class="card-header d-flex justify-content-center">
                                         ${x.fileName}
                                         <button class="btnDelete btn-close" aria-label="Close"
@@ -154,17 +154,17 @@ btnSubmit.addEventListener('click', function () {
             
         str +=    ' <tr th:each="book : ${ searchList }"> ' 
          +        ' <td class="align-middle"> ' 
-         +   `<a href="/detail?id=${c.bookId}"><img src="${c.bookImage}" style="width: 80px;"/></a>  </td>` 
+         +   `<a href="/detail?id=${c.bookId}"><img src="${c.bookImage}" style="width: 150px;"/></a>  </td>` 
          +        ' </td> ' 
-         +        ' <td class="align-middle" style="text-align: left;"> '  
-         +                    ' <small class="d-inline-flex px-2 my-1 border rounded text-secondary"> ' 
+         +        ' <td class="w-100 align-middle" style="text-align: left;"> '  
+         +                    ' <small class="d-inline-flex px-2 my-1 border rounded text-secondary" style="font-size: 12px;"> ' 
          +                        ' <span>'+c.bookgroup+'</span><span> / </span><span>'+c.category+'</span> ' 
-         +                    ' </small> ' 
-         +                    ' <div class="h5">'+c.bookName+'</div> ' 
-         +                    ' <div >'+c.author+'</div> ' 
-         +                    ' <div >'+c.publisher+'</div> ' 
-         +                    ' <div>'+c.publishedDate+'</div> ' 
-         +                    ' <div>'+c.isbn+'</div> ' 
+         +                    ' </small><br> ' 
+         +                    ' <div class="h5" style="font-weight: bold;">'+c.bookName+'</div><br> ' 
+         +                    ' <div >'+c.author+'</div><br> ' 
+         +                    ' <div >'+c.publisher+'</div><br> ' 
+         +                    ' <div>'+c.publishedDate+'</div><br> '   
+         +                    ' <div>ISBN: '+c.isbn+'</div> ' 
          +        ' </td> ' 
 
 
@@ -224,36 +224,23 @@ btnSubmit.addEventListener('click', function () {
         const bookSelectDiv = document.querySelector('#bookSelect')
         let str='';
         
-        str += ' <table class="w-100 table" style="text-align: center;"> ' 
+        str += ' <table class="w-100" style="text-align: center;"> ' 
             +    ' <tbody style="height: 200px;" > ' 
 
          +  ' <tr > ' 
          +        ' <td class="align-middle"> ' 
-         +   `<a href="/detail?id=${book.bookId}" ><img src="${book.bookImage}" style="width: 80px;"/></a>  </td>` 
+         +   `<a href="/detail?id=${book.bookId}" ><img src="${book.bookImage}" style="width: 200px;"/></a>  </td>` 
          +        ' </td> ' 
-         +        ' <td class="align-middle" style="text-align: left;"> '  
-         +                    ' <small class="d-inline-flex px-2 my-1 border rounded text-secondary"> ' 
+         +        ' <td class="align-middle" style="text-align: left; padding-left: 25px;"> '  
+         +                    ' <small class="d-inline-flex px-2 my-1 border rounded text-secondary" style="font-size: 12px;"> ' 
          +                        ' <span>'+book.bookgroup+'</span><span> / </span><span>'+book.category+'</span> ' 
-         +                    ' </small> ' 
-         +                    ' <div class="h5"><input readyonly style="border:none; " class="w-100" form="formCreate" name="bookTitle"  value="'+book.bookName+'"/></div> ' 
-         +                    ' <div ><span> 작가 : </span>'+book.author+'</div> ' 
-         +        ' <td class="align-middle" style="text-align: left;"> '  
-         +          '<small>출판사</small>'
-         +                    ' <div > '+book.publisher+'</div> ' 
-         +                    ' <div>'+book.publishedDate+'</div> ' 
-         +        ' </td> ' 
-         +        ' <td class="align-middle" style="text-align: left;"> '  
-         +                    ' <div> isbn : '+book.isbn+'</div> ' 
-         +        ' </td> ' 
-
-
-         +        ' <td class="align-middle"> ' 
-                
-         +        ' </td> ' 
-
-//         +        ' <td class="align-middle"> ' 
-//         +                ' <input class="btn btn-dark btn-sm my-2"  style="width: 100px;"   value="뭐 넣지"> '
-//         +        ' </td> ' 
+         +                    ' </small><br> ' 
+         +                    ' <div class="h5"><input readyonly style="border:none; width:800px; font-weight: bold;" form="formCreate" name="bookTitle"  value="'+book.bookName+'"/></div><br> ' 
+         +                    ' <div ><span> 작가 : </span>'+book.author+'</div><br> ' 
+         +                    '<small>출판사</small>'
+         +                    ' <div > '+book.publisher+'</div><br> ' 
+         +                    ' <div>'+book.publishedDate+'</div><br> '
+         +                    ' <div>ISBN : '+book.isbn+'</div> ' 
          +    ' </tr> ' 
          +   ' </tbody> ' 
           +   ' </table> ' ;  
