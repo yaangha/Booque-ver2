@@ -151,7 +151,18 @@ public class UsedBookService {
     public List<UsedBook> readOtherUsedBook(Integer bookId) {
         log.info("하은 중고책의 책 정보를 가진 아이디는? = {}", bookId);
         
-        List<UsedBook> otherUsedBookList = usedBookRepository.findByBookId(bookId);
+        // (1) 같은 책의 중고판매글 리스트
+        List<UsedBook> otherUsedBookListAll = usedBookRepository.findByBookId(bookId); 
+        
+        // (2) 임시저장 글 제외한 리스트 재생성
+        List<UsedBook> otherUsedBookList = new ArrayList<>();
+        
+        for (UsedBook u : otherUsedBookListAll) {
+            UsedBookPost storageChk = usedBookPostRepository.findByUsedBookId(u.getId());
+            if (storageChk.getStorage() != 0) {
+                otherUsedBookList.add(u);
+            }
+        }
         
         return otherUsedBookList;
     }

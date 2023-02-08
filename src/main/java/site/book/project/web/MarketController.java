@@ -206,10 +206,24 @@ public class MarketController {
         model.addAttribute("sale", sale);
         model.addAttribute("wish", wish);
         model.addAttribute("book", book);
-        model.addAttribute("user", user); // userName만 보낼 수 있게 수정(?)
+        model.addAttribute("user", user); 
         model.addAttribute("usedBookPost", usedBookPost);
         model.addAttribute("usedBook", usedBook);
-        model.addAttribute("otherUsedBookListFinal", otherUsedBookListFinal);     
+        model.addAttribute("otherUsedBookListFinal", otherUsedBookListFinal);  
+        
+        
+        // (하은) 같은 책 다른 중고상품 수정
+        List<MarketCreateDto> otherUsedBookList2 = mainList(otherUsedBookList);
+        List<MarketCreateDto> otherUsedBookListFinal2 = new ArrayList<>();
+
+        for (MarketCreateDto m : otherUsedBookList2) {
+            if(usedBookId != m.getUsedBookId()) {
+                otherUsedBookListFinal2.add(m);
+            }
+        }
+        
+        model.addAttribute("otherUsedBookListFinal2", otherUsedBookListFinal2);
+        
     }
     
     // (하은) 조회수 증가
