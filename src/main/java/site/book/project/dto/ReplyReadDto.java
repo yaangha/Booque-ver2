@@ -16,9 +16,11 @@ public class ReplyReadDto {
 
     private Integer replyId;
     private Integer postId;
+    private Integer bookId;
+    private Integer userId; // postWriter id;
+    private String nickName;
     private String replyContent;
     private String replyWriter;
-    private String nickName;
     private String userImage;
     private LocalDateTime createdTime;
     private LocalDateTime modifiedTime;
@@ -26,6 +28,8 @@ public class ReplyReadDto {
     public static ReplyReadDto fromEntity(PostReply entity) {
         return ReplyReadDto.builder().replyId(entity.getReplyId())
                 .postId(entity.getPost().getPostId())
+                .bookId(entity.getPost().getBook().getBookId())
+                .userId(entity.getPost().getUser().getId())
                 .replyWriter(entity.getReplyWriter())
                 .userImage(entity.getUser().getUserImage())
                 .nickName(entity.getUser().getNickName())

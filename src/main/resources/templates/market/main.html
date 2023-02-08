@@ -45,10 +45,15 @@
     <div class="w-70 container">
     
     <div style="margin-bottom: 80px;"><!-- 상단 div(검색, 판매글, 마이페이지 이동 등) -->
-        <div style="margin-left:280px; display:inline-block;">
+        <div style="margin-left:100px; display:inline-block;">
         
+        <form id="formSearchL" action="/market/mainSearch" method="get">
         
-                <form id="formSearchL" action="/market/mainSearch" method="get">
+        <label for="statusAll" style="margin-right: 20px"> 
+        <input  checked name="status" id="statusAll" type="radio" value="all" style="padding: 10px;"> 전체</label> 
+        <label for="statusAble" style="margin-right: 20px">
+        <input  name="status" id="statusAble"  type="radio" value="able"> 구매가능</label>
+        
             <select name="region" id="selectLocation" style="width:180px; height: 40px; display: inline-block; border: none;">
                 <option value="">지역을 선택하세요</option>
                 <option value="서울">서울특별시</option>
@@ -79,7 +84,32 @@
         
         
         <div class="float-end" style="display: inline-block;">
-            <a class="btn btn-success" th:href="@{ /market/create }">상품등록</a>
+        
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">상품등록</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">상품등록</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        상품 등록을 진행하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <div th:unless="${ #lists.isEmpty(usedBookPost) }">
+            <a class="btn btn-secondary" th:href="@{ /market/storage }">이어서 작성</a>
+        </div>
+        <a class="btn btn-primary" th:href="@{ /market/create }">새로 작성</a>
+      </div>
+    </div>
+  </div>
+</div>
+            
+            
+            
             <a class="btn btn-danger" style="margin-right: 40px;" th:href="@{ /market/mypage?userNickname={userNickname} (userNickname = ${ userNickname }) }">마이부끄</a>            
         </div>
     </div><!-- 상단 div end -->
@@ -88,17 +118,21 @@
     
     <div style="margin-top:15px; margin-bottom:15px;">
         <div style="font-weight: bold; font-size:25px; margin-left: 40px; display:inline-block;">부끄마켓 중고거래</div>
-        <select class="form-select float-end" style="width:120px; height: 40px; margin-right:40px; display: inline-block;">
-            <option>인기순</option>
-            <option>최신순</option>
-            <option>오래된순</option>
+        <form id="formOrder" action="/market/main" method="get" style="display: inline-block; margin-left: 910px;">
+        <select id="orderSlt" name="orderSlt" onchange="changeStatus()"  class="form-select" style="width:120px; height: 40px; margin-right:40px; display: inline-block;">
+            <option th:selected ="${ orderSlt } == 최신순" value="최신순">최신순</option>
+            <option th:selected ="${ orderSlt } == 인기순" value="인기순">인기순</option>
+            <option th:selected ="${ orderSlt } == 오래된순" value="오래된순">오래된순</option>
         </select>
+        </form>
     </div>
-        
-
+    
     <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:40px; display:inline-block;"><!-- content 1개 -->
         <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ marketCreateDto.usedBookId }) }" th:myname="${ marketCreateDto.usedBookId }" onclick="usedBookHits(this.getAttribute('myname'))">
-            <div id="img" class="border" style="height:350px; width:350px; margin-bottom:10px; background-color: silver;"></div>
+            <div id="img" class="border" style="height:350px; width:350px; margin-bottom:10px; background-color: silver;">
+            <img alt="" th:src="${ marketCreateDto.imgUsed }"  style="height:350px; width:350px; margin-bottom:10px;">
+            </div>
+            
             <div class="text-truncate" th:text="${ marketCreateDto.title }" style="font-weight: bold; font-size: 20px;"></div>
             <div th:text="|${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold; font-size: 25px; color:red;"></div>
             <div th:text="${ marketCreateDto.location }" style="display: inline-block;"></div>
@@ -127,16 +161,17 @@
     <script>
     
     const btnSearch = document.querySelector('#btnSearchL')
-
     
     btnSearch.addEventListener('click', function(){
-    	
         // form으로 넘겨야 겠지?
         const formSearch = document.querySelector('#formSearch')
-        
-        console.log(formSearch)
     	
     })
+    
+    function changeStatus(){
+    	const formOrder= document.querySelector('#formOrder')
+        formOrder.submit();
+    }
     
     </script>
     
@@ -150,7 +185,6 @@
     		   console.log(err);
     	   })
     }
-    
     </script>
     
 </body>

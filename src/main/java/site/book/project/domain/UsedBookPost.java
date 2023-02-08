@@ -28,15 +28,17 @@ public class UsedBookPost {
     
     @Column(nullable = false)
     private Integer usedBookId;
-    
-    
-    @Column(nullable = false)
+
+    @Column
     private String content;
     
+    @Builder.Default
+    private Integer storage = 0; // 0 => 임시저장, 1 => 저장
     
-    public UsedBookPost update(String content) {
+    
+    public UsedBookPost update(String content, Integer storage) {
         this.content = content;
-        
+        this.storage = storage;
         return this;
     }
 

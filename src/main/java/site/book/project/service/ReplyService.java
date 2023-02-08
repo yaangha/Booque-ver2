@@ -43,6 +43,7 @@ public class ReplyService {
             User u = userRepository.findByUsername(r.getReplyWriter()).get();
             ReplyReadDto dto = ReplyReadDto.builder().postId(r.getPost().getPostId())
                     .replyId(r.getReplyId()).replyWriter(r.getReplyWriter())
+                    .nickName(u.getNickName())
                     .replyContent(r.getReplyContent()).userImage(u.getUserImage())
                     .createdTime(r.getCreatedTime()).modifiedTime(r.getModifiedTime()).build();
             
