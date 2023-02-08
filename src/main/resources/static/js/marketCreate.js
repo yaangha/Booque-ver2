@@ -38,9 +38,8 @@ btnSubmit.addEventListener('click', function () {
     document.querySelector('#btnModalUpload').addEventListener('click', e =>{
         console.log('btnModal 누름')
         
-        const formData = new FormData();
+        const formData = new FormData();  
         const fileInput =  document.querySelector('input[name="files"]');
-        console.log(fileInput.files);
         
         Array.from(fileInput.files).forEach(f => {
             formData.append('files', f);
@@ -48,16 +47,14 @@ btnSubmit.addEventListener('click', function () {
         })
         
         
+
         uploadFiles(formData);
-        console.log('컨트롤러로 보냄')
         
         
     })
     
 
     function uploadFiles(formData){
-        
-        console.log('컨트롤러로 보냄 upload')
         
         axios.post('/market/api/upload', formData)
             .then(getUploaded)

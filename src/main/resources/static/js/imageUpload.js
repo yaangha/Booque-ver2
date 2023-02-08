@@ -2,7 +2,7 @@ window.addEventListener('DOMContentLoaded', () => {
     
      // (예진) 이미지 업데이트 
      
-   //  tempImage();
+     tempImage();
     
      function tempImage() {
         
@@ -11,7 +11,7 @@ window.addEventListener('DOMContentLoaded', () => {
         
         axios
         .get('/tempView/' + id)  
-       // .then(response => { viewImage(response.data) } )
+        .then(response => { viewImage(response.data) } )
         .catch(err => { console.log(err) })
 
     };
@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
            img +=  `<img src="/view/${data.fileName}" width=200px />`;
         } else {
            // 설정한 프사 없을 경우 디폴트 이미지
-           img +=  `<img src="/view/10.png" width=200px />`;
+           img +=  `<img src="/view/113163657.jpg" width=200px />`;
         }
         divProfileImage.innerHTML = img;
        
