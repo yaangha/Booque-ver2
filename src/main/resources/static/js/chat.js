@@ -3,11 +3,9 @@
  */
  
 window.addEventListener('DOMContentLoaded', () => {
-   
-   var stompClient = null;
-        var buyerId = $('#buyerId').val();
-        var usedBookId = $('#usedBookId').val();
-        var sellerId = $('#sellerId').val();
+    
+        var stompClient = null;
+        var sender = $('#loginUser').val();
         var chatRoomId = $('#chatRoomId').val();
         
         // invoke when DOM(Documents Object Model; HTML(<head>, <body>...etc) is ready
@@ -56,7 +54,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 // 'buyerId': buyerId, 
                 // 'sellerId': sellerId,
                 // 'usedBookId': usedBookId,
-                'sender': buyerId,
+                'sender': sender,
                 'message': message,
                 'sendTime': date.toLocaleString('ko-kr')
                 });
