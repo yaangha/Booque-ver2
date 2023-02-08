@@ -13,6 +13,20 @@ btnSubmit.addEventListener('click', function () {
     const price = document.querySelector('#price').value;
     const contents = document.querySelector('#contents').value;
     
+    
+    const uploads = document.querySelector('#uploads');
+    const files = uploadResults.querySelectorAll('img');
+    
+    let htmlStr = '';
+    files.forEach(x => {
+        const imgLink = x.getAttribute('data-src');
+        //console.log(imgLink);
+        htmlStr += `<input type="hidden" name="fileNames" value="${imgLink}" />`;
+    });
+    uploads.innerHTML = htmlStr;
+    
+    
+    
     if (sample3_address == '' || title == '' || price == '' || contents == '') {
         alert('필수항목을 모두 채워주세요!');
         return;
@@ -23,9 +37,7 @@ btnSubmit.addEventListener('click', function () {
     
     const result = confirm('등록하시겠습니까?');
     if (result) {
-        formCreate.action = '/market/create';
-        formCreate.method = 'post';
-        formCreate.submit();
+     document.querySelector('#formCreate').submit();
     }
 });
     
@@ -66,19 +78,22 @@ btnSubmit.addEventListener('click', function () {
         
     }
     
-        function getUploaded(response) {
+    function getUploaded(response) {
         if (response.status == 200) {
+            
+        const imgNum = document.querySelector('#imgNum');
+        imgNum.innerHTML = response.data.length
+        
             response.data.forEach(x => {
                 //console.log(data);
                 // 이미지 파일이 아닌 경우, 디폴트 썸네일 이미지를 사용하도록.
                 let img = '';
                     img = `<img src="/market/api/view/${x.link}" data-src="${x.uuid + '_' + x.fileName}" class="card-img-bottom"/>`;
-
                 const htmlStr = `
                                 <div class="card" style="width:300px; margin: 5px;">
                                     <div class="card-header d-flex justify-content-center">
                                         ${x.fileName}
-                                        <button class="btnDelete btn-close" aria-label="Close"
+                                        <button class="btnDelet btn-close" aria-label="Close"
                                             data-uuid="${x.uuid}" data-fname="${x.fileName}"></button>
                                     </div>
                                     <div class="card-body">
@@ -91,24 +106,32 @@ btnSubmit.addEventListener('click', function () {
             });
             
             
-                const uploads = document.querySelector('#uploads');
-                const files = uploadResults.querySelectorAll('img');
-                let htmlStr = '';
-                files.forEach(x => {
-                    const imgLink = x.getAttribute('data-src');
-                    //console.log(imgLink);
-                    htmlStr += `<input type="hidden" name="fileNames" value="${imgLink}" />`;
-                });
-                uploads.innerHTML = htmlStr;
+     
             
             
-            document.querySelectorAll('.btnDelete').forEach(btn => {
+            document.querySelectorAll('.btnDelet').forEach(btn => {
                 btn.addEventListener('click', removeFileFromServer);
             });
             
         }
     }
     
+    function removeFileFromServer(event){
+        event.preventDefault();
+        
+        const btn = event.target;
+        const uuid = btn.getAttribute('data-uuid');
+        const fname = btn.getAttribute('data-fname');      
+        const fileName = uuid+'_'+fname;  
+        console.log(uuid);
+        console.log(fname);
+        
+        axios.delete('/market/api/view/'+fileName)
+            .then(btn.closest('.card').remove())
+            
+        
+        
+    }
     
     
     

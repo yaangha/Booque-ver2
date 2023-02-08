@@ -57,17 +57,17 @@
     <div class="w-70 container">
     
     
-    <div th:each="imgList: ${ imgList }" id="uploadResults" class="container-fluid d-flex" style="flex-wrap: wrap;">
-<div class="card my-2">
-    <div class="card-header d-flex justify-content-center">
-        <button class="btnDelete btn-close" aria-label="Close"
-            data-uuid="${x.uuid}" data-fname="${imgList.fileName}"></button>
-    </div>
-    <div class="card-body">
-        <img alt="" th:src="${ '/market/api/view/'+ imgList.fileName }" style="width: 250px;">
+<div id="uploadResults" class="container-fluid d-flex"style="flex-wrap: wrap;">
+    <div th:each="imgList: ${ imgList }"  class="card my-2">
+        <div class="card-header d-flex justify-content-center">
+            <button class="btnDelete btn-close" aria-label="Close"
+                ></button>
+        </div>
+        <div class="card-body">
+            <img alt="" th:src="${ '/market/api/view/'+ imgList.fileName }" style="width: 250px;">
+        </div>
     </div>
 </div>
-    </div>
     
     <div id="profile"> <!-- profile -->
         <a th:href="@{ /market/mypage(id=${ user.id }) }"><!-- 작성자 부끄마켓 개인 페이지로 이동 -->

@@ -16,6 +16,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,14 +71,6 @@ public class MarketRestController {
         return ResponseEntity.ok(list);
     }
     
-    @PostMapping("/api")
-    public ResponseEntity<FileUploadResultDto> a(FileUploadDto dto){
-        List<MultipartFile> files = dto.getFiles(); // 파일을 꺼내옴, 근데 왜 한번에는 안됐을까?
-        
-        
-        
-        return null;
-    }
     
     
     private FileUploadResultDto saveFile(MultipartFile file) {
@@ -128,6 +121,18 @@ public class MarketRestController {
         Resource resource = new FileSystemResource(file);
         
         return ResponseEntity.ok().headers(headers).body(resource);
+    }
+    
+    @DeleteMapping("/api/view/{fileName}")
+    public void deleteFile(@PathVariable String fileName) {
+        log.info("삭제할 파일 이루ㅁ{}", fileName);
+        
+        File file = new File(uploadPath, fileName);
+        log.info("파일은 뭔데??? {}", file);
+        
+        boolean result =  file.delete();
+        
+        log.info("삭제 되엇니???? {}", result);
     }
     
     
