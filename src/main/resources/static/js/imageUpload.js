@@ -2,7 +2,7 @@ window.addEventListener('DOMContentLoaded', () => {
     
      // (예진) 이미지 업데이트 
      
-     tempImage();
+   //  tempImage();
     
      function tempImage() {
         
@@ -11,7 +11,7 @@ window.addEventListener('DOMContentLoaded', () => {
         
         axios
         .get('/tempView/' + id)  
-        .then(response => { viewImage(response.data) } )
+       // .then(response => { viewImage(response.data) } )
         .catch(err => { console.log(err) })
 
     };
