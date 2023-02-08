@@ -11,11 +11,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Builder
 @ToString
 @Entity(name = "CHAT")
@@ -35,7 +37,12 @@ public class Chat extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer usedBookId;
     
-    @Column(nullable = false)
+    @Column
     private String fileName;
+    
+    public Chat update(String fileName) {
+        this.fileName = fileName;
+        return this;
+    }
     
 }

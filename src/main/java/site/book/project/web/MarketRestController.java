@@ -16,6 +16,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,14 +28,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.coobird.thumbnailator.Thumbnailator;
 import site.book.project.domain.Book;
 import site.book.project.domain.UsedBook;
+import site.book.project.domain.UsedBookImage;
 import site.book.project.dto.FileUploadDto;
 import site.book.project.dto.FileUploadResultDto;
 import site.book.project.dto.UsedBookStatus;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.SearchRepository;
+import site.book.project.repository.UsedBookImageRepository;
 import site.book.project.repository.UsedBookRepository;
 import site.book.project.service.UsedBookService;
 
@@ -47,6 +49,7 @@ public class MarketRestController {
     private final UsedBookService usedBookService;
     private final UsedBookRepository usedBookRepository;
     private final SearchRepository searchRepository;
+    private final UsedBookImageRepository usedBookImageRepository;
     
     @Value("${com.example.upload.path}")
     private String uploadPath;
@@ -71,6 +74,7 @@ public class MarketRestController {
     }
     
     
+    
     private FileUploadResultDto saveFile(MultipartFile file) {
         FileUploadResultDto result = null;
         
@@ -81,18 +85,10 @@ public class MarketRestController {
         log.info(target);
         
 //        Path path = Paths.get(uploadPath, target);
-        File dest = new File(uploadPath, target);
+        File dest = new File(uploadPath, target);   // 새로운 파일을 저장하는것?
         try {
 //            file.transferTo(path);
             file.transferTo(dest);
-            
-//            if (file.getContentType().startsWith("image")) {
-//                image = true;
-//                String thumbnailTarget = "s_" + target;
-//                File thumbnailDest = new File(uploadPath, thumbnailTarget);
-//                Thumbnailator.createThumbnail(dest, thumbnailDest, 200, 200);
-//                
-//            }
             
             result = FileUploadResultDto.builder()
                     .uuid(uuid)
@@ -129,6 +125,26 @@ public class MarketRestController {
         return ResponseEntity.ok().headers(headers).body(resource);
     }
     
+    @DeleteMapping("/api/view/{fileName}")
+    public void deleteFile(@PathVariable String fileName) {
+        log.info("삭제할 파일 이루ㅁ{}", fileName);
+        
+        File file = new File(uploadPath, fileName);
+        log.info("파일은 뭔데??? {}", file);
+        
+        boolean result =  file.delete();
+        
+        log.info("삭제 되엇니???? {}", result);
+        
+    }
+    
+    @DeleteMapping("/api/deleteImg/{imgId}")
+    public void deleteImg(@PathVariable Integer imgId) {
+        usedBookImageRepository.deleteById(imgId);
+        
+        
+        
+    }
     
     
     
