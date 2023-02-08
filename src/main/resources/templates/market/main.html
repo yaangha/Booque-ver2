@@ -139,7 +139,7 @@
             <div><img class="rounded-circle" width="40" height="40" th:src = "${ marketCreateDto.userImage }" /><span th:text="${ '&nbsp;&nbsp;'+marketCreateDto.nickName }"></span></div>
             
             <span class="text-truncate" th:text="${ '<' + marketCreateDto.bookTitle + '>'}"></span>
-            <div style="color: gray;">업로드(수정) 
+            <div style="color: gray;">업로드 
                 <small style="color: gray;" th:text="${ #temporals.format(marketCreateDto.modifiedTime, 'yyyy/MM/dd HH:mm') }"></small>
             </div>
             <div class="align-middle" style="color:gray;">

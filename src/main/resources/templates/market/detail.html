@@ -129,7 +129,6 @@
     </div>
     
     <div class="row"> <!-- content -->        
-        <!-- <div class="w-75 align-top" style="display: inline-block;"> content left -->
         <div class="col-8"> <!-- content left -->
             <div th:if="${ user.username } == ${ #authentication.name }">
                 <select onchange="changeStatus()" id="selectStatus" name="selectStatus" class="form-select" style="width:120px; height: 40px; margin-bottom: 10px; display: inline-block;">
@@ -155,7 +154,6 @@
             <input type="text" id="usedLocation" th:value="${ usedBook.location }" style="width: 300px; border: none; margin-bottom:10px;" />
         </div> <!-- content left end -->
         
-        <!-- <div class="float-end" style="display: inline-block;"> content right -->
         <div class="col" style="margin-left: 100px;"> <!-- content right -->
         <a th:href="@{ /detail(id=${ book.bookId }) }">
             <div class="card mx-2 my-2" style="width: 20rem;">    

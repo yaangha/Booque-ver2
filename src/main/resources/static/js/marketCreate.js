@@ -104,11 +104,7 @@ btnSubmit.addEventListener('click', function () {
                 });
                 uploads.innerHTML = htmlStr;
             
-            
-            document.querySelectorAll('.btnDelete').forEach(btn => {
-                btn.addEventListener('click', removeFileFromServer);
-            });
-            
+
         }
     }
     
