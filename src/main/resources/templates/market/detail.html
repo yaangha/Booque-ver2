@@ -29,7 +29,7 @@
 		}
 		
 		#other {
-			border-top: 1px solid silver;
+			/* border-top: 1px solid silver; */
 			padding-top: 18px;
 		}
 		
@@ -177,6 +177,35 @@
         </div> <!-- content right end -->
     </div> <!-- content end -->
     
+    <div class="row border rounded-4" style="height: auto; padding: 10px;"><!-- 작성자 블로그로 연결하기 -->
+        <div class="col-8" style="padding: 20px 0px;">
+            <div>
+                <div style="display: inline-block;">
+                    <i class="bi bi-bookmarks-fill" style="font-size: 25px; padding: 10px;"></i><br><br>
+                </div>
+                <div style="padding: 10px 0px; display: inline-block;"><!-- 블로그 목록 1개(임시) -->
+                    <div style="font-weight: bold; font-size:16px;">이 책은 이랬다.. 저랬다.. 그랬다.. 재밌다.. 어떤가.. 그런가.. 이런가..</div>
+                    <div>이런 저런 내용.. 재밌는데 재미없어요.. 샀어요 책을.. 다 읽었어요.. 별점은 5점입니다.</div>
+                    <div style="font-size: small; color: gray;">2023/02/06 06:23 월요일</div>
+                </div>
+            </div>
+            <div>
+                <div style="display: inline-block;">
+                    <i class="bi bi-bookmarks-fill" style="font-size: 25px; padding: 10px;"></i><br><br>
+                </div>
+                <div style="padding: 10px 0px; display: inline-block;"><!-- 블로그 목록 1개(임시) -->
+                    <div style="font-weight: bold; font-size:16px;">이 책은 이랬다.. 저랬다.. 그랬다.. 재밌다.. 어떤가.. 그런가.. 이런가..</div>
+                    <div>이런 저런 내용.. 재밌는데 재미없어요.. 샀어요 책을.. 다 읽었어요.. 별점은 5점입니다.</div>
+                    <div style="font-size: small; color: gray;">2023/02/06 06:23 월요일</div>
+                </div>
+            </div>
+            <a th:href="@{ /post/list(postWriter=${ user.username }) }" class="btn" style="border: 1px solid black; padding: 16px 14px; margin:16px; font-weight: bold;"><span th:text="${ '[' + user.nickName + ']' }"></span>님의 블로그 구경하기 →</a>
+        </div>
+        <div class="col" style="text-align: right;">
+            <img style="width:300px; height:300px; display:inline-block; margin-right: 10px;" th:src="${ user.userImage }">
+        </div>
+    </div><!-- 작성자 블로그 end -->
+    
     <div id="other"> <!-- 이 책의 다른 중고 상품은? -->
     	<div style="font-size:18px; padding-bottom: 15px;"><span th:text="${ '<' + book.bookName + '>' }" style="font-size:21px; font-weight: bold;"></span> 다른 중고 상품은?</div>
     	<div class="otherList align-middle" th:each="marketCreateDto : ${ otherUsedBookListFinal2 }"> <!-- 다른 상품 나열 부분 -->
@@ -254,12 +283,12 @@
         	// 정상적으로 검색 됐을 시
         	 if (status === daum.maps.services.Status.OK) {
         		 // (하은) 마커 변경
-        		 //var imageSrc = '/images/booque_logo_api.png',    
-        		 //   imageSize = new kakao.maps.Size(64, 69),
-        		 //   imageOption = {offset: new kakao.maps.Point(27, 69)};
+        		 var imageSrc = '/images/marker.png',    
+        		    imageSize = new kakao.maps.Size(45, 45),
+        		    imageOption = {offset: new kakao.maps.Point(27, 69)};
         		 
-        		 //var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
-        		  //   markerPosition = new kakao.maps.LatLng(37.54699, 127.09598);
+        		 var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+        		     markerPosition = new kakao.maps.LatLng(37.54699, 127.09598);
         		 
                  // 해당 주소에 대한 좌표를 받아서
                  var coords = new daum.maps.LatLng(result[0].y, result[0].x);
@@ -268,7 +297,7 @@
                  var marker = new daum.maps.Marker({
                      map: map,
                      position: coords,
-                 //    image: markerImage
+                     image: markerImage
                  });
                  
                  // 지도 중심을 변경한다.
