@@ -24,9 +24,23 @@
         margin-top:20px;
     }
     
+    #chatList {
+        padding-right: 30px;
+        margin-right: 30px;
+        padding-left: 30px;
+        margin-bottom: 50px;
+        border: 2px solid lightgrey;
+    }
+    
+    #chatDetail {
+        margin-right: 50px;
+        margin-left: 30px;
+        margin-bottom: 50px;
+        border: 2px solid lightgrey;
+    }
+    
     .chat-history {
         padding: 30px 30px 20px 20px;
-        margin-bottom: 30px;
         overflow-y: scroll;
         height: 375px;
     }
@@ -46,12 +60,12 @@
             </div>
             
             <!-- 채팅방 목록 -->
-            <div class="w3-quarter">
+            <div class="w3-quarter" id="chatList">
                 여기다가는 채팅방 리스트를 만들거에용ㅎ
             </div> <!-- 채팅방 목록 End -->
             
             <!-- 채팅 상세 창 -->
-            <div class="row">
+            <div class="row" id="chatDetail">
                     <!-- 출력 창(chatHistory) -->
                     <div id="content" class="chat-history">
                         <div th:each="chat : ${chatHistory}" th:classappend="${chat.sender == 1} ? 'chatalign' : ''">
@@ -65,7 +79,7 @@
                     <!-- 메시지 입력 창 -->
                     <div>
                         <div class="input_group" id="sendMessage">
-                            <input type="text" size="50" placeholder="메시지를 입력해 주세요." id="message" class="form_control"/>
+                            <input type="text" size="65" placeholder="메시지를 입력해 주세요." id="message" class="form_control"/>
                             <span class="input_group_append">
                                 <button id="btnSend" class="btn btn-primary">보내기</button>
                             </span>
