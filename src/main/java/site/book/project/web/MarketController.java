@@ -383,7 +383,7 @@ public class MarketController {
                         .userImage(user.getUserImage()).nickName(user.getNickName())
                         .bookTitle(book.getBookName()).price(ub.getPrice())
                         .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime()).hits(ub.getHits()).wishCount(ub.getWishCount())
-                        .imgUsed(imgList.get(0).getFileName())
+                       .imgUsed(imgList.get(0).getFileName())
                         .build();
                 list.add(dto);
         
