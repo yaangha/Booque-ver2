@@ -68,7 +68,7 @@
                                     <div class="card-header d-flex justify-content-center">
                                         ${x.fileName}
                                         <button class="btnImgDelete btn-close" aria-label="Close"
-                                            data-uuid="${x.uuid}" data-fname="${x.fileName}"></button>
+                                            data-uuid="${x.uuid}" data-fname="${x.uuid + '_' + x.fileName}"></button>
                                     </div>
                                     <div class="card-body">
                                         ${img}
