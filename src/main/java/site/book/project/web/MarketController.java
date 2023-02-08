@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Book;
+import site.book.project.domain.Post;
 import site.book.project.domain.UsedBook;
 import site.book.project.domain.UsedBookImage;
 import site.book.project.domain.UsedBookPost;
@@ -30,12 +31,14 @@ import site.book.project.domain.User;
 import site.book.project.dto.MarketCreateDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.BookRepository;
+import site.book.project.repository.PostRepository;
 import site.book.project.repository.SearchRepository;
 import site.book.project.repository.UsedBookImageRepository;
 import site.book.project.repository.UsedBookPostRepository;
 import site.book.project.repository.UsedBookRepository;
 import site.book.project.repository.UsedBookWishRepository;
 import site.book.project.repository.UserRepository;
+import site.book.project.service.PostService;
 import site.book.project.service.SearchService;
 import site.book.project.service.UsedBookService;
 
@@ -53,6 +56,8 @@ public class MarketController {
     private final UserRepository userRepository;
     private final UsedBookWishRepository usedBookWishRepository;
     private final UsedBookImageRepository usedBookImageRepository;
+    private final PostService postService;
+    private final PostRepository postRepository;
     
     
     
@@ -201,6 +206,18 @@ public class MarketController {
             }
         }
         
+        // (하은) 블로그로 연결 -> 해당 책에 관한 리뷰 + 최신 리뷰 = 총 2개 보여주기
+        List<Post> userPostList = postRepository.findByUserIdOrderByCreatedTimeDesc(user.getId()); // 작성자 블로그 글
+        
+        Post latestPost = userPostList.get(0);
+        Post thisBookPost = null;
+        for (Post p : userPostList) {
+            if (p.getBook().getBookId() == usedBook.getBookId()) {
+                thisBookPost = p;
+            }
+        }
+        
+        model.addAttribute("thisBookPost", thisBookPost);
         model.addAttribute("firstImg", firstImg);
         model.addAttribute("imgList", imgList);
         model.addAttribute("sale", sale);

@@ -177,13 +177,14 @@
         </div> <!-- content right end -->
     </div> <!-- content end -->
     
-    <div class="row border rounded-4" style="height: auto; padding: 10px;"><!-- 작성자 블로그로 연결하기 -->
+    <div class="row" style="height: auto; padding: 10px; border: 2px solid black;"><!-- 작성자 블로그로 연결하기 -->
         <div class="col-8" style="padding: 20px 0px;">
             <div>
                 <div style="display: inline-block;">
                     <i class="bi bi-bookmarks-fill" style="font-size: 25px; padding: 10px;"></i><br><br>
                 </div>
                 <div style="padding: 10px 0px; display: inline-block;"><!-- 블로그 목록 1개(임시) -->
+                    <div>아직 <span style="font-weight: bold; font-size:16px;" th:text="${ '<' + book.bookName + '>' }"></span> 책에 대한 리뷰를 작성하지 않으셨네요ㅠ,ㅠ</div>
                     <div style="font-weight: bold; font-size:16px;">이 책은 이랬다.. 저랬다.. 그랬다.. 재밌다.. 어떤가.. 그런가.. 이런가..</div>
                     <div>이런 저런 내용.. 재밌는데 재미없어요.. 샀어요 책을.. 다 읽었어요.. 별점은 5점입니다.</div>
                     <div style="font-size: small; color: gray;">2023/02/06 06:23 월요일</div>
@@ -194,15 +195,14 @@
                     <i class="bi bi-bookmarks-fill" style="font-size: 25px; padding: 10px;"></i><br><br>
                 </div>
                 <div style="padding: 10px 0px; display: inline-block;"><!-- 블로그 목록 1개(임시) -->
-                    <div style="font-weight: bold; font-size:16px;">이 책은 이랬다.. 저랬다.. 그랬다.. 재밌다.. 어떤가.. 그런가.. 이런가..</div>
-                    <div>이런 저런 내용.. 재밌는데 재미없어요.. 샀어요 책을.. 다 읽었어요.. 별점은 5점입니다.</div>
-                    <div style="font-size: small; color: gray;">2023/02/06 06:23 월요일</div>
+                    <div th:if="${ thisBookPost != null }" style="font-weight: bold; font-size:16px;" th:text="${ thisBookPost.title }"></div>
+                    <div th:if="${ thisBookPost == null }" style="font-weight: bold; font-size:16px;">아직 작성하신 리뷰가 없습니다!</div>
                 </div>
             </div>
             <a th:href="@{ /post/list(postWriter=${ user.username }) }" class="btn" style="border: 1px solid black; padding: 16px 14px; margin:16px; font-weight: bold;"><span th:text="${ '[' + user.nickName + ']' }"></span>님의 블로그 구경하기 →</a>
         </div>
         <div class="col" style="text-align: right;">
-            <img style="width:300px; height:300px; display:inline-block; margin-right: 10px;" th:src="${ user.userImage }">
+            <img class="rounded" style="width:300px; height:300px; object-fit: cover; display:inline-block; margin-right: 10px;" th:src="${ user.userImage }">
         </div>
     </div><!-- 작성자 블로그 end -->
     
