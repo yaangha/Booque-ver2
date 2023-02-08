@@ -24,18 +24,19 @@
         margin-top:20px;
     }
     
-    #chatList {
-        padding: 30px;
+    #chatListDiv {
         margin-right: 30px;
         margin-bottom: 50px;
         border: 2px solid lightgrey;
+        height: 600px;
     }
     
     #chatDetail {
-        margin-right: 50px;
+        margin-right: 30px;
         margin-left: 30px;
         margin-bottom: 50px;
         border: 2px solid lightgrey;
+        height: 600px;
     }
     
     .chat-history {
@@ -58,13 +59,61 @@
                 <h2>Booque Chat</h2>
             </div>
             
-            <!-- 채팅방 목록 -->
-            <div class="w3-quarter" id="chatList">
-                여기다가는 채팅방 리스트를 만들거에용ㅎ
-            </div> <!-- 채팅방 목록 End -->
+            <!-- 채팅방 목록 블럭 -->
+            <div class="w3-quarter" id="chatListDiv">
+            
+                <!-- 내 정보, 검색, 정렬 -->
+                <div id="chatListHead" style="border-bottom: 2px solid lightgrey; height: 130px;">
+                    <!-- 내 프로필사진, 닉네임 -->
+                    <div>
+                        <img class="rounded-circle" width="40" height="40" th:src = "${ loginUser.userImage }" />
+                        <span th:text="${ loginUser.nickName }"></span>
+                    </div>
+                    <!-- 채팅 검색(채팅상대 닉네임, 채팅 내용) -->
+                    <div>
+                        <input type="search" placeholder="채팅 검색" id="chatSearch" class="form_control"/>
+                        <button id="btnchatSearch" class="btn btn-primary">검색</button>
+                    </div>
+                    <!-- 전체 채팅방 보기 / 안읽은 채팅방만 보기 -->
+                    <!-- 시간여유가 될 경우: 체크박스 클릭or해제할 때마다 밑에 채팅방 리스트 달라지도록 반영(찜버튼처럼) -->
+                    <div>
+                        <button id="showAllChats" class="btn btn-info">전체보기</button>
+                        <button id="showUnreadChats" class="btn btn-info">안 읽은 채팅만 보기</button>
+                    </div>
+                </div>
+                
+                <!-- 채팅방 리스트  -->
+                <!-- 목록으로 불러와야 함 -->
+                <div id="chatList">
+                    <div style="display:inline-block;">
+                            <img class="rounded-circle" width="40" height="40" th:src = "${ chatWith.userImage }" />
+                            <span th:text="${ chatWith.nickName }"></span>
+                            <span>6분 전</span><br/>
+                            최신 메시지 내용...
+                    </div>
+                    <div style="display:inline-block;">
+                        <img width="60" height="auto" th:src = "${ chatWith.userImage }" />
+                    </div>
+                </div>
+                
+            </div> <!-- 채팅방 목록 블럭 End -->
             
             <!-- 채팅 상세 창 -->
             <div class="row" id="chatDetail">
+            
+                    <!-- 채팅 상대 정보 -->
+                    <div>
+                        <img class="rounded-circle" width="60" height="60" th:src = "${ chatWith.userImage }" />
+                        <span th:text="${ chatWith.nickName }"></span>
+                    </div>
+                    
+                    <!-- 중고판매글 정보 -->
+                    <div>
+                        <img width="60" height="auto" th:src = "${ chatWith.userImage }" />
+                        <span th:text="${ usedBook.title }"></span>
+                        <span th:text="${ usedBook.price }"></span>
+                    </div>
+            
                     <!-- 출력 창(chatHistory) -->
                     <div id="content" class="chat-history">
                         <div th:each="chat : ${chatHistory}" th:classappend="${chat.sender == 1} ? 'chatalign' : ''">
@@ -84,11 +133,13 @@
                             </span>
                             <div>
                                 <br/>
+                                <!-- 
                                 구매자(로그인유저):  <input type="text" th:value="${chatInfo.buyerId}" id="buyerId"/><br/>
                                 중고글id:  <input type="text" th:value="${chatInfo.usedBookId}" id="usedBookId"/><br/>
                                 판매자(작성자):  <input type="text" th:value="${chatInfo.sellerId}" id="sellerId"/><br/>
                                 chatRoomId:  <input type="text" th:value="${chatInfo.chatRoomId}" id="chatRoomId"/><br/>
-                                현재 로그인되어 있는 유저(나): <input type="text" th:value="${loginUser}" id="loginUser"/>
+                                현재 로그인되어 있는 유저(나): <input type="text" th:value="${loginUser.nickName}" id="loginUser"/>
+                                 -->
                             </div>                    
                         </div>                
                     </div>
