@@ -56,7 +56,7 @@
         
 
     <h2 style="padding-bottom: 10px;">기본정보<span style="font-size: 16px; color: red; margin-left: 30px">* 필수정보</span></h2>
-    <form id="formCreate">
+    <form id="formCreate" method="post" action="/market/create">
     <div id="usedId"></div>
     <ul id="info">
         <li>
@@ -72,7 +72,7 @@
             <div id="bookSelect"></div>
         </li>
         <li>
-            <div class="contents">책 이미지<span style="color: red;">*</span><small style="font-size:14px; color: gray;">(0/5)</small></div>
+            <div class="contents">책 이미지<span style="color: red;">*</span><small style="font-size:14px; color: gray;">(<span id="imgNum">0</span>/5)</small></div>
             <div>
                 <input type="file" name="files" class="form-control" multiple style="width:500px; display: inline-block;"/>
                 <button type="button" id="btnModalUpload" class="btn btn-dark" style="height: 35px;">Upload</button>    
@@ -147,10 +147,20 @@
 
 const btnSaveYet = document.querySelector('#btnSaveYet');
 btnSaveYet.addEventListener('click', function() {
-	formCreate.action = '/market/storage';
-	formCreate.method = 'post';
-	formCreate.submit();
-	alert('해당 글이 임시저장되었습니다!');
+	
+    const uploads = document.querySelector('#uploads');
+    const files = uploadResults.querySelectorAll('img');
+    let htmlStr = '';
+    files.forEach(x => {
+        const imgLink = x.getAttribute('data-src');
+        htmlStr += `<input type="hidden" name="fileNames" value="${imgLink}" />`;
+    });
+    uploads.innerHTML = htmlStr;
+	
+    formCreate.action = '/market/storage';
+    formCreate.method = 'post';
+    formCreate.submit();
+    alert('해당 글이 임시저장되었습니다!');
 })
 
 </script>
