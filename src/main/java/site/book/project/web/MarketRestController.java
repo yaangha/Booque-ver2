@@ -31,11 +31,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnailator;
 import site.book.project.domain.Book;
 import site.book.project.domain.UsedBook;
+import site.book.project.domain.UsedBookImage;
 import site.book.project.dto.FileUploadDto;
 import site.book.project.dto.FileUploadResultDto;
 import site.book.project.dto.UsedBookStatus;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.SearchRepository;
+import site.book.project.repository.UsedBookImageRepository;
 import site.book.project.repository.UsedBookRepository;
 import site.book.project.service.UsedBookService;
 
@@ -48,6 +50,7 @@ public class MarketRestController {
     private final UsedBookService usedBookService;
     private final UsedBookRepository usedBookRepository;
     private final SearchRepository searchRepository;
+    private final UsedBookImageRepository usedBookImageRepository;
     
     @Value("${com.example.upload.path}")
     private String uploadPath;
@@ -133,8 +136,16 @@ public class MarketRestController {
         boolean result =  file.delete();
         
         log.info("삭제 되엇니???? {}", result);
+        
     }
     
+    @DeleteMapping("/api/deleteImg/{imgId}")
+    public void deleteImg(@PathVariable Integer imgId) {
+        usedBookImageRepository.deleteById(imgId);
+        
+        
+        
+    }
     
     
     

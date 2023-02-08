@@ -4,7 +4,6 @@
  
  window.addEventListener('DOMContentLoaded', () => {
 const btnSubmit = document.querySelector('#btnSubmit');
-const formCreate = document.querySelector('#formCreate');
 
 btnSubmit.addEventListener('click', function () {
 
@@ -107,7 +106,6 @@ btnSubmit.addEventListener('click', function () {
             
             
      
-            
             
             document.querySelectorAll('.btnDelet').forEach(btn => {
                 btn.addEventListener('click', removeFileFromServer);

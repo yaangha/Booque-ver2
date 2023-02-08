@@ -180,17 +180,7 @@ public class MarketController {
         if(userDto != null) {
             wish = usedBookWishRepository.findByUserIdAndUsedBookId(userDto.getId(), usedBookId);
         }
-        
-        // 판매하는 책과 동일한 책(다른 중고책) 리스트
-        List<UsedBook> otherUsedBookList = usedBookService.readOtherUsedBook(usedBook.getBookId());
-        List<UsedBook> otherUsedBookListFinal = new ArrayList<>();
-        
-        for (UsedBook u : otherUsedBookList) {
-            if(usedBookId != u.getId()) {
-                otherUsedBookListFinal.add(u);
-            }
-        }
-        
+
         // (하은) 이미지 넘기기 -> 메인 1개 + 나머지 리스트
         List<UsedBookImage> imgListAll = usedBookImageRepository.findByUsedBookId(usedBookId);
         UsedBookImage firstImg = imgListAll.get(0); // 메인(처음에 보여질 이미지)
@@ -201,18 +191,8 @@ public class MarketController {
             imgList.add(imgListAll.get(i));
         }
         
-        model.addAttribute("firstImg", firstImg);
-        model.addAttribute("imgList", imgList);
-        model.addAttribute("sale", sale);
-        model.addAttribute("wish", wish);
-        model.addAttribute("book", book);
-        model.addAttribute("user", user); 
-        model.addAttribute("usedBookPost", usedBookPost);
-        model.addAttribute("usedBook", usedBook);
-        model.addAttribute("otherUsedBookListFinal", otherUsedBookListFinal);  
-        
-        
         // (하은) 같은 책 다른 중고상품 수정
+        List<UsedBook> otherUsedBookList = usedBookService.readOtherUsedBook(usedBook.getBookId());
         List<MarketCreateDto> otherUsedBookList2 = mainList(otherUsedBookList);
         List<MarketCreateDto> otherUsedBookListFinal2 = new ArrayList<>();
 
@@ -222,6 +202,14 @@ public class MarketController {
             }
         }
         
+        model.addAttribute("firstImg", firstImg);
+        model.addAttribute("imgList", imgList);
+        model.addAttribute("sale", sale);
+        model.addAttribute("wish", wish);
+        model.addAttribute("book", book);
+        model.addAttribute("user", user); 
+        model.addAttribute("usedBookPost", usedBookPost);
+        model.addAttribute("usedBook", usedBook);
         model.addAttribute("otherUsedBookListFinal2", otherUsedBookListFinal2);
         
     }
@@ -278,6 +266,7 @@ public class MarketController {
         Book book = bookRepository.findById(usedBook.getBookId()).get();
         User user = userRepository.findById(usedBook.getUserId()).get();
         
+
         List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(usedBookId);
         
         model.addAttribute("imgList", imgList);
@@ -294,6 +283,13 @@ public class MarketController {
     public String modify(MarketCreateDto dto, String originLocation) {
         log.info("수정창에서 읽어오는 dto , {}", dto);
         log.info("주소 값을 안줄때는 원래 값을 읽어야 해! {}", originLocation);
+        log.info( "{}",dto.getFileNames());
+        
+        if(dto.getFileNames() != null) {
+            usedBookService.createImg(dto.getUsedBookId(), dto.getFileNames());
+            
+        }
+        
         
         dto.setStorage(1);
         
