@@ -39,12 +39,20 @@
             width: 168px;
          }
          
+         .card-img-bottom {
+            height: 300px;
+            object-fit: cover;
+         }
+         
     </style>
     
 </head>
 <body>
     
     <div class="w-70 container">
+    
+    <h3 style="color: gray; margin-bottom: 30px;">[임시저장 페이지]</h3>
+
         
     <h2 style="padding-bottom: 10px;">기본정보<span style="font-size: 16px; color: red; margin-left: 30px">* 필수정보</span></h2>
     <form method="post" th:action="@{ /market/create }">
@@ -69,36 +77,17 @@
             </div>
         </li>
         <li>
-                    <h2>사진 첨부 부분</h2>
-    
-    <input type="file" name="files" class="form-control" multiple />
-    <button type="button" id="btnModalUpload" 
-                            class="btn btn-primary">Upload</button>    
-    
-    
-                            <div id="uploadResults" class="container-fluid d-flex"
-                                    style="flex-wrap: wrap;">
-                            </div>
-        <div id="uploads"></div> 
-        
-        
-        </li>
-        
-        
-        
-        <li>
             <div class="contents">책 이미지<span style="color: red;">*</span><small style="font-size:14px; color: gray;">(0/5)</small></div>
-            <div>                
-                <ul>
-                    <li style="border-top: none; padding: 0px; padding-bottom: 10px;">
-                        <div class="border" style="width: 200px; height: 200px; text-align: center;">이미지 등록</div>
-                    </li>
-                </ul>
-                <div style="color: blue; font-size: 13px;">
-                    * 이미지는 상품 등록 시 정사각형으로 잘려서 등록됩니다.<br>
-                    * 첫 번째 업로드한 파일이 대표 이미지로 설정됩니다.<br>
-                    * 큰 이미지일 경우 이미지가 깨지는 경우가 발생할 수 있습니다.
-                </div>
+            <div>
+                <input type="file" name="files" class="form-control" multiple style="width:500px; display: inline-block;"/>
+                <button type="button" id="btnModalUpload" class="btn btn-dark" style="height: 35px;">Upload</button>    
+                <div id="uploadResults" class="container-fluid d-flex" style="flex-wrap: wrap;"></div>
+                <div id="uploads"></div> 
+            </div>
+            <div style="color: blue; font-size: 13px; margin-left: 30px;">
+                * 이미지는 상품 등록 시 정사각형으로 잘려서 등록됩니다.<br>
+                * 첫 번째 업로드한 파일이 대표 이미지로 설정됩니다.<br>
+                * 큰 이미지일 경우 이미지가 깨지는 경우가 발생할 수 있습니다.
             </div>
         </li>
         <li>
@@ -132,7 +121,9 @@
             <div><textarea rows="10" class="form-control" id="contents" name="contents" style="width:1100px;" th:text="${ dto.contents }" placeholder="여러 장의 상품 사진과 사용감, 구입 연도 등 구매자에게 필요한 정보를 꼭 포함해주세요!"></textarea></div>
         </li>
     </ul>
-    <input class="btn btn-success" style="width: 200px; height:50px; margin: 5px; font-size: 18px;" type="submit" id="btnSubmit" value="등 록 하 기" />
+    <div style="margin-left: 1065px; margin-bottom: 30px;">
+        <input class="btn btn-success" style="width: 200px; height:50px; margin: 5px; font-size: 18px;" type="submit" id="btnSubmit" value="등 록 하 기" />
+    </div>
     </form>
         
     </div> <!-- w-70 end -->
@@ -154,28 +145,25 @@ const btnSubmit = document.querySelector('#btnSubmit');
 const formCreate = document.querySelector('#formCreate');
 
 btnSubmit.addEventListener('click', function () {
-
-const sample3_address = document.querySelector('#sample3_address').value;
-const title = document.querySelector('#title').value;
-const price = document.querySelector('#price').value;
-const contents = document.querySelector('#contents').value;
-
-if (sample3_address == '' || title == '' || price == '' || contents == '') {
-    alert('필수항목을 모두 채워주세요!');
-    return;
-}
-
-
+	
+    const sample3_address = document.querySelector('#sample3_address').value;
+    const title = document.querySelector('#title').value;
+    const price = document.querySelector('#price').value;
+    const contents = document.querySelector('#contents').value;
+    
+    if (sample3_address == '' || title == '' || price == '' || contents == '') {
+        alert('필수항목을 모두 채워주세요!');
+        return;
+    }
 
 
-const result = confirm('등록하시겠습니까?');
-if (result) {
-    formCreate.action = '/market/create';
-    formCreate.method = 'post';
-    formCreate.submit();
-}
+    const result = confirm('등록하시겠습니까?');
+    if (result) {
+        formCreate.action = '/market/create';
+        formCreate.method = 'post';
+        formCreate.submit();
+    }
 });
-
 
 
     // 우편번호 찾기 찾기 화면을 넣을 element
