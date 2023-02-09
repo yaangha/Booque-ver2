@@ -156,7 +156,7 @@
       <th:block sec:authorize="isAuthenticated()">
       <!-- 유저네임 표시 -->
       <div class="w3-right" style="margin-top:25px; padding-right:40px; border-right:2px solid grey;">님</div>
-      <div class="w3-right" th:text="${ nick }" style="margin-top:25px; margin-right:7px; color:cornflowerblue; font-weight:bold;"></div>
+      <div class="w3-right" sec:authentication="principal.nickName" style="margin-top:25px; margin-right:7px; color:cornflowerblue; font-weight:bold;"></div>
       </th:block>
 
       
