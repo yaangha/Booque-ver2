@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,9 @@ public class ChatService {
     // fileName 컬럼은 일단 null로 비워 둠
     public Integer createChat(Integer usedBookId, Integer sellerId, Integer buyerId) throws IOException {
         
-        Chat chat = Chat.builder().usedBookId(usedBookId).sellerId(sellerId).buyerId(buyerId).build();
+        Chat chat = Chat.builder().usedBookId(usedBookId).sellerId(sellerId).buyerId(buyerId)
+                    .createdTime(LocalDateTime.now()).modifiedTime(LocalDateTime.now())
+                    .build();
 
         chatRepository.save(chat);
         createFile(chat.getChatRoomId(), usedBookId);
@@ -136,6 +140,9 @@ public class ChatService {
         byte[] b = writeContent.getBytes();
         
         fos.write(b);
+        
+        chatAppend.setModifiedTime(LocalDateTime.now());
+        
         fos.close();
         
         // 읽음 여부 표시 기능 (TODO)
