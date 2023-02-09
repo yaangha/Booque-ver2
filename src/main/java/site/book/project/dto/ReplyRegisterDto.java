@@ -14,6 +14,7 @@ public class ReplyRegisterDto {
     private String replyContent;
     private String replyWriter;
     private String userImage;
+    private String nickName;
     
     public PostReply toEntity(User user,Post post) {
         return PostReply
