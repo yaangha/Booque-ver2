@@ -21,6 +21,7 @@ public interface UsedBookRepository extends JpaRepository<UsedBook, Integer> {
 //    @Query("select u from USEDBOOK u where u.userId = :userId and {u.status = '판매중' or u.status = '예약중'}")
 //    List<UsedBook> countUsedBookSellingPost(@Param(value="userId")Integer userId);
     
+    
     @Query("select u from USEDBOOK u where u.userId = :userId and u.status = :status")
     List<UsedBook> countUsedBookSoldoutPost(@Param(value="userId") Integer userId, @Param(value="status") String status);
     
