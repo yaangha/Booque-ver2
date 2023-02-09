@@ -16,6 +16,6 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
     Chat findByChatRoomId(Integer chatRoomId);
 
     // (홍찬) 내 채팅 목록들 불러오기
-    List<Chat> findByBuyerIdOrderByModifiedTimeDesc(Integer loginUserId);
+    List<Chat> findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(Integer loginUserId, Integer loginUserId2);
     
 }

@@ -2,6 +2,7 @@ package site.book.project.web;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,9 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
+import site.book.project.domain.UsedBook;
+import site.book.project.domain.User;
 import site.book.project.dto.ChatReadDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.ChatRepository;
+import site.book.project.repository.UsedBookRepository;
+import site.book.project.repository.UserRepository;
 import site.book.project.service.ChatService;
 
 @Slf4j
@@ -43,6 +48,10 @@ public class ChatController {
     
     @Autowired
     private ChatRepository chatRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UsedBookRepository usedBookRepository;
  
     // 중고판매글에서 '채팅하기' 버튼 클릭시
     @PostMapping("/chat")
@@ -73,23 +82,38 @@ public class ChatController {
     
     @GetMapping("/chat")
     public void showChatWindow(@AuthenticationPrincipal UserSecurityDto userDto, Integer chatRoomId, Model model) throws IOException {
-        
         log.info("챗창 오픈 Get Mapping");
         
-        Integer loginUserId = userDto.getId();
-        String loginUser = userDto.getNickName();
+        // TODO: chatRoomId를 통해 건너 건너 찾는 거 말고, 더 효율적으로 찾을 수 없나??
+        // 필요한 model 정보: 내(현재 로그인되어 있는) User 객체, 중고판매글 UsedBook 객체, 채팅상대 User 객체
         
+        // chatRoomId로 Chat 찾기
         Chat chat = chatRepository.findByChatRoomId(chatRoomId);
+        model.addAttribute("chatInfo", chat);
         
         // chatHistory 불러 오기
         List<ChatReadDto> chatHistory = chatService.readChatHistory(chat);
         //chatHistory Model에 저장해 View로 전달
         model.addAttribute("chatHistory", chatHistory);
-        // Chat 객체 Model에 저장해 view로 전달
-        model.addAttribute("chatInfo", chat);
-        // 현재 로그인되어 있는 유저id, 유저 닉네임 view로 전달 (보낸사람 식별)
-        model.addAttribute("loginUserId", loginUserId);
+        
+        // 중고판매글 정보 불러 오기
+        UsedBook usedBook = usedBookRepository.findById(chat.getUsedBookId()).get();
+        model.addAttribute("usedBook", usedBook);
+        
+        // 내 정보 불러 오기
+        User loginUser = userRepository.findById(userDto.getId()).get();
         model.addAttribute("loginUser", loginUser);
+        
+        // 채팅 상대 정보 불러 오기
+        if (userDto.getId() == chat.getSellerId()) {    // 내가 판매자면
+            User chatWith = userRepository.findById(chat.getBuyerId()).get();
+            model.addAttribute("chatWith", chatWith);
+            
+        } else {   // 내가 구매자면?
+            User chatWith = userRepository.findById(chat.getSellerId()).get();
+            model.addAttribute("chatWith", chatWith);
+            
+        }
     }
     
     // (홍찬) 내 대화 목록 불러오기
@@ -99,13 +123,13 @@ public class ChatController {
 
         log.info("잘 도착햇나{}",loginUserId);
         // 최근에 업데이트된 날짜 순으로 받아온 내가 대화중인 대화들
-        List<Chat> chat = chatRepository.findByBuyerIdOrderByModifiedTimeDesc(loginUserId);
+        List<Chat> chat = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
         
         for (Chat c : chat) {
             chatService.readLastThreeLines(c);
         }
         
         // model.addAttribute(chat);
-        return "home";
+        return "";
     }
 }

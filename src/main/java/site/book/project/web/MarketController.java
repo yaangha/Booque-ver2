@@ -109,9 +109,9 @@ public class MarketController {
     							Integer usedBookId) {
     	// 총 세개의 테이블을 크리에이트 해야함
         
-        // 리스트 먼저 확인해야함. 
-        log.info("사진~~~~~ 어떤 형태로 넘어 오니?? {} ",dto.getFileNames());
-        
+        if(dto.getFileNames().isEmpty()) {
+            log.info("뭘가??? {}",dto.getFileNames().isEmpty());
+        }
         usedBookService.createImg(usedBookId, dto.getFileNames());
         
     	dto.setUserId(userDto.getId());
@@ -151,6 +151,7 @@ public class MarketController {
     @PostMapping("/storage") // 임시저장 완료 후 부끄마켓 메인 페이지로 이동
     public String storage(@AuthenticationPrincipal UserSecurityDto userDto, MarketCreateDto dto, Integer usedBookId) {
         
+        usedBookService.createImg(usedBookId, dto.getFileNames());
         dto.setUserId(userDto.getId());
         dto.setStorage(0);
         usedBookService.create(usedBookId, dto);
@@ -168,15 +169,10 @@ public class MarketController {
         User user = userRepository.findById(usedBook.getUserId()).get(); // 작성자의 정보
         Book book = bookRepository.findById(usedBook.getBookId()).get();
         
-        List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(usedBookId);
-        
-        
         double bookPrice = book.getPrices();
         double usedPrice = usedBook.getPrice();
         
         double sale =  (1-usedPrice/bookPrice)*100;
-        
-        
         
         UsedBookWish wish = null;
         // 로그인 한 사람의 정보를 통해 내것도 하트 누를 수 있음!
@@ -184,27 +180,38 @@ public class MarketController {
         if(userDto != null) {
             wish = usedBookWishRepository.findByUserIdAndUsedBookId(userDto.getId(), usedBookId);
         }
+
+        // (하은) 이미지 넘기기 -> 메인 1개 + 나머지 리스트
+        List<UsedBookImage> imgListAll = usedBookImageRepository.findByUsedBookId(usedBookId);
+        UsedBookImage firstImg = imgListAll.get(0); // 메인(처음에 보여질 이미지)
+        // imgList.remove(0);
         
-        // 판매하는 책과 동일한 책(다른 중고책) 리스트
+        List<UsedBookImage> imgList = new ArrayList<>(); // 메인을 제외한 나머지 이미지 리스트
+        for (int i = 1; i < imgListAll.size(); i++) {
+            imgList.add(imgListAll.get(i));
+        }
+        
+        // (하은) 같은 책 다른 중고상품 수정
         List<UsedBook> otherUsedBookList = usedBookService.readOtherUsedBook(usedBook.getBookId());
-        List<UsedBook> otherUsedBookListFinal = new ArrayList<>();
-        
-        for (UsedBook u : otherUsedBookList) {
-            if(usedBookId != u.getId()) {
-                otherUsedBookListFinal.add(u);
+        List<MarketCreateDto> otherUsedBookList2 = mainList(otherUsedBookList);
+        List<MarketCreateDto> otherUsedBookListFinal2 = new ArrayList<>();
+
+        for (MarketCreateDto m : otherUsedBookList2) {
+            if(usedBookId != m.getUsedBookId()) {
+                otherUsedBookListFinal2.add(m);
             }
         }
-        log.info("사진이 안보이나?? 엥?? {} ", imgList);
         
-        
+        model.addAttribute("firstImg", firstImg);
         model.addAttribute("imgList", imgList);
         model.addAttribute("sale", sale);
         model.addAttribute("wish", wish);
         model.addAttribute("book", book);
-        model.addAttribute("user", user); // userName만 보낼 수 있게 수정(?)
+        model.addAttribute("user", user); 
         model.addAttribute("usedBookPost", usedBookPost);
         model.addAttribute("usedBook", usedBook);
-        model.addAttribute("otherUsedBookListFinal", otherUsedBookListFinal);
+        model.addAttribute("otherUsedBookListFinal2", otherUsedBookListFinal2);
+        
     }
     
     // (하은) 조회수 증가
@@ -259,6 +266,7 @@ public class MarketController {
         Book book = bookRepository.findById(usedBook.getBookId()).get();
         User user = userRepository.findById(usedBook.getUserId()).get();
         
+
         List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(usedBookId);
         
         model.addAttribute("imgList", imgList);
@@ -275,6 +283,15 @@ public class MarketController {
     public String modify(MarketCreateDto dto, String originLocation) {
         log.info("수정창에서 읽어오는 dto , {}", dto);
         log.info("주소 값을 안줄때는 원래 값을 읽어야 해! {}", originLocation);
+        log.info( "{}",dto.getFileNames());
+        
+        if(dto.getFileNames() != null) {
+            usedBookService.createImg(dto.getUsedBookId(), dto.getFileNames());
+            
+        }
+        
+        
+        dto.setStorage(1);
         
         // 책 제목 null이 됨.. 
         if(dto.getLocation().equals("")) {
@@ -312,7 +329,7 @@ public class MarketController {
     
     
     /**
-     * main에서 사용함
+     * main, 리스트 불러올때 사용함. 
      * @param usedBookList
      * @return
      */
@@ -321,19 +338,20 @@ public class MarketController {
         List<MarketCreateDto> list = new ArrayList<>();
         
         for (UsedBook ub : usedBookList) {
-            User user = userRepository.findById(ub.getUserId()).get();
-            Book book = bookRepository.findById(ub.getBookId()).get();
-            List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(ub.getId());
-            
-            MarketCreateDto dto = MarketCreateDto.builder()
-                    .usedBookId(ub.getId())
-                    .userId(user.getId()).username(user.getUsername())
-                    .userImage(user.getUserImage()).nickName(user.getNickName())
-                    .bookTitle(book.getBookName()).price(ub.getPrice())
-                    .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime()).hits(ub.getHits()).wishCount(ub.getWishCount())
-                    .imgUsed(imgList.get(0).getFileName())
-                    .build();
-            list.add(dto);
+                User user = userRepository.findById(ub.getUserId()).get();
+                Book book = bookRepository.findById(ub.getBookId()).get();
+                List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(ub.getId());
+                
+                MarketCreateDto dto = MarketCreateDto.builder()
+                        .usedBookId(ub.getId())
+                        .userId(user.getId()).username(user.getUsername())
+                        .userImage(user.getUserImage()).nickName(user.getNickName())
+                        .bookTitle(book.getBookName()).price(ub.getPrice())
+                        .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime()).hits(ub.getHits()).wishCount(ub.getWishCount())
+                        .imgUsed(imgList.get(0).getFileName())
+                        .build();
+                list.add(dto);
+        
         }
         
         
