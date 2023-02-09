@@ -24,7 +24,7 @@ import site.book.project.service.ReplyService;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-public class NoticeController {
+public class NoticetController {
 
     private final NoticeService noticeService;
     private final ReplyService replyService;
@@ -50,11 +50,12 @@ public class NoticeController {
         return ResponseEntity.ok(list);
     }
     
-    @DeleteMapping("/deleteNotice/{noticeId}")
-    public ResponseEntity<Integer> deleteNotice(@PathVariable Integer noticeId){
-        log.info("노티스삭제(noticeId={})", noticeId);
-        
-        Integer result = noticeService.delete(noticeId);
-        return ResponseEntity.ok(result);     
-    }
+//    노티스 삭제 컨트롤러 포스트 컨트롤러에..  
+//    @DeleteMapping("/deleteNotice/{noticeId}")
+//    public ResponseEntity<Integer> deleteNotice(@PathVariable Integer noticeId){
+//        log.info("노티스삭제(noticeId={})", noticeId);
+//        
+//        Integer result = noticeService.delete(noticeId);
+//        return ResponseEntity.ok(result);     
+//    }
 }

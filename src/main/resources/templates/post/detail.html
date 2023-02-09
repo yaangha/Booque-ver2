@@ -71,13 +71,7 @@
           <br/><br/>
           
        </div>
-    <br/>
-
-        <!--  댓글 알림 보여줄 div -->
-        <div id="divNo" align="left"></div>
-
-    <br/>
-
+  
     </div><!-- 프로필 블록 end -->
     
     <div class="border rounded py-2 w-75 bg-light" style="text-align: center;">
@@ -109,6 +103,8 @@
     <br/><br/>
     
 </div><!-- 프로필 col-2 -->
+
+
 
 <div class="col-8"><!-- 포스트 콘텐츠 블록 start -->
     <div class="my-2">
@@ -282,6 +278,9 @@
     </div>
 </div>
 <!-- 도서 정보 블록 end -->
+<br/>
+<div id="divNo"></div>
+<br/>
 
 </div>
 
@@ -346,27 +345,7 @@
     
 
     <script>
-    
-    const noticeBtn = document.querySelectorAll('#noticeBtn');
-    noticeBtn.forEach(btn => {btn.addEventListener('click', deleteNotice);});
-    
-    function deleteNotice(event){
-        const noticeId = event.target.getAttribute('data-nid');
-        console.log('삭제노티스?');
-        alert(noticeId);
-         
-        const result = confirm('알림 확인?');
-        if(result) {
-        axios
-        .delete('/deleteNotice/' + noticeId) 
-        .then(response => {
-            alert(`# 알림 삭제!`);
-            showNotice();
-         })
-        .catch(err => { console.log(err) }) 
-    };
-    }
-    
+
     const imModal = document.querySelector('#imageModal');
     const imgModal = new bootstrap.Modal(imModal);
     function imagePop() {

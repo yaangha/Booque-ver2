@@ -4,9 +4,8 @@
 
  window.addEventListener('DOMContentLoaded', () => {
      
-    // 새 알림 리스트 보여주기 (예진) 
-    showNotice();
-    
+   // showNotice();
+ 
     // 댓글 목록
     readAllReplies();
     // 댓글 갯수
@@ -92,8 +91,8 @@
         let str ='';
         
          for (let x of data){
-             str += `<div class="btn"><a href="/post/detail?postId=${ x.postId }&bookId=${ x.bookId }"  onclick="deleteNotice()">`
-                  +`<input type="hidden" id="noticeBtn" data-nid="${x.noticeId}" th:value="${ x.noticeId }" />`
+             str += `<div id="noticeBtn"><a href="/post/detail?postId=${ x.postId }&bookId=${ x.bookId }">`
+                  +`<input type="hidden" id="noticeBtn" data-nid="${x.noticeId}" />`
                   +'<img class="rounded-circle" width="25" height="25" src="' + x.userImage + '" />'
                   +`<span class="fw-bold m-1">${x.nickName}</span>님의 새 댓글!</a></div>`;
         }
@@ -102,7 +101,28 @@
     
     }
   
-  
+  const btns = document.querySelectorAll('#noticeBtn');
+  btns.forEach(btn => {
+      btn.addEventListener('click', deleteNotice);
+  });
+    
+    function deleteNotice(event){
+        const noticeId = event.target.getAttribute('data-nid');
+        console.log('타노스아이디');
+        console.log(noticeId);
+        
+        axios
+            .delete('/deleteNotice/' + noticeId ) 
+            .then(response => {
+                alert(`# 댓글 삭제 성공`);
+             
+             })
+             .catch(err => { console.log(err) }); 
+        
+    };
+    
+    
+    
     // 댓글 목록 함수
     function readAllReplies(){
         const postId = document.querySelector('#postId').value;

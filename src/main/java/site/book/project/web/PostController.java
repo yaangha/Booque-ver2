@@ -53,8 +53,7 @@ public class PostController {
         log.info("list()");
 //        bookService.readPostCountByAllBookId();
      
-
-        
+     
         User user = null; 
         List<PostListDto> postList = new ArrayList<>();
         
