@@ -148,18 +148,19 @@ public class ChatService {
         } */
         
     }
-
-    public ChatReadDto readLastThreeLines (Chat chat) throws IOException {
-        ChatReadDto recentChat = new ChatReadDto();
+    
+    // (홍찬) 마지막 채팅 가져오기
+    public String readLastThreeLines (Chat chat) throws IOException {
+        // ChatReadDto recentChat = new ChatReadDto();
+        String recentMessage = "";
         
         // fileName 컬럼을 통해 파일의 경로 찾기, 파일 읽기
         String pathName = fileUploadPath + chat.getFileName();
         
-        // 1. RandomAcessFile, 마지막 라인을 담을 String, 읽을 라인 수
+        // 1. RandomAcessFile, 마지막 라인을 담을 String, 읽을 라인 수 "r" 읽기모드
         RandomAccessFile chatResourceFile = new RandomAccessFile(pathName, "r");
         StringBuilder lastLine = new StringBuilder();
-        String chatline;
-        int lineCount = 3;
+        int lineCount = 2; // 마지막 2줄을 읽겠다는 내용!
 
         // 2. 전체 파일 길이
         long fileLength = chatResourceFile.length();
@@ -173,28 +174,23 @@ public class ChatService {
             // 3.2. pointer 위치의 글자를 읽는다.
             char c = (char) chatResourceFile.read();
             
-            // 3.3. 줄바꿈이 3번(lineCount) 나타나면 더 이상 글자를 읽지 않는다.
+            // 3.3. 줄바꿈이 2번(lineCount) 나타나면 더 이상 글자를 읽지 않는다.
             if (c == '\n') {
                 lineCount--;
                 if (lineCount == 0) {
+                    // 원하는 pointer가 위치해 있을 때 "UTF-8"이라는 변환을 한 후 그 줄의 readline으로 읽어옴.
+                    recentMessage = new String(chatResourceFile.readLine().getBytes("ISO-8859-1"),"UTF-8");
                     break;
                 }
             }
-            
             
             // 3.4. 결과 문자열의 앞에 읽어온 글자(c)를 붙여준다.
             lastLine.insert(0, c);
         }
         chatResourceFile.close();
         // 4. 결과 출력
-        System.out.println(lastLine);
-        
-        
-        
-        return recentChat;
+        //System.out.println(lastLine);
+        return recentMessage;
     }
 
-    private String toConvert (String Unicodestr) throws UnsupportedEncodingException {
-        return new String (Unicodestr.getBytes("8859_1"),"KSC5601");
-        }
 }

@@ -1,6 +1,7 @@
 package site.book.project.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -124,12 +125,13 @@ public class ChatController {
         log.info("잘 도착햇나{}",loginUserId);
         // 최근에 업데이트된 날짜 순으로 받아온 내가 대화중인 대화들
         List<Chat> chat = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
-        
+        List<String> cl = new ArrayList<>();
         for (Chat c : chat) {
-            chatService.readLastThreeLines(c);
+            log.info("방번호{}",c.getChatRoomId());
+            cl.add(chatService.readLastThreeLines(c));
         }
         
-        // model.addAttribute(chat);
+        model.addAttribute("myChatList" ,cl);
         return "";
     }
 }
