@@ -1,29 +1,23 @@
 package site.book.project.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
 import site.book.project.domain.UsedBook;
 import site.book.project.domain.User;
+import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
-import site.book.project.dto.PostUpdateDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.ChatRepository;
 import site.book.project.repository.UsedBookRepository;
@@ -91,36 +85,23 @@ public class ChatController {
     public void showChatWindow(@AuthenticationPrincipal UserSecurityDto userDto, Integer chatRoomId, Model model) throws IOException {
         log.info("챗창 오픈 Get Mapping");
         
-        // TODO: chatRoomId를 통해 건너 건너 찾는 거 말고, 더 효율적으로 찾을 수 없나??
-        // 필요한 model 정보: 내(현재 로그인되어 있는) User 객체, 중고판매글 UsedBook 객체, 채팅상대 User 객체
+        Integer loginUserId = userDto.getId();
+        User loginUser = userRepository.findById(loginUserId).get();
         
-        // chatRoomId로 Chat 찾기
-        Chat chat = chatRepository.findByChatRoomId(chatRoomId);
-        model.addAttribute("chatInfo", chat);
-        
-        // chatHistory 불러 오기
-        List<ChatReadDto> chatHistory = chatService.readChatHistory(chat);
-        //chatHistory Model에 저장해 View로 전달
-        model.addAttribute("chatHistory", chatHistory);
-        
-        // 중고판매글 정보 불러 오기
-        UsedBook usedBook = usedBookRepository.findById(chat.getUsedBookId()).get();
-        model.addAttribute("usedBook", usedBook);
-        
-        // 내 정보 불러 오기
-        User loginUser = userRepository.findById(userDto.getId()).get();
+        // 뷰에 보여 줄 내 정보
         model.addAttribute("loginUser", loginUser);
         
-        // 채팅 상대 정보 불러 오기
-        if (userDto.getId() == chat.getSellerId()) {    // 내가 판매자면
-            User chatWith = userRepository.findById(chat.getBuyerId()).get();
-            model.addAttribute("chatWith", chatWith);
-            
-        } else {   // 내가 구매자면?
-            User chatWith = userRepository.findById(chat.getSellerId()).get();
-            model.addAttribute("chatWith", chatWith);
-            
-        }
+        List<ChatListDto> list = chatService.loadChatList(loginUserId);
+        
+        // 뷰에 보여 줄 채팅방 정보들(리스트)
+        model.addAttribute("data", list);
+        
+        List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
+        
+            // chatHistory 불러 오기
+            List<ChatReadDto> chatHistory = chatService.readChatHistory(myChats.get(0));
+            //chatHistory Model에 저장해 View로 전달
+            model.addAttribute("chatHistory", chatHistory);    // (주의) 지금은 가장 최신 채팅방 히스토리만 보이는 상태! JS 작업 해야 함
     }
     
 }

@@ -23,11 +23,8 @@ public class ChatListDto {
     private Integer usedBookId;    // 중고판매글 id
     private String usedBookImage;  // 상품 이미지(List[0])
     private String usedBookTitle;  // 판매글 제목
-    private String price;          // 중고 판매 가격
+    private Integer price;          // 중고 판매 가격
     private String status;         // 판매 상태
-    
-    private String loginUserName;   // 내 닉네임
-    private String loginUserImage;  // 내 프사
     
     private String chatWithName;    // 채팅 상대 닉네임
     private String chatWithImage;   // 채팅 상대 프사

@@ -3,25 +3,34 @@ package site.book.project.service;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
+import site.book.project.domain.UsedBook;
+import site.book.project.domain.UsedBookImage;
+import site.book.project.domain.User;
+import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
+import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.ChatRepository;
+import site.book.project.repository.UsedBookImageRepository;
+import site.book.project.repository.UsedBookRepository;
+import site.book.project.repository.UserRepository;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,6 +39,9 @@ import site.book.project.repository.ChatRepository;
 public class ChatService {
     
     private final ChatRepository chatRepository;
+    private final UserRepository userRepository;
+    private final UsedBookRepository usedBookRepository;
+    private final UsedBookImageRepository usedBookImageRepository;
     
     @Value("${file.upload-dir}")
     String fileUploadPath; 
@@ -155,7 +167,93 @@ public class ChatService {
         
     }
 
+    public ChatReadDto readLastThreeLines (Chat chat) throws IOException {
+        ChatReadDto recentChat = new ChatReadDto();
+        
+        // fileName 컬럼을 통해 파일의 경로 찾기, 파일 읽기
+        String pathName = fileUploadPath + chat.getFileName();
+        
+        // 1. RandomAcessFile, 마지막 라인을 담을 String, 읽을 라인 수
+        RandomAccessFile chatResourceFile = new RandomAccessFile(pathName, "r");
+        StringBuilder lastLine = new StringBuilder();
+        String chatline;
+        int lineCount = 3;
 
+        // 2. 전체 파일 길이
+        long fileLength = chatResourceFile.length();
 
+        // 3. 포인터를 이용하여 뒤에서부터 앞으로 데이터를 읽는다.
+        for (long pointer = fileLength - 2; pointer >= 0; pointer--) {
 
+            // 3.1. pointer를 읽을 글자 앞으로 옮긴다.
+            chatResourceFile.seek(pointer);
+
+            // 3.2. pointer 위치의 글자를 읽는다.
+            char c = (char) chatResourceFile.read();
+            
+            // 3.3. 줄바꿈이 3번(lineCount) 나타나면 더 이상 글자를 읽지 않는다.
+            if (c == '\n') {
+                lineCount--;
+                if (lineCount == 0) {
+                    break;
+                }
+            }
+            
+            
+            // 3.4. 결과 문자열의 앞에 읽어온 글자(c)를 붙여준다.
+            lastLine.insert(0, c);
+        }
+        chatResourceFile.close();
+        // 4. 결과 출력
+        System.out.println(lastLine);
+        
+        
+        
+        return recentChat;
+    }
+
+    private String toConvert (String Unicodestr) throws UnsupportedEncodingException {
+        return new String (Unicodestr.getBytes("8859_1"),"KSC5601");
+        }
+    
+    
+    // 내가 (판매자 혹은 구매자로) 포함된 모든 채팅방 불러와 dto에 데이터 추가
+    public List<ChatListDto> loadChatList (Integer loginUserId) throws IOException {
+        
+        List<ChatListDto> list = new ArrayList<>();
+        User chatWith = new User();
+        
+        // 내 유저id로 내가 포함되어 있는 모든 채팅방 찾기
+        List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
+        
+        for (Chat chat : myChats) {
+            
+            // 채팅 상대 정보 불러 오기
+            
+            if (loginUserId == chat.getSellerId()) {    // 내가 판매자면
+                chatWith = userRepository.findById(chat.getBuyerId()).get();
+            } else {   // 내가 구매자면
+                chatWith = userRepository.findById(chat.getSellerId()).get();
+            }
+            
+            // 중고판매글 정보 불러 오기
+            Integer usedBookId = chat.getUsedBookId();
+            UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
+            List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(usedBookId);
+            
+            ChatListDto dto = ChatListDto.builder()
+                    .chatRoomId(chat.getChatRoomId()).modifiedTime(chat.getModifiedTime())
+                    .usedBookId(usedBookId).usedBookImage(imgList.get(0).getFileName()).usedBookTitle(usedBook.getTitle()).price(usedBook.getPrice())
+                    .status(usedBook.getStatus())
+                    .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
+                    .build();
+            
+            list.add(dto);
+            
+        }
+        return list;
+        
+    }
+    
+    
 }
