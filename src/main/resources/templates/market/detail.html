@@ -194,7 +194,7 @@
     	    <div id="content" th:text="${ usedBookPost.content }" style="white-space:pre; font-size:18px; margin-bottom:100px;"></div>
             <input type="text" id="usedLocation" th:value="${ '거래장소: ' + usedBook.location }" style="width: 300px; border: none;" />
             <div id="map" style="width:300px; height:300px; margin-top:10px; margin-bottom:10px; z-index:-1"></div>
-            <i class="bi bi-clock" style="font-size: small;"></i><small style="color: gray;" th:text="${ ' ' + #temporals.format(usedBook.modifiedTime, 'yyyy/MM/dd HH:mm') + ' 등록' }"></small>
+            <i class="bi bi-clock" style="font-size: small;"></i><small style="color: gray;" th:text="${ ' ' + #temporals.format(usedBook.createdTime, 'yyyy/MM/dd HH:mm') + ' 등록' }"></small>
         </div> <!-- content left end -->
         
         <div class="col" style="margin-left: 100px;"> <!-- content right -->
