@@ -1,5 +1,7 @@
 package site.book.project.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import site.book.project.domain.Chat;
@@ -14,6 +16,6 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
     Chat findByChatRoomId(Integer chatRoomId);
     
     // 내가 (판매자 혹은 구매자로) 포함된 모든 채팅방 찾기, 최신업뎃시간순 정렬
-    Chat findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(Integer sellerId, Integer buyerId);
+    List<Chat> findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(Integer buyerId, Integer sellerId);
     
 }
