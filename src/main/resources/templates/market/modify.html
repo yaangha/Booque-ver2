@@ -64,7 +64,6 @@
          }
         
         .contents {
-            width: 168px;
             color: silver;
             font-size: 12px;
          }
@@ -100,8 +99,9 @@
                  <div style="font-size:15px; height: 21px; display:inline-block; padding: 1px; text-align: center; color:green; font-weight: bold;">
                     <i class="fa-solid fa-seedling"></i>
                     <small th:text="${ user.booqueLevel }" ></small>
-                    <small th:text="${ user.booqueScore + 'P' }"></small>
                     <i class="fa-solid fa-seedling"></i>
+                    <i class="bi bi-file-ppt-fill"></i>
+                    <small th:text="${ user.booqueScore }"></small>
                 </div>
                 <div th:text="${ usedBook.location }" style="width: 300px;"></div>
                 <div class="align-middle" style="color:gray;">
@@ -126,7 +126,7 @@
                 <div id="uploads"></div>       
             </div>
         
-            <small style="color: gray;" th:text="${ '마지막 수정시간: ' + #temporals.format(usedBook.modifiedTime, 'yyyy/MM/dd HH:mm:ss') }"></small><br>
+            
             
             <div class="contents" style="margin-top: 25px;">판매상태<span style="color: red;">*</span></div>
             <input type="hidden" name="bookTitle" th:value="${ book.bookName }">
@@ -142,7 +142,7 @@
                 <li>
                     <div class="contents">거래지역<span style="color: red;">*</span></div>
                     <div>
-                        <input class="form-control" style="width: auto; display: inline-block;"  name="originLocation" th:value="${ usedBook.location }" readonly>
+                        <input class="form-control" style="width: 300px; display: inline-block;"  name="originLocation" th:value="${ usedBook.location }" readonly>
                         <input type="text" name="location" class="form-control" id="sample3_address" style="width: 300px; display: inline-block;" placeholder="주소를 변경하시려면 검색하세요!" readonly>
                         <input type="button" onclick="sample3_execDaumPostcode()" class="btn btn-dark" style="display: inline-block; width:100px;"  value="주 소 검 색">
                         <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
@@ -204,6 +204,7 @@
         </div> <!-- content right end -->
     </div> <!-- content end -->
     
+    <small style="color: gray;" th:text="${ '마지막 수정시간: ' + #temporals.format(usedBook.modifiedTime, 'yyyy/MM/dd HH:mm:ss') }"></small>
     
     <div style="margin-bottom: 30px;">
         <button class="btn btn-danger" id="btnModify" style="width: 200px; height:50px;">수 정 하 기</button>

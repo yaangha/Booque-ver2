@@ -70,7 +70,7 @@ public class MarketController {
         
         // 서비스로 넘겨야 할까? 
         if(orderSlt==null || orderSlt.equals("최신순")) {
-            List<UsedBook> storageChk = usedBookRepository.findByOrderByModifiedTimeDesc();            
+            List<UsedBook> storageChk = usedBookRepository.findByOrderByCreatedTimeDesc();            
             for (UsedBook u : storageChk) {
                 UsedBookPost post = usedBookPostRepository.findByUsedBookId(u.getId());
                 if (post.getStorage() == 1) {
@@ -217,26 +217,35 @@ public class MarketController {
         }
         
         // (하은) 블로그로 연결 -> 해당 책에 관한 리뷰 + 최신 리뷰 = 총 2개 보여주기
-        List<Post> userPostList = postRepository.findByUserIdOrderByCreatedTimeDesc(user.getId()); // 작성자 블로그 글
+        List<Post> userPostList = postRepository.findByUserIdOrderByCreatedTime(user.getId()); // 작성자 블로그 글
         
-        // (1) 해당 책에 관한 리뷰
         Post thisBookPost = null;
-        for (Post p : userPostList) {
-            if (p.getBook().getBookId() == usedBook.getBookId()) {
-                thisBookPost = p;
-            }
-        }
-        
-        // (2) 해당 책 제외 최신 글
         Post latestPost = null;
-        for (int i = 0; i < userPostList.size(); i++) {
-            if (userPostList.get(i).getPostId() != thisBookPost.getPostId()) {
-                latestPost = userPostList.get(i);
+        
+        if (userPostList != null) {
+            for (Post p : userPostList) {
+                if (p.getBook().getBookId() == book.getBookId()) {
+                    thisBookPost = p;
+                    log.info("하은 블로그 연동 1 = {}", thisBookPost);
+                    break;
+                }
             }
+            
+            for (Post p : userPostList) {
+                if (p.getBook().getBookId() != book.getBookId()) {
+                    latestPost = p;
+                    log.info("하은 블로그 연동 2 = {}", latestPost);
+                    break;
+                }
+            }
+        } else {
+            thisBookPost = null;
+            latestPost = null;
+            log.info("하은 블로그 연동 3 = {}, {}", thisBookPost, latestPost);
         }
         
-        model.addAttribute("latestPost", latestPost);
         model.addAttribute("thisBookPost", thisBookPost);
+        model.addAttribute("latestPost", latestPost);
         model.addAttribute("firstImg", firstImg);
         model.addAttribute("imgList", imgList);
         model.addAttribute("sale", sale);
