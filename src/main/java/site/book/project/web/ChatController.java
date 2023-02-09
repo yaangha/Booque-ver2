@@ -3,28 +3,19 @@ package site.book.project.web;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
-import site.book.project.domain.User;
 import site.book.project.dto.ChatReadDto;
-import site.book.project.dto.PostUpdateDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.ChatRepository;
-import site.book.project.repository.UserRepository;
 import site.book.project.service.ChatService;
 
 @Slf4j
@@ -101,4 +92,20 @@ public class ChatController {
         model.addAttribute("loginUser", loginUser);
     }
     
+    // (홍찬) 내 대화 목록 불러오기
+    @GetMapping("/chat/list")
+    public String openMyChatList(@AuthenticationPrincipal UserSecurityDto userDto, Model model) throws IOException {
+        Integer loginUserId = userDto.getId();
+
+        log.info("잘 도착햇나{}",loginUserId);
+        // 최근에 업데이트된 날짜 순으로 받아온 내가 대화중인 대화들
+        List<Chat> chat = chatRepository.findByBuyerIdOrderByModifiedTimeDesc(loginUserId);
+        
+        for (Chat c : chat) {
+            chatService.readLastThreeLines(c);
+        }
+        
+        // model.addAttribute(chat);
+        return "home";
+    }
 }
