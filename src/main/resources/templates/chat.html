@@ -85,17 +85,20 @@
                 <!-- 채팅방 리스트  -->
                 <div id="chatList">
                     <div th:each = "chat : ${ data }" class="w3-container">
+                    <a th:href="@{ /chat?chatRoomId={chatRoomId} (chatRoomId = ${ chat.chatRoomId })  }">
                         <div class="w3-third">
                             <img class="rounded-circle" width="40" height="40" th:src = "${ chat.chatWithImage }" />
                         </div>
                         <div class="w3-third">
-                            <span th:text="${ chat.chatWithName }"></span>
+                            <span th:text="${ chat.chatWithName }"></span><br>
+                            <span th:text="${ chat.usedTitle }"></span><br>
                             <span th:text="${ chat.modifiedTime }"></span><br/>
                             최신 메시지 내용...
                         </div>
                         <div class="w3-third">
                             <img width="auto" height="50" th:src = "${ '/market/api/view/'+ chat.usedBookImage }" />
                         </div>
+                    </a>
                         <hr/>
                     </div>
                 </div>
@@ -107,17 +110,17 @@
             
                     <!-- 채팅 상대 정보 -->    
                     <div>
-                        <img class="rounded-circle" width="60" height="60" th:src = "${ data[0].chatWithImage }" />
-                        <span th:text="${ data[0].chatWithName }"></span>
-                        <span th:text="${ data[0].chatWithLevel }"></span>
+                        <img class="rounded-circle" width="60" height="60" th:src = "${ chatUser.chatWithImage }" />
+                        <span th:text="${ chatUser.chatWithName }"></span>
+                        <span th:text="${ chatUser.chatWithLevel }"></span>
                     </div>
                     
                     <!-- 중고판매글 정보 -->
                     <div>
-                        <img width="60" height="auto" th:src = "${ '/market/api/view/'+ data[0].usedBookImage }" />
-                        <span th:text="${ data[0].usedBookTitle }"></span>
-                        <span th:text="${ data[0].price }"></span>
-                        <span th:text="${ data[0].status }"></span>
+                        <img width="60" height="auto" th:src = "${ '/market/api/view/'+ usedbook.usedBookImage }" />
+                        <span th:text="${ usedbook.usedBookTitle }"></span>
+                        <span th:text="${ usedbook.price }"></span>
+                        <span th:text="${ usedbook.status }"></span>
                     </div>
             
                     <!-- 출력 창(chatHistory) -->
@@ -144,7 +147,7 @@
                                 구매자(로그인유저):  <input type="text" th:value="${chatInfo.buyerId}" id="buyerId"/><br/>
                                 중고글id:  <input type="text" th:value="${chatInfo.usedBookId}" id="usedBookId"/><br/>
                                 판매자(작성자):  <input type="text" th:value="${chatInfo.sellerId}" id="sellerId"/><br/> -->
-                                <input type="hidden" th:value="${data[0].chatRoomId}" id="chatRoomId"/><br/>
+                                <input type="hidden" th:value="${usedbook.chatRoomId}" id="chatRoomId"/><br/>
                                 <input type="hidden" th:value="${loginUser.nickName}" id="loginUser"/>
                             </div>                    
                         </div>                

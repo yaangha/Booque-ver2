@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
 import site.book.project.domain.UsedBook;
+import site.book.project.domain.UsedBookImage;
 import site.book.project.domain.User;
 import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.ChatRepository;
+import site.book.project.repository.UsedBookImageRepository;
 import site.book.project.repository.UsedBookRepository;
 import site.book.project.repository.UserRepository;
 import site.book.project.service.ChatService;
@@ -53,6 +55,9 @@ public class ChatController {
     private UserRepository userRepository;
     @Autowired
     private UsedBookRepository usedBookRepository;
+    
+    @Autowired
+    private UsedBookImageRepository usedBookImageRepository;
  
     // 중고판매글에서 '채팅하기' 버튼 클릭시
     @PostMapping("/chat")
@@ -98,8 +103,52 @@ public class ChatController {
         
         List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
         
+        List<ChatReadDto> chatHistory = null;
+        if(chatRoomId==null) {
+             chatHistory = chatService.readChatHistory(myChats.get(0));
+             
+             ChatListDto usedbook = list.get(0);
+             model.addAttribute("usedbook", usedbook);
+             // chatListDto를 같
+             model.addAttribute("chatUser", usedbook);
+        } else {
+            
+            Chat chatById = chatRepository.findByChatRoomId(chatRoomId);
+            chatHistory = chatService.readChatHistory(chatById);
+            
+            // 책 정보
+            UsedBook u = usedBookRepository.findById(chatById.getUsedBookId()).get();
+            UsedBookImage img = usedBookImageRepository.findByUsedBookId(u.getId()).get(0);
+            //  채팅 상대 정보
+            
+            
+            
+            ChatListDto usedbook = ChatListDto.builder().usedBookImage(img.getFileName()).usedBookTitle(u.getBookTitle())
+                                                .price(u.getPrice()).status(u.getStatus())
+                                                .chatRoomId(chatRoomId)
+                                                .build();
+            
+            
+            ChatListDto chatPerson = null;
+            if(loginUserId.equals(chatById.getSellerId())) {
+                User chatUser = userRepository.findById(chatById.getBuyerId()).get();
+                
+                chatPerson = ChatListDto.builder().chatWithImage(chatUser.getUserImage()).chatWithLevel(chatUser.getBooqueLevel())
+                                .chatWithName(chatUser.getNickName()).build();
+            } else {
+                User chatUser = userRepository.findById(chatById.getSellerId()).get();
+                
+                chatPerson = ChatListDto.builder().chatWithImage(chatUser.getUserImage()).chatWithLevel(chatUser.getBooqueLevel())
+                .chatWithName(chatUser.getNickName()).build();
+                
+            }
+            
+            
+            model.addAttribute("usedbook", usedbook);
+            model.addAttribute("chatUser", chatPerson);
+        }
+        
             // chatHistory 불러 오기
-            List<ChatReadDto> chatHistory = chatService.readChatHistory(myChats.get(0));
             //chatHistory Model에 저장해 View로 전달
             model.addAttribute("chatHistory", chatHistory);    // (주의) 지금은 가장 최신 채팅방 히스토리만 보이는 상태! JS 작업 해야 함
     }
