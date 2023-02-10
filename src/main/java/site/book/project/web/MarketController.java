@@ -121,8 +121,9 @@ public class MarketController {
             
         }
         
-    	dto.setUserId(userDto.getId());
-    	dto.setStorage(1); // storage 값을 1(저장)로 변경 => 디폴트 값은 0(임시저장)
+        dto.setUserId(userDto.getId());
+        dto.setStorage(1); // storage 값을 1(저장)로 변경 => 디폴트 값은 0(임시저장)
+        
     	usedBookService.create( usedBookId, dto );
     	
     	return "redirect:/market/detail?usedBookId="+usedBookId;

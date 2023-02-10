@@ -46,6 +46,13 @@ window.addEventListener('DOMContentLoaded', () => {
             
         function send() {
             var message = $('#message').val();
+            
+            const finalChat = document.querySelectorAll('#finalChat')
+            
+            console.log('메세지 보자 재정렬를 해야함. ')
+            console.log(finalChat)
+            console.log(message)
+
             autoScroll();
             sendChat({
                 // 'chatRoomId': chatRoomId,
@@ -59,6 +66,10 @@ window.addEventListener('DOMContentLoaded', () => {
                 });
             $('#message').val("");
         }
+        
+        
+        
+        
         
         // 메시지 입력 창에서 Enter키가 보내기와 연동되도록 설정
         var inputMessage = document.getElementById('message'); 
