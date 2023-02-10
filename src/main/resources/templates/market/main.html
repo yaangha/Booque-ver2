@@ -92,7 +92,6 @@
             
         </div>
         
-        
         <div style="display: inline-block; margin-left: 20px;">
         
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i> 상품등록</button>
@@ -117,8 +116,8 @@
                 </div>
               </div>
             </div>
-            
-            <a class="btn btn-danger" style="margin-right: 40px;" th:href="@{ /market/mypage?userNickname={userNickname} (userNickname = ${ userNickname }) }"><i class="bi bi-house-door"></i> 마이부끄</a>            
+            <a class="btn btn-danger" style="margin-right: 40px;" th:href="@{ /market/mypage?userId={userId} (userId = ${ userId }) }"><i class="bi bi-house-door"></i> 마이부끄</a>            
+
         </div>
     </div><!-- 상단 div end -->
     

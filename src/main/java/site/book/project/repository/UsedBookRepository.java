@@ -1,6 +1,7 @@
 package site.book.project.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,6 +15,20 @@ public interface UsedBookRepository extends JpaRepository<UsedBook, Integer> {
 
     // (하은) bookId로 동일한 다른 중고책 리스트 찾기
     List<UsedBook> findByBookId(Integer bookId);
+    Optional<UsedBook> findById(Integer userId);
+    List<UsedBook> findByUserId(Integer userId);
+    
+
+    @Query("select u.usedBookId from USEDBOOKWISH u where userId = :userId")
+    List<UsedBook> selectUsedBookIdfromUserId(@Param(value="userId") Integer userId);
+
+    
+//    @Query("select u from USEDBOOK u where u.userId = :userId and {u.status = '판매중' or u.status = '예약중'}")
+//    List<UsedBook> countUsedBookSellingPost(@Param(value="userId")Integer userId);
+    
+    
+    @Query("select u from USEDBOOK u where u.userId = :userId and u.status = :status")
+    List<UsedBook> countUsedBookSoldoutPost(@Param(value="userId") Integer userId, @Param(value="status") String status);
     
     // (하은) 중고판매글 조회수 증감
     /*

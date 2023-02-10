@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.springframework.http.ResponseEntity;
@@ -94,7 +96,7 @@ public class MarketController {
         List<MarketCreateDto> list = mainList(usedBookList);
 
         if(userDto != null) {
-            model.addAttribute("userNickname", userDto.getNickName());       
+            model.addAttribute("userId", userDto.getId());       
         }
         
         
@@ -297,9 +299,37 @@ public class MarketController {
      * @param model
      */
     @GetMapping("/mypage") // /market/mypage 판매글작성자&마이페이지 이동
-    public void mypage(String userNickname,Model model) {
+    public void mypage(Integer userId,Model model) {
+        User user = userRepository.findById(userId).get();
+        log.info("userInfo좀 나와라ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ = {}", user);
+        List<UsedBook> usedBook = usedBookRepository.findByUserId(userId);
         
-        model.addAttribute("user", userNickname);
+        List<MarketCreateDto> list = mainList(usedBook);
+        
+        log.info("list userBookInfo ddfdfdf= {}", list);
+        Book book = bookRepository.findById(userId).get();
+        String userNickName = user.getNickName();
+        Integer postCount = postRepository.findByUserId(userId).size();
+        String soldout = "판매완료";
+        
+//        Integer usedBookSellingCount = usedBookRepository.countUsedBookSellingPost(userId).size();
+        Integer usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId, soldout).size();
+        
+        Integer usedBookSellingCount = postCount - usedBookSoldoutCount;
+//        List<UsedBook> usedBookWishList = usedBookRepository.selectUsedBookIdfromUserId(userId);
+//        log.info("usedBookWishList = {}", usedBookWishList); // usedBookId를 가져오기 성공!
+//        List<MarketCreateDto> usedBookList = mainList(usedBookWishList);
+//        
+        
+//        model.addAttribute("usedBookList", usedBookList);
+        model.addAttribute("list", list);
+    	model.addAttribute("userNickName", userNickName);
+        model.addAttribute("user", user);
+        model.addAttribute("usedBook", usedBook);
+        model.addAttribute("book", book);
+        model.addAttribute("postCount", postCount);
+        model.addAttribute("usedBookSellingCount", usedBookSellingCount);
+        model.addAttribute("usedBookSoldoutCount", usedBookSoldoutCount);
         
     }
     
@@ -401,6 +431,5 @@ public class MarketController {
         
         return list;
     }
-    
     
 }
