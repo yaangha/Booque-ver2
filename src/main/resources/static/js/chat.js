@@ -119,3 +119,15 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         
 });
+
+
+        // (지혜) 채팅창에서 프사,닉네임,책표지 클릭시 부모창 링크 변경(챗리스트에선 적용x)
+        function changeParentPage(url) {
+            parent = window.opener;
+            parent.location.href=url;
+            // parent.focus();  부모창으로 포커스(크롬에서는 지원되지 않는다 함...ㅠㅠ)
+        }
+        
+        
+        
+        

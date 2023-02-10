@@ -243,9 +243,9 @@ public class ChatService {
             
             ChatListDto dto = ChatListDto.builder()
                     .chatRoomId(chat.getChatRoomId()).modifiedTime(ChatController.convertTime(chat.getModifiedTime()))
-                    .usedBookId(usedBookId).usedBookImage(imgList.get(0).getFileName()).usedTitle(usedBook.getTitle()).price(usedBook.getPrice())
+                    .usedBookId(usedBookId).usedBookImage(imgList.get(0).getFileName()).usedBookTitle(usedBook.getBookTitle()).price(usedBook.getPrice())
                     .status(usedBook.getStatus())
-                    .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
+                    .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel()).chatWithId(chatWith.getId())
                     .build();
             
             list.add(dto);
