@@ -225,6 +225,9 @@ btnSubmit.addEventListener('click', function () {
                     bookSelect(response.data.book, response.data.usedBookId)
                         
                 })
+                .catch(err => {
+                    console.log(err)
+                })
             
         })
     })
