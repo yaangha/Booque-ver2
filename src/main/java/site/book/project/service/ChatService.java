@@ -31,6 +31,7 @@ import site.book.project.repository.ChatRepository;
 import site.book.project.repository.UsedBookImageRepository;
 import site.book.project.repository.UsedBookRepository;
 import site.book.project.repository.UserRepository;
+import site.book.project.web.ChatController;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -229,7 +230,7 @@ public class ChatService {
             
             // 채팅 상대 정보 불러 오기
             
-            if (loginUserId == chat.getSellerId()) {    // 내가 판매자면
+            if (loginUserId.equals(chat.getSellerId())) {    // 내가 판매자면
                 chatWith = userRepository.findById(chat.getBuyerId()).get();
             } else {   // 내가 구매자면
                 chatWith = userRepository.findById(chat.getSellerId()).get();
@@ -241,8 +242,8 @@ public class ChatService {
             List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(usedBookId);
             
             ChatListDto dto = ChatListDto.builder()
-                    .chatRoomId(chat.getChatRoomId()).modifiedTime(chat.getModifiedTime())
-                    .usedBookId(usedBookId).usedBookImage(imgList.get(0).getFileName()).usedBookTitle(usedBook.getTitle()).price(usedBook.getPrice())
+                    .chatRoomId(chat.getChatRoomId()).modifiedTime(ChatController.convertTime(chat.getModifiedTime()))
+                    .usedBookId(usedBookId).usedBookImage(imgList.get(0).getFileName()).usedTitle(usedBook.getTitle()).price(usedBook.getPrice())
                     .status(usedBook.getStatus())
                     .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
                     .build();

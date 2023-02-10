@@ -129,9 +129,10 @@
         </form>
     </div>
     
-    <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:40px; display:inline-block;"><!-- content 1개 -->
+     <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:40px; display:inline-block;"><!-- content 1개 -->
         <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ marketCreateDto.usedBookId }) }" th:myname="${ marketCreateDto.usedBookId }" onclick="usedBookHits(this.getAttribute('myname'))">
             <img id="img" alt="" th:src="${ '/market/api/view/'+marketCreateDto.imgUsed }"  style="height:350px; width:350px; margin-bottom:10px; object-fit: cover;">
+            <img id="img" alt="" th:src="${ '/market/api/view/'+ marketCreateDto.imgUsed }"  style="height:350px; width:350px; margin-bottom:10px; object-fit: cover;">
             <div class="text-truncate" th:text="${ marketCreateDto.title }" style="font-weight: bold; font-size: 20px;"></div>
             <div th:text="|${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold; font-size: 25px; color:red;"></div>
             <div class="text-truncate" th:text="${ marketCreateDto.location }" style="display: inline-block;"></div>
@@ -139,7 +140,7 @@
             <div><img class="rounded-circle" width="40" height="40" th:src = "${ marketCreateDto.userImage }" /><span th:text="${ '&nbsp;&nbsp;'+marketCreateDto.nickName }"></span></div>
             
             <span class="text-truncate" th:text="${ '<' + marketCreateDto.bookTitle + '>'}"></span>
-            <div style="color: gray;">업로드 
+            <div style="color: gray;"><i class="bi bi-clock" style="font-size: small;"></i>
                 <small style="color: gray;" th:text="${ #temporals.format(marketCreateDto.modifiedTime, 'yyyy/MM/dd HH:mm') }"></small>
             </div>
             <div class="align-middle" style="color:gray;">
