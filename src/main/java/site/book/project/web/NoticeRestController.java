@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,18 +17,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Notices;
 import site.book.project.domain.PostReply;
+import site.book.project.domain.User;
+import site.book.project.dto.CheckDto;
 import site.book.project.dto.NoticeDto;
 import site.book.project.dto.ReplyReadDto;
+import site.book.project.dto.UserSecurityDto;
 import site.book.project.service.NoticeService;
 import site.book.project.service.ReplyService;
+import site.book.project.service.UserService;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-public class NoticetController {
+public class NoticeRestController {
 
     private final NoticeService noticeService;
-    private final ReplyService replyService;
+    private final UserService userService;
     
     // (예진) 어떤 포스트 글에 새 댓글이 달릴 때 알림(notice) 만들어짐
     // notice create
@@ -58,4 +63,25 @@ public class NoticetController {
 //        Integer result = noticeService.delete(noticeId);
 //        return ResponseEntity.ok(result);     
 //    }
+    
+    @PostMapping("/notice/check")
+    public ResponseEntity<Integer> checkContainingSubsKeyword(@RequestBody CheckDto checkDto){
+        log.info("체크디티오={}",checkDto);
+        
+        List<User> users = userService.read();
+        List<String> subs = new ArrayList<>();
+        String kw = null;
+        for (User u : users) {
+            kw = u.getSubsKeyword();     
+        } subs.add(kw);
+        
+        for (String s: subs) {
+            
+        }
+         
+        
+        return ResponseEntity.ok(1);
+    }
+   
+    
 }

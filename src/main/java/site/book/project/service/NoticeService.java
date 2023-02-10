@@ -72,6 +72,7 @@ public class NoticeService {
     }
 
 
+    
     public Notices read(Integer noticeId) {
          Notices notice = noticeRepository.findById(noticeId).get();
         return notice;

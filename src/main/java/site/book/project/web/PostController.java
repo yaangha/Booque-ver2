@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -21,15 +22,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Book;
+import site.book.project.domain.Notices;
 import site.book.project.domain.Post;
 import site.book.project.domain.User;
 import site.book.project.dto.PostCreateDto;
 import site.book.project.dto.PostListDto;
 import site.book.project.dto.PostReadDto;
 import site.book.project.dto.PostUpdateDto;
+import site.book.project.dto.ReplyReadDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.UserRepository;
 import site.book.project.service.BookService;
+import site.book.project.service.NoticeService;
 import site.book.project.service.PostService;
 import site.book.project.service.ReplyService;
 import site.book.project.service.UserService;
@@ -45,7 +49,7 @@ public class PostController {
     private final UserService userService;
     private final ReplyService replyService;
     private final UserRepository userRepository;
-       
+    private final NoticeService noticeService;   
     
     @Transactional(readOnly = true)
     @GetMapping("/list")
@@ -141,16 +145,15 @@ public class PostController {
     @Transactional(readOnly = true)
     @GetMapping({ "/detail", "/modify" })
     public void detail(@AuthenticationPrincipal UserSecurityDto userDto,
-            Integer postId, String username ,Integer bookId, Model model) {
+            Integer postId, String username ,Integer bookId, Integer replyId, Integer noticeId, Model model) {
         log.info("detail(postId= {}, bookId={}, postWriter={})", postId, bookId, username);
+        log.info("리플아이디???={}",replyId);
         
         List<PostReadDto> recomList = postService.postRecomm(username, bookId);  // 1)
         
         Post p = postService.read(postId);
         Book b = bookService.read(bookId);
-        
-
-        
+    
         if (username == null || userDto == null) { // 글 작성자와 유저가 다른 경우
             User u = userService.read(p.getUser().getId());
             Post entity = postService.read(postId); // 그 글의 조회수를 1올려줌.
@@ -166,15 +169,21 @@ public class PostController {
             model.addAttribute("user", u);
         }
         
+        // (예진) 댓글 알림 클릭해서 들어가는 경우
+        if(replyId != null) {
+         
+            model.addAttribute("replyId", replyId);
+        }
+        
         // (예진) 리플 작성칸 nickName 주기
         String nick = userDto.getNickName();
         
+    
          model.addAttribute("recomList",recomList );    // 2)
          model.addAttribute("post", p);
          model.addAttribute("book", b);
          model.addAttribute("nick", nick);
-       
-        
+
     }
    
     @PreAuthorize("hasRole('USER')")
@@ -241,5 +250,6 @@ public class PostController {
         
         return "redirect:"+urlTemp;
     }
+   
    
 }

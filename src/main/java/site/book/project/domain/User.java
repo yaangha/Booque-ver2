@@ -83,6 +83,9 @@ public class User {
     @Builder.Default
     private String booqueLevel = "새싹부끄";
     
+    @Setter
+    private String subsKeyword; // subscribed 키워드: 부끄장터 알림 등록한 키워드
+    
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<UserRole> roles = new HashSet<>();

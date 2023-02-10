@@ -118,7 +118,9 @@
                      <div th:each="no : ${ noticeList }">
                          <!-- (예진) 새 댓글이 등록될 때 생성된 notice들의 리스트. 클릭하면 댓글이 달린 포스트 글로 이동함. -->
                          <div>
-                            <a style="font-size: 17px; text-align:center; padding-top:15px; color:grey;" class="w3-bar-item w3-button" th:href="@{ /post/detail?postId={postId}&bookId={bookId} (postId = ${ no.postId }, bookId = ${ no.bookId } )}">
+                            <a style="font-size: 17px; text-align:center; padding-top:15px; color:grey;" class="w3-bar-item w3-button" 
+                            th:noticeId = "${ no.noticeId }" onclick="deleteNotice(this.getAttribute('noticeId'));" 
+                            th:href="@{ /post/detail?postId={postId}&bookId={bookId} (postId = ${ no.postId }, bookId = ${ no.bookId },replyId= ${ no.replyId } )}">
                             <input type="hidden" id="noticeId" th:value="${ no.noticeId }" />
                             <img class="rounded-circle" width="28" height="28" th:src="${ no.userImage }"/>
                             <span class="fw-bold" th:text="${ no.nickName }"></span>님의 새 댓글이 있어요!</a>
@@ -378,7 +380,22 @@
 
     <th:block layout:fragment="script">
     
-  
+    <script>
+    function deleteNotice(noticeId) {
+        alert(noticeId);
+        axios.get('/notice/delete', {params: {noticeId : noticeId}})
+        .then(response => {
+            console.log(response);
+            return true;
+        })
+        .catch(err =>{
+            console.log(err);
+        });
+    
+    };
+    </script>
+    
+    
     
     <script>
 function nothingKeywordCheck(){

@@ -156,33 +156,48 @@
 //                + '</div>'
 //                + '</div>';
 //        }
-        
-        for (let r of data){
-         str += '<div class="card border-dark mb-3 w-100" style="text-align: left;">'
-            + '<div class="flex-shrink-0">'
-            +`<a href="/post/list?postWriter=${r.replyWriter}">`
-            +'<img class="rounded-circle" width="60" height="60" src="' + r.userImage + '" alt="..." />'
 
-            + `<span class="fw-bold m-2">${r.nickName}</span></a></div>`
-         
+       for (let r of data){
+            str += '<div class="card border-dark mb-3 w-100" style="text-align: left;">';
+            
+            if(r.replyId == repId) {  
+               str +='<div class="bgColor" id="bgColorBtn" style="background-color: #e6f2ff;">';
+            }
+                  
+            str +='<div class="flex-shrink-0"><img class="rounded-circle" width="60" height="60" src="' + r.userImage + '" alt="..." /></div>'
+                + `<div class="fw-bold"><a href="/post/list?postWriter=${r.replyWriter}">${r.replyWriter}</a></div>`
                 + '<div class="card-body text-dark">'
                 + '<p class="card-text">' + r.replyContent + '</p>'
                 + '<div><small style="color:gray;"> 작성시간: ' + '<span id="commentDate">' + r.createdTime + '</span>' + '</small></div>'
     //            + '<div><small style="color:gray;"> 수정시간: ' + r.modifiedTime + '</small></div>'
                 + '</div>';
+                
             if(r.replyWriter == loginUser){
-            str += '<div class="card-footer">'
-                + `<button type="button" class="btnModifies btn btn-outline-primary" data-rid="${r.replyId}">수정</button>`
-                + '</div>';
+               str += '<div class="card-footer">'
+                   + `<button type="button" class="btnModifies btn btn-outline-primary" data-rid="${r.replyId}">수정</button>`
+                   + '</div>';
             }
+            
             str += '</div>';
+          
+            if(r.replyId == repId) {    
+               str +='</div>';
+            }
+            
         }
         
         divReplies.innerHTML = str;
         
+        const bc = document.querySelector('.bgColor');
+        bc.addEventListener('click', function(){
+        const div22 = document.getElementById('bgColorBtn');
+        div22.style.backgroundColor = 'white';
+        
+    });
+      
         
         const dateC = document.querySelectorAll('#commentDate');
-    dateC.forEach(e => {
+       dateC.forEach(e => {
        let dateComment = new Date(e.innerText);
        console.log(dateComment)
        let dateM = dateComment.getMonth()+1;
@@ -195,6 +210,7 @@
         e.innerText = dd;
            
     })
+  
         
         // [수정] 버튼에 이벤트 리스너를 등록
         const buttons = document.querySelectorAll('.btnModifies');

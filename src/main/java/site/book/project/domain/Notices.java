@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity(name ="NOTICES")
 @SequenceGenerator(name = "NOTICES_SEQ_GEN", sequenceName = "NOTICES_SEQ", initialValue = 1, allocationSize = 1)
 public class Notices {
-    
+    // (예진) 새 댓글 알림, 키워드 알림 구현하기 위한 도메인
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICES_SEQ_GEN")
@@ -31,5 +31,8 @@ public class Notices {
     private Integer postId;
     
     private Integer replyId;
+    
+    
+
  
 }

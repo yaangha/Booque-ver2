@@ -26,8 +26,30 @@ btnSubmit.addEventListener('click', function () {
         formCreate.action = '/market/create';
         formCreate.method = 'post';
         formCreate.submit();
+        
+        checkContainingKeyword();
     }
+    
+    
 });
+    
+    function checkContainingKeyword(){
+        const title = document.querySelector('#title').value;
+        const content = document.querySelector('#contents').value;
+        const usedBookId = document.querySelector('#usedBookId ').value;
+        
+        const data = {
+            title: title,
+            content: content,
+            usedBookId,usedBookId          
+        };
+        
+        axios
+        .post('/notice/check', data)
+        .then(response => { alert('보냄!');} )
+        .catch(err => { console.log(err); });
+    };
+    
     
     
     
@@ -258,7 +280,7 @@ btnSubmit.addEventListener('click', function () {
         document.getElementById('marketCreate').style.display='none';
         
         const idDiv = document.querySelector('#usedId')
-        let used = '<input type="text" name=usedBookId value="'+usedBookId+'">';
+        let used = '<input type="text" id="usedBookId" name=usedBookId value="'+usedBookId+'">';
         idDiv.innerHTML = used
         
     }

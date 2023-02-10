@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +39,7 @@ import site.book.project.repository.UsedBookWishRepository;
 import site.book.project.repository.UserRepository;
 import site.book.project.service.SearchService;
 import site.book.project.service.UsedBookService;
+import site.book.project.service.UserService;
 
 @Slf4j
 @Controller
@@ -53,6 +55,8 @@ public class MarketController {
     private final UserRepository userRepository;
     private final UsedBookWishRepository usedBookWishRepository;
     private final UsedBookImageRepository usedBookImageRepository;
+    private final UserService userService;
+  
     
     
     
@@ -338,6 +342,20 @@ public class MarketController {
         
         
         return list;
+    }
+    
+    
+    // (예진) 알림받을 키워드 등록
+    @PostMapping("/register/subsKeyword")
+    public String registerSubsKeyword(String subsKeyword, @AuthenticationPrincipal UserSecurityDto dto) {
+        
+       User user = userService.read(dto.getId());
+       user.setSubsKeyword(subsKeyword);
+
+       
+       userRepository.save(user);
+        
+       return  "redirect:/market/main";
     }
     
     
