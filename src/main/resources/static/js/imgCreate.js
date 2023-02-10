@@ -73,10 +73,8 @@
         event.preventDefault();
         
         const btn = event.target;
-        console.log('눈물나,,')
-        console.log(btn)
         const uuid = btn.getAttribute('data-uuid');
-       const fname = btn.getAttribute('data-fname');      
+        const fname = btn.getAttribute('data-fname');      
         const fileName = uuid+'_'+fname;  
         console.log(uuid);
         console.log(fname);

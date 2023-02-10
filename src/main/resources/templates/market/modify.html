@@ -75,8 +75,8 @@
 <body>
     
     <div class="w-70 container">
-    
-        <div  id="uploadResults" class="container-fluid d-flex" style="flex-wrap: wrap;">
+    <!-- usedBook에 저장되이미지 -->
+    <div id="uploadResults" class="container-fluid d-flex" style="flex-wrap: wrap;">
 <div th:each="imgList: ${ imgList }" class="card my-2">
     <div class="card-header d-flex justify-content-center">
         <button class="btnImgDelete btn-close" aria-label="Close" th:data-imgId="${ imgList.id }"
