@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -14,13 +15,22 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
+import site.book.project.domain.UsedBook;
+import site.book.project.domain.UsedBookImage;
+import site.book.project.domain.User;
+import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
+import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.ChatRepository;
+import site.book.project.repository.UsedBookImageRepository;
+import site.book.project.repository.UsedBookRepository;
+import site.book.project.repository.UserRepository;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,6 +39,9 @@ import site.book.project.repository.ChatRepository;
 public class ChatService {
     
     private final ChatRepository chatRepository;
+    private final UserRepository userRepository;
+    private final UsedBookRepository usedBookRepository;
+    private final UsedBookImageRepository usedBookImageRepository;
     
     @Value("${file.upload-dir}")
     String fileUploadPath; 
@@ -37,7 +50,9 @@ public class ChatService {
     // fileName 컬럼은 일단 null로 비워 둠
     public Integer createChat(Integer usedBookId, Integer sellerId, Integer buyerId) throws IOException {
         
-        Chat chat = Chat.builder().usedBookId(usedBookId).sellerId(sellerId).buyerId(buyerId).build();
+        Chat chat = Chat.builder().usedBookId(usedBookId).sellerId(sellerId).buyerId(buyerId)
+                    .createdTime(LocalDateTime.now()).modifiedTime(LocalDateTime.now())
+                    .build();
 
         chatRepository.save(chat);
         createFile(chat.getChatRoomId(), usedBookId);
@@ -137,6 +152,9 @@ public class ChatService {
         byte[] b = writeContent.getBytes();
         
         fos.write(b);
+        
+        chatAppend.setModifiedTime(LocalDateTime.now());
+        
         fos.close();
         
         // 읽음 여부 표시 기능 (TODO)
@@ -193,4 +211,49 @@ public class ChatService {
         return recentMessage;
     }
 
+
+    private String toConvert (String Unicodestr) throws UnsupportedEncodingException {
+        return new String (Unicodestr.getBytes("8859_1"),"KSC5601");
+        }
+    
+    
+    // 내가 (판매자 혹은 구매자로) 포함된 모든 채팅방 불러와 dto에 데이터 추가
+    public List<ChatListDto> loadChatList (Integer loginUserId) throws IOException {
+        
+        List<ChatListDto> list = new ArrayList<>();
+        User chatWith = new User();
+        
+        // 내 유저id로 내가 포함되어 있는 모든 채팅방 찾기
+        List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
+        
+        for (Chat chat : myChats) {
+            
+            // 채팅 상대 정보 불러 오기
+            
+            if (loginUserId == chat.getSellerId()) {    // 내가 판매자면
+                chatWith = userRepository.findById(chat.getBuyerId()).get();
+            } else {   // 내가 구매자면
+                chatWith = userRepository.findById(chat.getSellerId()).get();
+            }
+            
+            // 중고판매글 정보 불러 오기
+            Integer usedBookId = chat.getUsedBookId();
+            UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
+            List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(usedBookId);
+            
+            ChatListDto dto = ChatListDto.builder()
+                    .chatRoomId(chat.getChatRoomId()).modifiedTime(chat.getModifiedTime())
+                    .usedBookId(usedBookId).usedBookImage(imgList.get(0).getFileName()).usedBookTitle(usedBook.getTitle()).price(usedBook.getPrice())
+                    .status(usedBook.getStatus())
+                    .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
+                    .build();
+            
+            list.add(dto);
+            
+        }
+        return list;
+        
+    }
+    
+    
 }

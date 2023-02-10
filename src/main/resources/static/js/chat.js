@@ -90,7 +90,7 @@ window.addEventListener('DOMContentLoaded', () => {
             messageObj.sendTime +
             ']</div></p>';
             } else {
-            return '<p><div id="newHistory" class="row alert alert-info"><div class="col_8">' +
+            return '<p><div id="newResponseHistory" class="row alert alert-info"><div class="col_8">' +
             messageObj.sender +
             '</div><div class="col_4 text-right">' +
             messageObj.message+
@@ -100,6 +100,10 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
         
+        $('#message').focus(function(){
+        let nm = document.getElementById('newResponseHistory');
+        nm.className = "row";
+        });
         
         // (홍찬) 채팅칠 때 혹은 채팅받을 때 자동으로 스크롤 조절 해줌.
         function autoScroll() {
