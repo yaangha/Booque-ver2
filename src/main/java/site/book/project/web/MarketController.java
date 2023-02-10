@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Book;
+import site.book.project.domain.Post;
 import site.book.project.domain.UsedBook;
 import site.book.project.domain.UsedBookImage;
 import site.book.project.domain.UsedBookPost;
@@ -30,12 +31,14 @@ import site.book.project.domain.User;
 import site.book.project.dto.MarketCreateDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.BookRepository;
+import site.book.project.repository.PostRepository;
 import site.book.project.repository.SearchRepository;
 import site.book.project.repository.UsedBookImageRepository;
 import site.book.project.repository.UsedBookPostRepository;
 import site.book.project.repository.UsedBookRepository;
 import site.book.project.repository.UsedBookWishRepository;
 import site.book.project.repository.UserRepository;
+import site.book.project.service.PostService;
 import site.book.project.service.SearchService;
 import site.book.project.service.UsedBookService;
 
@@ -53,6 +56,8 @@ public class MarketController {
     private final UserRepository userRepository;
     private final UsedBookWishRepository usedBookWishRepository;
     private final UsedBookImageRepository usedBookImageRepository;
+    private final PostService postService;
+    private final PostRepository postRepository;
     
     
     
@@ -65,7 +70,7 @@ public class MarketController {
         
         // 서비스로 넘겨야 할까? 
         if(orderSlt==null || orderSlt.equals("최신순")) {
-            List<UsedBook> storageChk = usedBookRepository.findByOrderByModifiedTimeDesc();            
+            List<UsedBook> storageChk = usedBookRepository.findByOrderByCreatedTimeDesc();            
             for (UsedBook u : storageChk) {
                 UsedBookPost post = usedBookPostRepository.findByUsedBookId(u.getId());
                 if (post.getStorage() == 1) {
@@ -211,6 +216,36 @@ public class MarketController {
             }
         }
         
+        // (하은) 블로그로 연결 -> 해당 책에 관한 리뷰 + 최신 리뷰 = 총 2개 보여주기
+        List<Post> userPostList = postRepository.findByUserIdOrderByCreatedTime(user.getId()); // 작성자 블로그 글
+        
+        Post thisBookPost = null;
+        Post latestPost = null;
+        
+        if (userPostList != null) {
+            for (Post p : userPostList) {
+                if (p.getBook().getBookId() == book.getBookId()) {
+                    thisBookPost = p;
+                    log.info("하은 블로그 연동 1 = {}", thisBookPost);
+                    break;
+                }
+            }
+            
+            for (Post p : userPostList) {
+                if (p.getBook().getBookId() != book.getBookId()) {
+                    latestPost = p;
+                    log.info("하은 블로그 연동 2 = {}", latestPost);
+                    break;
+                }
+            }
+        } else {
+            thisBookPost = null;
+            latestPost = null;
+            log.info("하은 블로그 연동 3 = {}, {}", thisBookPost, latestPost);
+        }
+        
+        model.addAttribute("thisBookPost", thisBookPost);
+        model.addAttribute("latestPost", latestPost);
         model.addAttribute("firstImg", firstImg);
         model.addAttribute("imgList", imgList);
         model.addAttribute("sale", sale);
@@ -357,7 +392,7 @@ public class MarketController {
                         .userImage(user.getUserImage()).nickName(user.getNickName())
                         .bookTitle(book.getBookName()).price(ub.getPrice())
                         .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime()).hits(ub.getHits()).wishCount(ub.getWishCount())
-                        .imgUsed(imgList.get(0).getFileName())
+                       .imgUsed(imgList.get(0).getFileName())
                         .build();
                 list.add(dto);
         

@@ -1,29 +1,26 @@
 package site.book.project.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
+import site.book.project.domain.UsedBook;
 import site.book.project.domain.User;
+import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
-import site.book.project.dto.PostUpdateDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.ChatRepository;
+import site.book.project.repository.UsedBookRepository;
 import site.book.project.repository.UserRepository;
 import site.book.project.service.ChatService;
 
@@ -52,6 +49,10 @@ public class ChatController {
     
     @Autowired
     private ChatRepository chatRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UsedBookRepository usedBookRepository;
  
     // 중고판매글에서 '채팅하기' 버튼 클릭시
     @PostMapping("/chat")
@@ -82,23 +83,42 @@ public class ChatController {
     
     @GetMapping("/chat")
     public void showChatWindow(@AuthenticationPrincipal UserSecurityDto userDto, Integer chatRoomId, Model model) throws IOException {
-        
         log.info("챗창 오픈 Get Mapping");
         
         Integer loginUserId = userDto.getId();
-        String loginUser = userDto.getNickName();
+        User loginUser = userRepository.findById(loginUserId).get();
         
-        Chat chat = chatRepository.findByChatRoomId(chatRoomId);
-        
-        // chatHistory 불러 오기
-        List<ChatReadDto> chatHistory = chatService.readChatHistory(chat);
-        //chatHistory Model에 저장해 View로 전달
-        model.addAttribute("chatHistory", chatHistory);
-        // Chat 객체 Model에 저장해 view로 전달
-        model.addAttribute("chatInfo", chat);
-        // 현재 로그인되어 있는 유저id, 유저 닉네임 view로 전달 (보낸사람 식별)
-        model.addAttribute("loginUserId", loginUserId);
+        // 뷰에 보여 줄 내 정보
         model.addAttribute("loginUser", loginUser);
+        
+        List<ChatListDto> list = chatService.loadChatList(loginUserId);
+        
+        // 뷰에 보여 줄 채팅방 정보들(리스트)
+        model.addAttribute("data", list);
+        
+        List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
+        
+            // chatHistory 불러 오기
+            List<ChatReadDto> chatHistory = chatService.readChatHistory(myChats.get(0));
+            //chatHistory Model에 저장해 View로 전달
+            model.addAttribute("chatHistory", chatHistory);    // (주의) 지금은 가장 최신 채팅방 히스토리만 보이는 상태! JS 작업 해야 함
     }
     
+    // (홍찬) 내 대화 목록 불러오기
+    @GetMapping("/chat/list")
+    public String openMyChatList(@AuthenticationPrincipal UserSecurityDto userDto, Model model) throws IOException {
+        Integer loginUserId = userDto.getId();
+
+        log.info("잘 도착햇나{}",loginUserId);
+        // 최근에 업데이트된 날짜 순으로 받아온 내가 대화중인 대화들
+        List<Chat> chat = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
+        List<String> cl = new ArrayList<>();
+        for (Chat c : chat) {
+            log.info("방번호{}",c.getChatRoomId());
+            cl.add(chatService.readLastThreeLines(c));
+        }
+        
+        model.addAttribute("myChatList" ,cl);
+        return "";
+    }
 }

@@ -40,6 +40,12 @@
         #img {
             box-shadow: 10px 10px 20px lightgrey;
         }  
+        
+        #img:hover {
+            transform:scale(1.05);
+            transition: .3s;
+        }
+        
     </style>
     
   
@@ -139,7 +145,7 @@
             <div><img class="rounded-circle" width="40" height="40" th:src = "${ marketCreateDto.userImage }" /><span th:text="${ '&nbsp;&nbsp;'+marketCreateDto.nickName }"></span></div>
             
             <span class="text-truncate" th:text="${ '<' + marketCreateDto.bookTitle + '>'}"></span>
-            <div style="color: gray;">업로드 
+            <div style="color: gray;"><i class="bi bi-clock" style="font-size: small;"></i>
                 <small style="color: gray;" th:text="${ #temporals.format(marketCreateDto.modifiedTime, 'yyyy/MM/dd HH:mm') }"></small>
             </div>
             <div class="align-middle" style="color:gray;">

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org/"
     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{ layout/layout }">
+    layout:decorate="~{ layout/layoutM }">
 
 <div layout:fragment="content">
 
@@ -90,8 +90,9 @@
                 <div style="font-size:15px; height: 21px; display:inline-block; padding: 1px; text-align: center; color:green; font-weight: bold;">
                     <i class="fa-solid fa-seedling"></i>
                     <small th:text="${ user.booqueLevel }" ></small>
-                    <small th:text="${ user.booqueScore + 'P' }"></small>
                     <i class="fa-solid fa-seedling"></i>
+                    <i class="bi bi-file-ppt-fill"></i>
+                    <small th:text="${ user.booqueScore }"></small>
                 </div>
                 <div th:text="${ usedBook.location }"></div>
                 <input type="hidden" id="usedLocation" th:value="${ usedBook.location }"/>
@@ -129,7 +130,45 @@
     	</div>
     </div>
     
-    <div class="row"> <!-- content -->        
+    <!-- 작성자 블로그로 연결하기 -->
+    <div class="row bg-dark p-2 text-dark bg-opacity-10 rounded-4" style="height: 100px; margin-bottom: 30px; overflow: hidden; padding-right: none;">
+        <div class="col-1" style="margin: auto;">
+            <i class="bi bi-bookmarks-fill" style="font-size: 25px; margin: 30px;"></i>
+        </div>
+        <div class="col" style="margin: auto;"><!-- 블로그 목록 1개(임시) -->
+            <div th:if="${ thisBookPost == null }"><!-- 해당 책 리뷰가 없을시 최신 리뷰 보여주기 -->
+                <div th:if="${ latestPost == null }" style="margin: auto; font-size: 18px; font-weight: bold;"><span th:text="${ '[' + user.username + ']' }"></span>님이 작성하신 리뷰가 아직 없어요!</div>
+                <div th:unless="${ latestPost == null }">
+                    <div style="color: gray; font-size: small;"><span th:text="${ user.username }"></span>님의 최신 리뷰 ↓</div>
+                    <a th:href="@{ /post/detail(postId=${ latestPost.postId }, bookId=${ book.bookId }, username=${ user.username }) }">
+                    <div class="text-truncate" style="font-weight: bold; font-size: 21px;" th:text="${ latestPost.title }"></div>
+                    <!-- <div class="text-truncate" th:text="${ latestPost.postContent }"></div> -->
+                    <div style="font-size: small; color: gray;">
+                        <i class="bi bi-clock"></i><span th:text="${ ' ' + #temporals.format(latestPost.modifiedTime , 'yyyy/MM/dd HH:mm') }"></span>
+                    </div>
+                    </a>
+                </div>
+            </div>
+            <div th:unless="${ thisBookPost == null }"><!-- 해당 리뷰가 있을시 보여주기 -->
+                <div style="color: gray; font-size: small;"><span th:text="${ user.username }"></span>님의 <span th:text="${ '<' + book.bookName + '>' }" style="font-weight: bold;"></span> 리뷰 ↓</div>
+                <a th:href="@{ /post/detail(postId=${ thisBookPost.postId }, bookId=${ book.bookId }, username=${ user.username }) }">
+                <div class="text-truncate" style="font-weight: bold; font-size: 21px;" th:text="${ thisBookPost.title }"></div>
+                <!-- <div class="text-truncate" th:text="${ thisBookPost.postContent }"></div> -->
+                <div style="font-size: small; color: gray;">
+                    <i class="bi bi-clock"></i><span th:text="${ ' ' + #temporals.format(thisBookPost.modifiedTime , 'yyyy/MM/dd HH:mm') }"></span>
+                </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-3" style="margin: auto;">
+            <a th:href="@{ /post/list(postWriter=${ user.username }) }" class="btn btn-dark" style="border: 1px solid black; padding: 16px 18px; margin:16px;"><span th:text="${ '[' + user.nickName + ']' }"></span>님의 블로그 구경하기
+            <i class="bi bi-house-door"></i></a>
+        </div>
+    </a>
+    </div><!-- 작성자 블로그 end -->
+    
+    
+    <div class="row" style="margin-bottom: 30px;"> <!-- content -->        
         <div class="col-8"> <!-- content left -->
             <div th:if="${ user.username } == ${ #authentication.name }">
                 <select onchange="changeStatus()" id="selectStatus" name="selectStatus" class="form-select" style="width:120px; height: 40px; margin-bottom: 10px; display: inline-block;">
@@ -144,15 +183,18 @@
                 </select>
             </div>
             
-    	    <div class="h3" th:text="${ usedBook.title }"></div>
-    	    <div class="h2" style="color: red;" th:text="|${#numbers.formatInteger(usedBook.price, 0, 'COMMA')}원|"></div>	
-            <div th:text="${ #numbers.formatDecimal(sale, 2, 0) + '% 할인' }"></div>
-            <div>상품상태: <span th:text="${ usedBook.bookLevel }"></span></div>
-    	    <small style="color: gray;" th:text="${ #temporals.format(usedBook.modifiedTime, 'yyyy/MM/dd HH:mm') }"></small>
+            <div>
+        	    <span class="h3" th:text="${ usedBook.title }" style="display: inline-block;"></span>
+                <span th:text="${ '(상품상태: ' + usedBook.bookLevel + ')' }" style="color:gray; font-size: 18px;"></span>
+            </div>
+            <div>
+        	    <span class="h2" style="color: red; display: inline-block;" th:text="|${#numbers.formatInteger(usedBook.price, 0, 'COMMA')}원|"></span>
+                <span th:text="${ #numbers.formatDecimal(sale, 2, 0) + '% 할인' }" style="color:gray; font-size: 18px;"></span>
+            </div>
     	    <div id="content" th:text="${ usedBookPost.content }" style="white-space:pre; font-size:18px; margin-bottom:100px;"></div>
+            <input type="text" id="usedLocation" th:value="${ '거래장소: ' + usedBook.location }" style="width: 300px; border: none;" />
             <div id="map" style="width:300px; height:300px; margin-top:10px; margin-bottom:10px; z-index:-1"></div>
-            <span>거래장소: </span>
-            <input type="text" id="usedLocation" th:value="${ usedBook.location }" style="width: 300px; border: none; margin-bottom:10px;" />
+            <i class="bi bi-clock" style="font-size: small;"></i><small style="color: gray;" th:text="${ ' ' + #temporals.format(usedBook.createdTime, 'yyyy/MM/dd HH:mm') + ' 등록' }"></small>
         </div> <!-- content left end -->
         
         <div class="col" style="margin-left: 100px;"> <!-- content right -->
@@ -176,36 +218,7 @@
         </div> <!-- content right end -->
     </div> <!-- content end -->
     
-    <div class="row border rounded-4" style="height: auto; padding: 10px;"><!-- 작성자 블로그로 연결하기 -->
-        <div class="col-8" style="padding: 20px 0px;">
-            <div>
-                <div style="display: inline-block;">
-                    <i class="bi bi-bookmarks-fill" style="font-size: 25px; padding: 10px;"></i><br><br>
-                </div>
-                <div style="padding: 10px 0px; display: inline-block;"><!-- 블로그 목록 1개(임시) -->
-                    <div style="font-weight: bold; font-size:16px;">이 책은 이랬다.. 저랬다.. 그랬다.. 재밌다.. 어떤가.. 그런가.. 이런가..</div>
-                    <div>이런 저런 내용.. 재밌는데 재미없어요.. 샀어요 책을.. 다 읽었어요.. 별점은 5점입니다.</div>
-                    <div style="font-size: small; color: gray;">2023/02/06 06:23 월요일</div>
-                </div>
-            </div>
-            <div>
-                <div style="display: inline-block;">
-                    <i class="bi bi-bookmarks-fill" style="font-size: 25px; padding: 10px;"></i><br><br>
-                </div>
-                <div style="padding: 10px 0px; display: inline-block;"><!-- 블로그 목록 1개(임시) -->
-                    <div style="font-weight: bold; font-size:16px;">이 책은 이랬다.. 저랬다.. 그랬다.. 재밌다.. 어떤가.. 그런가.. 이런가..</div>
-                    <div>이런 저런 내용.. 재밌는데 재미없어요.. 샀어요 책을.. 다 읽었어요.. 별점은 5점입니다.</div>
-                    <div style="font-size: small; color: gray;">2023/02/06 06:23 월요일</div>
-                </div>
-            </div>
-            <a th:href="@{ /post/list(postWriter=${ user.username }) }" class="btn" style="border: 1px solid black; padding: 16px 14px; margin:16px; font-weight: bold;"><span th:text="${ '[' + user.nickName + ']' }"></span>님의 블로그 구경하기 →</a>
-        </div>
-        <div class="col" style="text-align: right;">
-            <img style="width:300px; height:300px; display:inline-block; margin-right: 10px;" th:src="${ user.userImage }">
-        </div>
-    </div><!-- 작성자 블로그 end -->
-    
-    <div id="other"> <!-- 이 책의 다른 중고 상품은? -->
+    <div id="other" th:unless="${ #lists.isEmpty(otherUsedBookListFinal2) }" style="border-top: 1px solid silver;"> <!-- 이 책의 다른 중고 상품은? -->
     	<div style="font-size:18px; padding-bottom: 15px;"><span th:text="${ '<' + book.bookName + '>' }" style="font-size:21px; font-weight: bold;"></span> 다른 중고 상품은?</div>
     	<div class="otherList align-middle" th:each="marketCreateDto : ${ otherUsedBookListFinal2 }"> <!-- 다른 상품 나열 부분 -->
     		<div style="width:200px; height: 315px;"> <!-- 상품목록 1개 -->
@@ -282,9 +295,9 @@
         	// 정상적으로 검색 됐을 시
         	 if (status === daum.maps.services.Status.OK) {
         		 // (하은) 마커 변경
-        		 var imageSrc = '/images/marker.png',    
-        		    imageSize = new kakao.maps.Size(45, 45),
-        		    imageOption = {offset: new kakao.maps.Point(27, 69)};
+        		 var imageSrc = '/images/marker2.png',    
+        		    imageSize = new kakao.maps.Size(120, 100),
+        		    imageOption = {offset: new kakao.maps.Point(27, 100)};
         		 
         		 var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
         		     markerPosition = new kakao.maps.LatLng(37.54699, 127.09598);
