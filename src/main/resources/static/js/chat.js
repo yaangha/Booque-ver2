@@ -88,7 +88,7 @@ window.addEventListener('DOMContentLoaded', () => {
             messageObj.message+
             '</div><div>[' +
             messageObj.sendTime +
-            ']</div></p>';
+            ']</div><span id="check">1</span></p>';
             } else {
             return '<p><div id="newResponseHistory" class="row alert alert-info"><div class="col_8">' +
             messageObj.sender +
@@ -100,10 +100,27 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
         
+        
         $('#message').focus(function(){
-        let nm = document.getElementById('newResponseHistory');
-        nm.className = "row";
+            
+            let nm = document.getElementById('newResponseHistory');
+            nm.className = "row";
+            nm.removeAttribute('id');
+            if(sender == sender){
+                console.log("확인해주세요!")
+        setInterval( CheckPageFocus, 200 );
+        }
         });
+        
+        function CheckPageFocus() {
+        //var info = document.getElementById("message");
+        if ( document.hasFocus() ) {
+            let nm = document.getElementById('check');
+            nm.style.visibility = 'hidden';
+            nm.removeAttribute('id');
+         } 
+        }
+        
         
         // (홍찬) 채팅칠 때 혹은 채팅받을 때 자동으로 스크롤 조절 해줌.
         function autoScroll() {
