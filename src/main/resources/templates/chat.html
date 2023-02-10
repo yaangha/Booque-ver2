@@ -84,14 +84,16 @@
                 
                 <!-- 채팅방 리스트  -->
                 <div id="chatList">
-                    <div th:each = "chat : ${ data }">
-                        <div style="display:inline-block;">
+                    <div th:each = "chat : ${ data }" class="w3-container">
+                        <div class="w3-third">
                             <img class="rounded-circle" width="40" height="40" th:src = "${ chat.chatWithImage }" />
+                        </div>
+                        <div class="w3-third">
                             <span th:text="${ chat.chatWithName }"></span>
                             <span th:text="${ chat.modifiedTime }"></span><br/>
                             최신 메시지 내용...
                         </div>
-                        <div style="display:inline-block;">
+                        <div class="w3-third">
                             <img width="auto" height="50" th:src = "${ '/market/api/view/'+ chat.usedBookImage }" />
                         </div>
                         <hr/>
@@ -100,10 +102,10 @@
                 
             </div> <!-- 채팅방 목록 블럭 End -->
             
-            <!-- 채팅 상세 창 -->
+            <!-- 채팅 상세 창 -->     <!-- 일단 지금은 가장 최신챗만 보이게 해 놓은 상태 -->
             <div class="row" id="chatDetail">
             
-                    <!-- 채팅 상대 정보 -->
+                    <!-- 채팅 상대 정보 -->    
                     <div>
                         <img class="rounded-circle" width="60" height="60" th:src = "${ data[0].chatWithImage }" />
                         <span th:text="${ data[0].chatWithName }"></span>

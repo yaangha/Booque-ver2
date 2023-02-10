@@ -104,4 +104,21 @@ public class ChatController {
             model.addAttribute("chatHistory", chatHistory);    // (주의) 지금은 가장 최신 채팅방 히스토리만 보이는 상태! JS 작업 해야 함
     }
     
+    // (홍찬) 내 대화 목록 불러오기
+    @GetMapping("/chat/list")
+    public String openMyChatList(@AuthenticationPrincipal UserSecurityDto userDto, Model model) throws IOException {
+        Integer loginUserId = userDto.getId();
+
+        log.info("잘 도착햇나{}",loginUserId);
+        // 최근에 업데이트된 날짜 순으로 받아온 내가 대화중인 대화들
+        List<Chat> chat = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
+        List<String> cl = new ArrayList<>();
+        for (Chat c : chat) {
+            log.info("방번호{}",c.getChatRoomId());
+            cl.add(chatService.readLastThreeLines(c));
+        }
+        
+        model.addAttribute("myChatList" ,cl);
+        return "";
+    }
 }
