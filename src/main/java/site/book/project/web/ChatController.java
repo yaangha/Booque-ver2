@@ -151,6 +151,18 @@ public class ChatController {
             // chatHistory 불러 오기
             //chatHistory Model에 저장해 View로 전달
             model.addAttribute("chatHistory", chatHistory);    // (주의) 지금은 가장 최신 채팅방 히스토리만 보이는 상태! JS 작업 해야 함
+            
+            
+            log.info("잘 도착햇나{}",loginUserId);
+            // 최근에 업데이트된 날짜 순으로 받아온 내가 대화중인 대화들
+            List<Chat> chat = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
+            List<String> cl = new ArrayList<>();
+            for (Chat c : chat) {
+                log.info("방번호{}",c.getChatRoomId());
+                cl.add(chatService.readLastThreeLines(c));
+            }
+            
+            log.info("뭐가 나오는거지? {}",cl);
     }
     
     // (홍찬) 내 대화 목록 불러오기

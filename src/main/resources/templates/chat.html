@@ -93,7 +93,9 @@
                             <span th:text="${ chat.chatWithName }"></span><br>
                             <span th:text="${ chat.usedTitle }"></span><br>
                             <span th:text="${ chat.modifiedTime }"></span><br/>
+                            <span id="finalChat">
                             최신 메시지 내용...
+                            </span>
                         </div>
                         <div class="w3-third">
                             <img width="auto" height="50" th:src = "${ '/market/api/view/'+ chat.usedBookImage }" />

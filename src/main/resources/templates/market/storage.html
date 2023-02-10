@@ -55,7 +55,7 @@
 
         
     <h2 style="padding-bottom: 10px;">기본정보<span style="font-size: 16px; color: red; margin-left: 30px">* 필수정보</span></h2>
-    <form method="post" th:action="@{ /market/create }">
+    <form id="formCreate">
     <ul id="info">
         <li>
             <input type="hidden" name="usedBookId" th:value="${ dto.usedBookId }" />
