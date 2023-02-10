@@ -75,12 +75,12 @@
        </div>
   
     </div><!-- 프로필 블록 end -->
-    
+   
     <div class="border rounded py-2 w-75 bg-light" style="text-align: center;">
         <a th:href="@{ /post/list?postWriter={postWriter} (postWriter = ${ post.postWriter })}" style="color: black;">▶ 전 체 목 록 보 기</a>
     </div>
     
-    <br/>
+    <br/> <br/>
     
     <div class="fw-bold" style="text-align: left; font-size: small;">다른 부끄들은 이런 리뷰를 남겼어요!</div>
 
@@ -348,8 +348,9 @@
     <script>
     const loginUser = document.querySelector('#rWriter').value;
     const repId = document.querySelector('#repId').value;
-   
     </script>
+    
+    
     
     <script>
 

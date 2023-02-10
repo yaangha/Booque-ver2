@@ -27,28 +27,28 @@ btnSubmit.addEventListener('click', function () {
         formCreate.method = 'post';
         formCreate.submit();
         
-        checkContainingKeyword();
+        // checkKeyword();
     }
     
     
 });
     
-    function checkContainingKeyword(){
-        const title = document.querySelector('#title').value;
-        const content = document.querySelector('#contents').value;
-        const usedBookId = document.querySelector('#usedBookId ').value;
-        
-        const data = {
-            title: title,
-            content: content,
-            usedBookId,usedBookId          
-        };
-        
-        axios
-        .post('/notice/check', data)
-        .then(response => { alert('보냄!');} )
-        .catch(err => { console.log(err); });
-    };
+   // function checkKeyword(){
+   //    const contents = document.querySelector('#contents').value;
+   //     const usedBookId = document.querySelector('#usedBookId').value;
+   //     
+   //     const data ={
+   //          contents : contents,
+   //          usedBookId : usedBookId
+   //     }
+   //      
+   //     console.log(체크데이터);
+   //    console.log(data);
+   //     axios
+   //      .get('/notice/check', data)
+   //      .then(response => { newKeywordNotice(response.data) } )
+   //       .catch(err => { console.log(err); });
+   // };
     
     
     

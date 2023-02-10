@@ -17,13 +17,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Notices;
 import site.book.project.domain.PostReply;
+import site.book.project.domain.UsedBookPost;
 import site.book.project.domain.User;
-import site.book.project.dto.CheckDto;
+
 import site.book.project.dto.NoticeDto;
 import site.book.project.dto.ReplyReadDto;
 import site.book.project.dto.UserSecurityDto;
+import site.book.project.repository.NoticeRepository;
+import site.book.project.repository.UsedBookPostRepository;
 import site.book.project.service.NoticeService;
 import site.book.project.service.ReplyService;
+
 import site.book.project.service.UserService;
 
 @Slf4j
@@ -32,7 +36,10 @@ import site.book.project.service.UserService;
 public class NoticeRestController {
 
     private final NoticeService noticeService;
+    private final NoticeRepository noticeRepository;
     private final UserService userService;
+    private final UsedBookPostRepository usedBookPostRepository;
+ 
     
     // (예진) 어떤 포스트 글에 새 댓글이 달릴 때 알림(notice) 만들어짐
     // notice create
@@ -48,40 +55,49 @@ public class NoticeRestController {
     // (예진) userId(postWriter) 기준 알림 리스트(notice list) 불러오기
     @GetMapping("/showNotice/{userId}")
     public ResponseEntity<List<NoticeDto>> showAllNotices(@PathVariable Integer userId) {
-        log.info("쇼All노티스(userId={})", userId);
-        
-        List<NoticeDto> list =noticeService.readNotices(userId);
+      
+         List<NoticeDto> list =noticeService.readNotices(userId);
+       
        
         return ResponseEntity.ok(list);
     }
     
-//    노티스 삭제 컨트롤러 포스트 컨트롤러에..  
-//    @DeleteMapping("/deleteNotice/{noticeId}")
-//    public ResponseEntity<Integer> deleteNotice(@PathVariable Integer noticeId){
-//        log.info("노티스삭제(noticeId={})", noticeId);
-//        
-//        Integer result = noticeService.delete(noticeId);
-//        return ResponseEntity.ok(result);     
-//    }
-    
-    @PostMapping("/notice/check")
-    public ResponseEntity<Integer> checkContainingSubsKeyword(@RequestBody CheckDto checkDto){
-        log.info("체크디티오={}",checkDto);
+   
+    @DeleteMapping("/notice/delete/{noticeId}")
+    public void deleteNotice(@PathVariable Integer noticeId){
+        log.info("노티스삭제(noticeId={})", noticeId);
         
-        List<User> users = userService.read();
-        List<String> subs = new ArrayList<>();
-        String kw = null;
-        for (User u : users) {
-            kw = u.getSubsKeyword();     
-        } subs.add(kw);
-        
-        for (String s: subs) {
+        noticeService.delete(noticeId);
+        noticeRepository.deleteById(noticeId);    
             
-        }
-         
-        
-        return ResponseEntity.ok(1);
     }
+    
+//    @GetMapping("/notice/check")
+//    public ResponseEntity<List<String>> checkContainingSubsKeyword(@RequestBody CheckDto dto){
+//        log.info("체크디티오={}", dto.getUsedBookId());
+//        
+//        List<User> users = userService.read();
+//
+//        List<String> subsList = new ArrayList<>();
+//            String kw = null;
+//            for (User u : users) {
+//                kw = u.getSubsKeyword();    
+//            } subsList.add(kw); // 유저들의 알람 등록 된 키워드 리스트
+//            
+//        List<UsedBookPost> usedList =  usedBookPostRepository.findByUsedBookIdOrderByIdDesc(dto.getUsedBookId());
+//        UsedBookPost up = usedList.get(0);  // 아이디 내림차순 정렬 -> 인덱스 0번 -> Create된 포스트
+//        
+//        UsedBookPost p =null;
+//        for (String s : subsList) {
+//           p = usedBookPostService.searchSubsKeyword(s);
+//           if(p != null) {
+//               subsList.add(s);
+//           }
+//        }
+//       
+//        
+//        return ResponseEntity.ok(subsList);
+//    }
    
     
 }

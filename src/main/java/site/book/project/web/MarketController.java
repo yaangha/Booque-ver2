@@ -344,19 +344,6 @@ public class MarketController {
         return list;
     }
     
-    
-    // (예진) 알림받을 키워드 등록
-    @PostMapping("/register/subsKeyword")
-    public String registerSubsKeyword(String subsKeyword, @AuthenticationPrincipal UserSecurityDto dto) {
-        
-       User user = userService.read(dto.getId());
-       user.setSubsKeyword(subsKeyword);
-
-       
-       userRepository.save(user);
-        
-       return  "redirect:/market/main";
-    }
-    
+   
     
 }

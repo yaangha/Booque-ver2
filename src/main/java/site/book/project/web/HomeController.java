@@ -104,21 +104,25 @@ public class HomeController {
           log.info("id={},score={},bookname={}", b.getPostId(), b.getHit(), b.getBookName());
         }
         
-        // (예진) 홈 오른쪽 위 ooo님 => username을 nickName으로 교체
-        String nick = null;
-        if(userSecurityDto != null) {
-           nick = userSecurityDto.getNickName();
+       
+        if(userSecurityDto != null) { 
+            // (예진) 홈 로그인시 nickName으로 교체
+           String nick = userSecurityDto.getNickName();
            model.addAttribute("nick", nick); 
+           
+           // (예진) 알림 리스트 불러오기위해 userId
+           Integer userId = userSecurityDto.getId();
+           model.addAttribute("userId", userId); 
         }
         
-        // (예진) 새 댓글 알림(notice) 리스트
-        if(userSecurityDto != null) {
-            List<NoticeDto> noticeList = noticeService.readNotices(userSecurityDto.getId()); 
-            
-            int noticeCount = noticeList.size();
-            model.addAttribute("noticeList", noticeList);                   // notice 리스트 
-            model.addAttribute("noticeCount", noticeCount);
-        }
+//        // (예진) 새 댓글 알림(notice) 리스트
+//        if(userSecurityDto != null) {
+//            List<NoticeDto> noticeList = noticeService.readNotices(userSecurityDto.getId()); 
+//            
+//            int noticeCount = noticeList.size();
+//            model.addAttribute("noticeList", noticeList);                   // notice 리스트 
+//            model.addAttribute("noticeCount", noticeCount);
+//        }
         
         model.addAttribute("top4ScoreList", list);                     // 전체 책 별점순 1~8위
         model.addAttribute("top4ReviewList", postList);                // 전체 책 리뷰많은순 1~8위
