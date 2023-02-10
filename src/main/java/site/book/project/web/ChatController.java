@@ -1,6 +1,9 @@
 package site.book.project.web;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +58,6 @@ public class ChatController {
     private UserRepository userRepository;
     @Autowired
     private UsedBookRepository usedBookRepository;
-    
     @Autowired
     private UsedBookImageRepository usedBookImageRepository;
  
@@ -106,63 +108,52 @@ public class ChatController {
         List<ChatReadDto> chatHistory = null;
         if(chatRoomId==null) {
              chatHistory = chatService.readChatHistory(myChats.get(0));
-             
+
              ChatListDto usedbook = list.get(0);
-             model.addAttribute("usedbook", usedbook);
+             model.addAttribute("usedBook", usedbook);
              // chatListDto를 같
-             model.addAttribute("chatUser", usedbook);
+             model.addAttribute("chatWith", usedbook);
         } else {
-            
+
             Chat chatById = chatRepository.findByChatRoomId(chatRoomId);
             chatHistory = chatService.readChatHistory(chatById);
-            
+
             // 책 정보
             UsedBook u = usedBookRepository.findById(chatById.getUsedBookId()).get();
             UsedBookImage img = usedBookImageRepository.findByUsedBookId(u.getId()).get(0);
             //  채팅 상대 정보
-            
-            
-            
-            ChatListDto usedbook = ChatListDto.builder().usedBookImage(img.getFileName()).usedBookTitle(u.getBookTitle())
+
+
+
+            ChatListDto usedbook = ChatListDto.builder().usedBookImage(img.getFileName())
                                                 .price(u.getPrice()).status(u.getStatus())
+                                                .usedTitle(u.getTitle())
                                                 .chatRoomId(chatRoomId)
                                                 .build();
-            
-            
+
+
             ChatListDto chatPerson = null;
             if(loginUserId.equals(chatById.getSellerId())) {
-                User chatUser = userRepository.findById(chatById.getBuyerId()).get();
-                
-                chatPerson = ChatListDto.builder().chatWithImage(chatUser.getUserImage()).chatWithLevel(chatUser.getBooqueLevel())
-                                .chatWithName(chatUser.getNickName()).build();
+                User chatWith = userRepository.findById(chatById.getBuyerId()).get();
+
+                chatPerson = ChatListDto.builder().chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
+                                .chatWithName(chatWith.getNickName()).build();
             } else {
-                User chatUser = userRepository.findById(chatById.getSellerId()).get();
-                
-                chatPerson = ChatListDto.builder().chatWithImage(chatUser.getUserImage()).chatWithLevel(chatUser.getBooqueLevel())
-                .chatWithName(chatUser.getNickName()).build();
-                
+                User chatWith = userRepository.findById(chatById.getSellerId()).get();
+
+                chatPerson = ChatListDto.builder().chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
+                .chatWithName(chatWith.getNickName()).build();
+
             }
-            
-            
-            model.addAttribute("usedbook", usedbook);
-            model.addAttribute("chatUser", chatPerson);
+
+
+            model.addAttribute("usedBook", usedbook);
+            model.addAttribute("chatWith", chatPerson);
         }
-        
+
             // chatHistory 불러 오기
             //chatHistory Model에 저장해 View로 전달
-            model.addAttribute("chatHistory", chatHistory);    // (주의) 지금은 가장 최신 채팅방 히스토리만 보이는 상태! JS 작업 해야 함
-            
-            
-            log.info("잘 도착햇나{}",loginUserId);
-            // 최근에 업데이트된 날짜 순으로 받아온 내가 대화중인 대화들
-            List<Chat> chat = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
-            List<String> cl = new ArrayList<>();
-            for (Chat c : chat) {
-                log.info("방번호{}",c.getChatRoomId());
-                cl.add(chatService.readLastThreeLines(c));
-            }
-            
-            log.info("뭐가 나오는거지? {}",cl);
+            model.addAttribute("chatHistory", chatHistory);
     }
     
     // (홍찬) 내 대화 목록 불러오기
@@ -181,5 +172,35 @@ public class ChatController {
         
         model.addAttribute("myChatList" ,cl);
         return "";
+    }
+    
+    
+    // (지혜) 최신 업데이트시간을 ㅇ초 전, ㅇ분 전, ㅇ시간 전, ㅇ일 전 식으로 바꿔 출력하기
+    public static String convertTime(LocalDateTime modifiedTime) {
+        
+        // 현재 시간
+        LocalDateTime now = LocalDateTime.now();
+        
+        // 시간차 구하기(초)
+        long diffTime = ChronoUnit.SECONDS.between(modifiedTime, now);
+        
+        String ago;
+        
+        if (diffTime == 0) {
+            ago = "방금 전";
+        } else if (diffTime < 60) {
+            ago = diffTime + "초 전";
+        } else if (diffTime < 60 * 60) {
+            ago = (diffTime/60) + "분 전";
+        } else if (diffTime < 60 * 60 * 24) {
+            ago = (diffTime/60/60) + "시간 전";
+        } else if (diffTime < 60 * 60 * 24 * 10) {
+            ago = (diffTime/60/60/24) + "일 전";
+        } else {  // 10일보다 오래된 채팅은 날짜를 표시
+            ago = modifiedTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        }
+        
+        return ago;
+        
     }
 }

@@ -28,7 +28,20 @@
         margin-right: 30px;
         margin-bottom: 50px;
         border: 2px solid lightgrey;
-        height: 600px;
+        height: 580px;
+    }
+    
+    #chatList {
+        overflow-y: scroll;
+    }
+    
+    #chatList tr {
+        border-bottom: 1px solid lightgrey;
+    }
+    
+    #chatList td {
+        padding-top: 15px;
+        padding-bottom: 15px;
     }
     
     #chatDetail {
@@ -36,13 +49,18 @@
         margin-left: 30px;
         margin-bottom: 50px;
         border: 2px solid lightgrey;
-        height: 600px;
+        height: 580px;
+    }
+    
+    #chatDetail tr {
+        border-bottom: 1px solid lightgrey;
     }
     
     .chat-history {
         padding: 30px 30px 20px 20px;
         overflow-y: scroll;
-        height: 375px;
+        height: 400px;
+        border-bottom: 1px solid lightgrey;
     }
     
     #sendMessage {
@@ -54,16 +72,16 @@
 
 <body>
 
-    <div class="container">
-            <div class="title_text" style="margin-bottom:50px;">
-                <h2>Booque Chat</h2>
+    <div class="w3-container">
+            <div class="title_text" style="margin-bottom:30px;">
+                <h2 style="color:hotpink;">Booque Chat</h2>
             </div>
             
             <!-- 채팅방 목록 블럭 -->
             <div class="w3-quarter" id="chatListDiv">
             
                 <!-- 내 정보, 검색, 정렬 -->
-                <div id="chatListHead" style="border-bottom: 2px solid lightgrey; height: 130px;">
+                <div id="chatListHead" style="border-bottom: 2px solid lightgrey; height: 140px; padding: 10px;">
                     <!-- 내 프로필사진, 닉네임 -->
                     <div>
                         <img class="rounded-circle" width="40" height="40" th:src = "${ loginUser.userImage }" />
@@ -71,7 +89,7 @@
                     </div>
                     <!-- 채팅 검색(채팅상대 닉네임, 채팅 내용) -->
                     <div>
-                        <input type="search" placeholder="채팅 검색" id="chatSearch" class="form_control"/>
+                        <input type="search" placeholder="채팅 검색" id="chatSearch" class="form_control" size="15"/>
                         <button id="btnchatSearch" class="btn btn-primary">검색</button>
                     </div>
                     <!-- 전체 채팅방 보기 / 안읽은 채팅방만 보기 -->
@@ -84,46 +102,69 @@
                 
                 <!-- 채팅방 리스트  -->
                 <div id="chatList">
-                    <div th:each = "chat : ${ data }" class="w3-container">
-                    <a th:href="@{ /chat?chatRoomId={chatRoomId} (chatRoomId = ${ chat.chatRoomId })  }">
-                        <div class="w3-third">
-                            <img class="rounded-circle" width="40" height="40" th:src = "${ chat.chatWithImage }" />
-                        </div>
-                        <div class="w3-third">
-                            <span th:text="${ chat.chatWithName }"></span><br>
-                            <span th:text="${ chat.usedTitle }"></span><br>
-                            <span th:text="${ chat.modifiedTime }"></span><br/>
-                            <span id="finalChat">
-                            최신 메시지 내용...
-                            </span>
-                        </div>
-                        <div class="w3-third">
-                            <img width="auto" height="50" th:src = "${ '/market/api/view/'+ chat.usedBookImage }" />
-                        </div>
-                    </a>
-                        <hr/>
-                    </div>
+                <table>
+                    <tbody>
+                        <tr th:each="chat : ${ data}" 
+                        th:onclick="|location.href='@{/chat?chatRoomId={chatRoomId} (chatRoomId = ${ chat.chatRoomId})}'|"
+                        style="cursor:pointer;">
+                            <td style="padding-left:10px; width:20%;">
+                                <img class="rounded-circle" width="40" height="40" th:src = "${ chat.chatWithImage }" />
+                            </td>
+                            <td style="padding-left: 10px; padding-right:10px; width:80%;">
+                                <div th:text="${ chat.chatWithName }"></div>
+                                <div style="font-size:9px;" th:text="${ chat.modifiedTime }"></div>
+                                <div th:text="${ chat.usedTitle }"></div>  <!-- 여기는 최신 채팅내용 넣을 곳(임시로 글제목 넣어놓음) -->
+                            </td>
+                            <td style="padding-right:10px; width:20%;">
+                                 <img width="auto" height="50" th:src = "${ '/market/api/view/'+ chat.usedBookImage }" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                 </div>
                 
             </div> <!-- 채팅방 목록 블럭 End -->
             
             <!-- 채팅 상세 창 -->     <!-- 일단 지금은 가장 최신챗만 보이게 해 놓은 상태 -->
-            <div class="row" id="chatDetail">
+            <div class="w3-rest" id="chatDetail">
             
-                    <!-- 채팅 상대 정보 -->    
-                    <div>
-                        <img class="rounded-circle" width="60" height="60" th:src = "${ chatUser.chatWithImage }" />
-                        <span th:text="${ chatUser.chatWithName }"></span>
-                        <span th:text="${ chatUser.chatWithLevel }"></span>
-                    </div>
+                    <!-- 채팅 상대 정보 -->  
+                    <table style="width:100%;">
+                        <tbody>
+                            <tr>
+                                <td style="width:10%; padding:5px; padding-left:10px;">
+                                    <img class="rounded-circle" width="50" height="50" th:src = "${ chatWith.chatWithImage }" />
+                                </td>
+                                <td>
+                                    <div th:text="${ chatWith.chatWithName }" style="font-weight:bold;"></div>
+                                    <div th:text="${ chatWith.chatWithLevel }" style="color:mediumseagreen;"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     
                     <!-- 중고판매글 정보 -->
-                    <div>
-                        <img width="60" height="auto" th:src = "${ '/market/api/view/'+ usedbook.usedBookImage }" />
-                        <span th:text="${ usedbook.usedBookTitle }"></span>
-                        <span th:text="${ usedbook.price }"></span>
-                        <span th:text="${ usedbook.status }"></span>
-                    </div>
+                    <table style="width:100%;">
+                        <tbody>
+                            <tr>
+                                <td style="width:10%; padding:5px; padding-left:10px;">
+                                    <img width="auto" height="60" th:src = "${ '/market/api/view/'+ usedBook.usedBookImage }" />
+                                </td>
+                                <td>
+                                    <div>
+                                        <b>제목:  </b>
+                                        <span th:text="${ usedBook.usedTitle }"></span>
+                                    </div>
+                                        <b>가격:  </b>
+                                        <span th:text="${ usedBook.price }"></span> 원
+                                </td>
+                                <td style="text-align:right; padding-right:35px;">
+                                     <span th:text="${ usedBook.status }" style="color:orange; font-weight:bold;"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                </table>
+                        
             
                     <!-- 출력 창(chatHistory) -->
                     <div id="content" class="chat-history">
@@ -138,20 +179,14 @@
                     <!-- 메시지 입력 창 -->
                     <div>
                         <div class="input_group" id="sendMessage">
-                            <input type="text" size="65" placeholder="메시지를 입력해 주세요." id="message" class="form_control"/>
-                            <span class="input_group_append">
-                                <button id="btnSend" class="btn btn-primary">보내기</button>
-                            </span>
-                            <div>
-                                <br/>
-                                
+                            <input type="text" size="78%" placeholder="메시지를 입력해 주세요." id="message" class="form_control"/>
+                            <button id="btnSend" class="btn btn-primary">보내기</button>
                                 <!--
                                 구매자(로그인유저):  <input type="text" th:value="${chatInfo.buyerId}" id="buyerId"/><br/>
                                 중고글id:  <input type="text" th:value="${chatInfo.usedBookId}" id="usedBookId"/><br/>
                                 판매자(작성자):  <input type="text" th:value="${chatInfo.sellerId}" id="sellerId"/><br/> -->
-                                <input type="hidden" th:value="${usedbook.chatRoomId}" id="chatRoomId"/><br/>
+                                <input type="hidden" th:value="${usedBook.chatRoomId}" id="chatRoomId"/>
                                 <input type="hidden" th:value="${loginUser.nickName}" id="loginUser"/>
-                            </div>                    
                         </div>                
                     </div>
                 </div>  <!-- 채팅 상세 창 End -->
