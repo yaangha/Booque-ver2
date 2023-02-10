@@ -154,9 +154,12 @@
                     </div>
                 </div>
                 <button id="btnOrderNow" type="button" class="w-50 btn btn-danger">구매하기</button>
-
                 </div>
                     
+                <div th:if="${countUsedBook } > 0">
+                부끄마켓에 <span th:text="${ countUsedBook }"></span>개의 중고제품이 있어요!  <a class="btn btn-outline-dark" th:href="@{ /market/mainSearch(region=null, mainKeyword=${ book.bookName }, status='all') }">보 러 가 기</a>
+                </div>
+                
                 <!-- (지혜) 찜(위시리스트) 버튼 -->
                 <!-- A 유저가 B 책을 위시리스트에 담고 빨강하트 된 상태에서, 화면 새로고침하면 다시 빈 하트로 뜨는 것 수정 필요 (로그인과 연결) -->
                 <!-- 작은화면에서 마우스오버(hover)하면 밑의 컨텐츠가 위로 당겨지는 현상 수정 필요 -->

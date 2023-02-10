@@ -31,6 +31,7 @@ import site.book.project.service.BookIntroService;
 import site.book.project.service.BookService;
 import site.book.project.service.BookWishService;
 import site.book.project.service.PostService;
+import site.book.project.service.UsedBookService;
 import site.book.project.service.UserService;
 
 @Controller
@@ -44,7 +45,7 @@ public class BookDetailController {
 	
 	private final BookWishService bookWishService;
 	private final BookIntroService bookIntroService;
-
+	private final UsedBookService usedBookService;
     
     @GetMapping("/detail")
     public String detail(Integer id, 
@@ -69,6 +70,9 @@ public class BookDetailController {
         log.info("하은 author={}", book.getAuthor());
         model.addAttribute("authorOtherBook", authorOtherBook);
         
+        // (하은) 책 디테일 창에서 부끄장터 검색창으로 연결
+        Integer countUsedBook = userService.countMarket(id);
+        model.addAttribute("countUsedBook", countUsedBook);
         
         // for문을 통해서 숫자를 그림으로 표현? 참고해서 고치기
         double score = book.getBookScore()/10.0;

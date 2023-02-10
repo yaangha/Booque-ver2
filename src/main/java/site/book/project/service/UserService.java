@@ -3,6 +3,7 @@ package site.book.project.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,11 +16,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import site.book.project.domain.UsedBook;
+import site.book.project.domain.UsedBookPost;
 import site.book.project.domain.User;
 import site.book.project.dto.UserModifyDto;
 import site.book.project.dto.UserRegisterDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.dto.UserSigninDto;
+import site.book.project.repository.UsedBookPostRepository;
+import site.book.project.repository.UsedBookRepository;
 import site.book.project.repository.UserRepository;
 
 @Slf4j
@@ -29,8 +34,8 @@ public class UserService {
     
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    
-
+    private final UsedBookRepository usedBookRepository;
+    private final UsedBookPostRepository usedBookPostRepository;
     
     
     
@@ -167,5 +172,20 @@ public class UserService {
         log.info("fileName={}", fileName);
         log.info("filePath={}",imageFilePath+fileName);
         log.info("user.getUserImage ={}", user.getUserImage());
+    }
+    
+    // (하은) 책 디테일 창에서 부끄장터로 연결하기 - 해당 책은 중고 몇 권 들어와있는지
+    public Integer countMarket(Integer id) {
+        List<UsedBook> usedBook = usedBookRepository.findByBookId(id); // 부끄마켓에 있는 해당 책 목록 전체(+임시저장)
+        List<UsedBook> usedBookList = new ArrayList<>();
+        
+        for (UsedBook u : usedBook) {
+            UsedBookPost usedBookPost = usedBookPostRepository.findByUsedBookId(u.getId());
+            if (usedBookPost.getStorage() == 1) {
+                usedBookList.add(u);
+            }
+        }
+        
+        return usedBookList.size();
     }
 }

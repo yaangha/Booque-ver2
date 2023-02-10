@@ -18,6 +18,11 @@ public interface UsedBookRepository extends JpaRepository<UsedBook, Integer> {
     Optional<UsedBook> findById(Integer userId);
     List<UsedBook> findByUserId(Integer userId);
     
+
+    @Query("select u.usedBookId from USEDBOOKWISH u where userId = :userId")
+    List<UsedBook> selectUsedBookIdfromUserId(@Param(value="userId") Integer userId);
+
+    
 //    @Query("select u from USEDBOOK u where u.userId = :userId and {u.status = '판매중' or u.status = '예약중'}")
 //    List<UsedBook> countUsedBookSellingPost(@Param(value="userId")Integer userId);
     
@@ -39,7 +44,7 @@ public interface UsedBookRepository extends JpaRepository<UsedBook, Integer> {
             "select b from USEDBOOK b "
             + " where b.location like ( :region || '%') "
             + " and (b.bookTitle like ('%' || :keyword || '%') or b.title like ('%'|| :keyword || '%' ))"
-            + " order by b.modifiedTime desc"
+            + " order by b.createdTime desc"
             )
     List<UsedBook> searchM(@Param(value = "region") String region,@Param(value = "keyword") String keyword );
     
@@ -69,7 +74,7 @@ public interface UsedBookRepository extends JpaRepository<UsedBook, Integer> {
                     + " where b.location like ( :region || '%') "
                     + " and b.status = '판매중' "
                     + " and (b.bookTitle like ('%' || :keyword || '%') or b.title like ('%'|| :keyword || '%' ))"
-                    + " order by b.modifiedTime desc"
+                    + " order by b.createdTime desc"
             )
     List<UsedBook> searchM2(@Param(value = "region") String region,@Param(value = "keyword") String keyword );
     
@@ -91,7 +96,7 @@ public interface UsedBookRepository extends JpaRepository<UsedBook, Integer> {
     List<UsedBook> searchPriceDesc2(@Param(value = "region") String region,@Param(value = "keyword") String keyword );
     
     
-    List<UsedBook> findByOrderByModifiedTimeDesc();
+    List<UsedBook> findByOrderByCreatedTimeDesc();
     List<UsedBook> findByOrderByHitsDesc();
 
     // (하은) userId, storage로 임시저장 목록 찾기
