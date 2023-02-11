@@ -121,6 +121,18 @@
                         </tr>
                     </tbody>
                 </table>
+                    <div th:each = "chat : ${ data }">
+                        <div style="display:inline-block;">
+                            <img class="rounded-circle" width="40" height="40" th:src = "${ chat.chatWithImage }" />
+                            <span th:text="${ chat.chatWithName }"></span>
+                            <span th:text="${ chat.modifiedTime }"></span><br/>
+                            <span th:text="${ recentMessage }"></span>
+                        </div>
+                        <div style="display:inline-block;">
+                            <img width="auto" height="50" th:src = "${ '/market/api/view/'+ chat.usedBookImage }" />
+                        </div>
+                        <hr/>
+                    </div>
                 </div>
                 
             </div> <!-- 채팅방 목록 블럭 End -->
@@ -168,8 +180,8 @@
             
                     <!-- 출력 창(chatHistory) -->
                     <div id="content" class="chat-history">
-                        <div th:each="chat : ${chatHistory}" th:classappend="${chat.sender == 1} ? 'chatalign' : ''">
-                            <p>
+                        <div th:each="chat : ${chatHistory}" >
+                            <p th:style="${chat.sender == loginUser.nickName } ? 'text-align: right;' : 'text-align: left;'">
                                 <span id="chatSender" th:text="${chat.sender}"></span><br>
                                 <span id="chatMessage" th:text="${chat.message}"></span><br>
                                 <span id="chatSendTime" th:text="${chat.sendTime}"></span><br>
@@ -221,7 +233,9 @@
     </li>
     </script>
     
+    <script>
     
+    </script>
     <!-- bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>

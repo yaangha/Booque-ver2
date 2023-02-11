@@ -104,6 +104,16 @@ public class ChatController {
         model.addAttribute("data", list);
         
         List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
+         
+        
+        // 최신 메세지 내용 불러 오기
+        List<String> cl = new ArrayList<>();
+        for (Chat c : myChats) {
+            log.info("방번호{}",c.getChatRoomId());
+            cl.add(chatService.readLastThreeLines(c));
+        }
+            model.addAttribute("recentMessage" ,cl);
+        
         
         List<ChatReadDto> chatHistory = null;
         if(chatRoomId==null) {
@@ -171,10 +181,8 @@ public class ChatController {
         }
         
         model.addAttribute("myChatList" ,cl);
-        return "";
+        return "chat";
     }
-    
-    
     // (지혜) 최신 업데이트시간을 ㅇ초 전, ㅇ분 전, ㅇ시간 전, ㅇ일 전 식으로 바꿔 출력하기
     public static String convertTime(LocalDateTime modifiedTime) {
         
