@@ -145,7 +145,10 @@ public class ChatController {
             ChatListDto usedbook = ChatListDto.builder().usedBookImage(img.getFileName())
                                                 .price(u.getPrice()).status(u.getStatus())
                                                 .usedTitle(u.getTitle())
+                                                .usedBookTitle(u.getBookTitle())
                                                 .chatRoomId(chatRoomId)
+                                                .price(u.getPrice()).status(u.getStatus()).usedTitle(u.getTitle())
+                                                .chatRoomId(chatRoomId).usedBookId(u.getId())
                                                 .build();
 
 
@@ -154,12 +157,12 @@ public class ChatController {
                 User chatWith = userRepository.findById(chatById.getBuyerId()).get();
 
                 chatPerson = ChatListDto.builder().chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
-                                .chatWithName(chatWith.getNickName()).build();
+                                .chatWithName(chatWith.getNickName()).chatWithId(chatWith.getId()).build();
             } else {
                 User chatWith = userRepository.findById(chatById.getSellerId()).get();
 
                 chatPerson = ChatListDto.builder().chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
-                .chatWithName(chatWith.getNickName()).build();
+                .chatWithName(chatWith.getNickName()).chatWithId(chatWith.getId()).build();
 
             }
 

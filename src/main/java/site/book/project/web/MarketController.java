@@ -61,13 +61,10 @@ public class MarketController {
     private final UserRepository userRepository;
     private final UsedBookWishRepository usedBookWishRepository;
     private final UsedBookImageRepository usedBookImageRepository;
-<<<<<<< HEAD
     private final PostService postService;
     private final PostRepository postRepository;
-=======
     private final UserService userService;
   
->>>>>>> branch '0210_YeJin' of https://github.com/yaangha/Booque-ver2.git
     
     
     
@@ -443,8 +440,6 @@ public class MarketController {
         return list;
     }
     
-<<<<<<< HEAD
-=======
     
     // (예진) 알림받을 키워드 등록
     @PostMapping("/register/subsKeyword")
@@ -460,5 +455,4 @@ public class MarketController {
     }
     
     
->>>>>>> branch '0210_YeJin' of https://github.com/yaangha/Booque-ver2.git
 }
