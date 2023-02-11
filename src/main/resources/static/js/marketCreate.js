@@ -36,36 +36,33 @@ btnSubmit.addEventListener('click', function () {
     
     const result = confirm('등록하시겠습니까?');
     if (result) {
-<<<<<<< HEAD
      document.querySelector('#formCreate').submit();
-=======
         formCreate.action = '/market/create';
         formCreate.method = 'post';
         formCreate.submit();
         
         checkContainingKeyword();
->>>>>>> branch '0210_YeJin' of https://github.com/yaangha/Booque-ver2.git
     }
     
     
 });
     
-    function checkContainingKeyword(){
-        const title = document.querySelector('#title').value;
-        const content = document.querySelector('#contents').value;
-        const usedBookId = document.querySelector('#usedBookId ').value;
-        
-        const data = {
-            title: title,
-            content: content,
-            usedBookId,usedBookId          
-        };
-        
-        axios
-        .post('/notice/check', data)
-        .then(response => { alert('보냄!');} )
-        .catch(err => { console.log(err); });
-    };
+   // function checkKeyword(){
+   //    const contents = document.querySelector('#contents').value;
+   //     const usedBookId = document.querySelector('#usedBookId').value;
+   //     
+   //     const data ={
+   //          contents : contents,
+   //          usedBookId : usedBookId
+   //     }
+   //      
+   //     console.log(체크데이터);
+   //    console.log(data);
+   //     axios
+   //      .get('/notice/check', data)
+   //      .then(response => { newKeywordNotice(response.data) } )
+   //       .catch(err => { console.log(err); });
+   // };
     
     
     

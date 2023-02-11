@@ -64,7 +64,7 @@
            axios.post('/notice', data)
            .then(response => {
                console.log('노티스 저장성공');
-               showNotice();
+             
            })         
             .catch(error => {
                     console.log(error);
@@ -72,54 +72,8 @@
      
     }
     
-    function showNotice(){
-        const userId = document.querySelector('#userId').value;
-        console.log('쇼노티스유저아이디');
-        console.log(userId);
-        
-        axios
-        .get('/showNotice/' + userId)  
-        .then(response => { updateNoticeList(response.data) } )
-        .catch(err => { console.log(err) });
-    }    
-    
-    function updateNoticeList(data){
-        console.log('리스트?');
-        console.log(data);
-        
-        const divNo = document.querySelector('#divNo');
-        let str ='';
-        
-         for (let x of data){
-             str += `<div id="noticeBtn"><a href="/post/detail?postId=${ x.postId }&bookId=${ x.bookId }">`
-                  +`<input type="hidden" id="noticeBtn" data-nid="${x.noticeId}" />`
-                  +'<img class="rounded-circle" width="25" height="25" src="' + x.userImage + '" />'
-                  +`<span class="fw-bold m-1">${x.nickName}</span>님의 새 댓글!</a></div>`;
-        }
-        
-        divNo.innerHTML = str;
-    
-    }
+   
   
-  const btns = document.querySelectorAll('#noticeBtn');
-  btns.forEach(btn => {
-      btn.addEventListener('click', deleteNotice);
-  });
-    
-    function deleteNotice(event){
-        const noticeId = event.target.getAttribute('data-nid');
-        console.log('타노스아이디');
-        console.log(noticeId);
-        
-        axios
-            .delete('/deleteNotice/' + noticeId ) 
-            .then(response => {
-                alert(`# 댓글 삭제 성공`);
-             
-             })
-             .catch(err => { console.log(err) }); 
-        
-    };
     
     
     
@@ -164,8 +118,9 @@
                str +='<div class="bgColor" id="bgColorBtn" style="background-color: #e6f2ff;">';
             }
                   
-            str +='<div class="flex-shrink-0"><img class="rounded-circle" width="60" height="60" src="' + r.userImage + '" alt="..." /></div>'
-                + `<div class="fw-bold"><a href="/post/list?postWriter=${r.replyWriter}">${r.replyWriter}</a></div>`
+            str +=`<div class="flex-shrink-0"><a href="/post/list?postWriter=${r.replyWriter}">`
+                + '<img class="rounded-circle m-2" width="45" height="45" src="' + r.userImage + '" alt="..." />'
+                + `<span class="fw-bold m-2">${r.nickName}</span></a></div>`
                 + '<div class="card-body text-dark">'
                 + '<p class="card-text">' + r.replyContent + '</p>'
                 + '<div><small style="color:gray;"> 작성시간: ' + '<span id="commentDate">' + r.createdTime + '</span>' + '</small></div>'
@@ -188,10 +143,13 @@
         
         divReplies.innerHTML = str;
         
-        const bc = document.querySelector('.bgColor');
-        bc.addEventListener('click', function(){
-        const div22 = document.getElementById('bgColorBtn');
-        div22.style.backgroundColor = 'white';
+        
+        const bg = document.querySelector('.bgColor');
+        
+        bg.addEventListener('click', function(){
+        const divBg = document.getElementById('bgColorBtn');
+        divBg.style.backgroundColor = 'white';
+        divBg.removeAttribute('class');
         
     });
       

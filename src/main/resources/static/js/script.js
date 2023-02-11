@@ -157,8 +157,6 @@ function search_close() {
 }
 
 
-<<<<<<< HEAD
-=======
 
 // (지혜) 새 창으로 띄우기
 // 채팅 기능에 사용 중 - 상단바 채팅버튼 & 부끄마켓 상세페이지창 채팅하기버튼
@@ -172,4 +170,3 @@ function search_close() {
 
 
 
->>>>>>> branch '0210_YeJin' of https://github.com/yaangha/Booque-ver2.git

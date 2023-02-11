@@ -33,6 +33,12 @@ public class Notices {
     private Integer replyId;
     
     
+    
+    private Integer noticeUsedBookId; 
+    
+    private Integer usedBookId;
+    
+    
 
  
 }

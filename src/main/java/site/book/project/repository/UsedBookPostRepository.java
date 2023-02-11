@@ -10,4 +10,6 @@ public interface UsedBookPostRepository extends JpaRepository<UsedBookPost, Inte
 
     UsedBookPost findByUsedBookId(Integer usedBookId);
     
+  
+    
 }

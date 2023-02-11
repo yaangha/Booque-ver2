@@ -84,7 +84,8 @@ public class User {
     private String booqueLevel = "새싹부끄";
     
     @Setter
-    private String subsKeyword; // subscribed 키워드: 부끄장터 알림 등록한 키워드
+    private Integer noticeUsedBookId;  // (예진) usedBookId 알림 설정
+    
     
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
