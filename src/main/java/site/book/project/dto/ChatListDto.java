@@ -30,4 +30,6 @@ public class ChatListDto {
     private String chatWithImage;   // 채팅 상대 프사
     private String chatWithLevel;   // 채팅 상대 부끄레벨
     
+    private String lastMessage;
+    
 }

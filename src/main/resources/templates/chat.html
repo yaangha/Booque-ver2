@@ -114,6 +114,7 @@
                                 <div th:text="${ chat.chatWithName }"></div>
                                 <div style="font-size:9px;" th:text="${ chat.modifiedTime }"></div>
                                 <div th:text="${ chat.usedTitle }"></div>  <!-- 여기는 최신 채팅내용 넣을 곳(임시로 글제목 넣어놓음) -->
+	                            <span th:text="${ chat.lastMessage }"></span>
                             </td>
                             <td style="padding-right:10px; width:20%;">
                                  <img width="auto" height="50" th:src = "${ '/market/api/view/'+ chat.usedBookImage }" />
@@ -121,18 +122,6 @@
                         </tr>
                     </tbody>
                 </table>
-                    <div th:each = "chat : ${ data }">
-                        <div style="display:inline-block;">
-                            <img class="rounded-circle" width="40" height="40" th:src = "${ chat.chatWithImage }" />
-                            <span th:text="${ chat.chatWithName }"></span>
-                            <span th:text="${ chat.modifiedTime }"></span><br/>
-                            <span th:text="${ recentMessage }"></span>
-                        </div>
-                        <div style="display:inline-block;">
-                            <img width="auto" height="50" th:src = "${ '/market/api/view/'+ chat.usedBookImage }" />
-                        </div>
-                        <hr/>
-                    </div>
                 </div>
                 
             </div> <!-- 채팅방 목록 블럭 End -->

@@ -101,7 +101,6 @@ public class ChatController {
         List<ChatListDto> list = chatService.loadChatList(loginUserId);
         
         // 뷰에 보여 줄 채팅방 정보들(리스트)
-        model.addAttribute("data", list);
         
         List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
          
@@ -113,7 +112,15 @@ public class ChatController {
             cl.add(chatService.readLastThreeLines(c));
         }
             model.addAttribute("recentMessage" ,cl);
+            
+            // 최신 메세지 내용 불러 오기  Dto에 넣어서 보냄
+        for(int i=0; i<list.size(); i++) {
+        	String last = chatService.readLastThreeLines(myChats.get(i));
+        	list.get(i).setLastMessage(last);
+        	
+        }
         
+        model.addAttribute("data", list);
         
         List<ChatReadDto> chatHistory = null;
         if(chatRoomId==null) {
