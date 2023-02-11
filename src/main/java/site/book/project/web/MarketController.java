@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -121,6 +122,8 @@ public class MarketController {
     	return "redirect:/market/detail?usedBookId="+usedBookId;
     }
     
+    
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/storage") // 메인화면 -> 상품등록에서 작성하던 글 이어서 작성하기 버튼 눌렀을 때!
     public void storage(@AuthenticationPrincipal UserSecurityDto userDto, Model model) {
         // (1) 사용자 글에서 임시저장 목록 뽑기 -> userid로 작성한 글 리스트업(내림차순) -> [0]번째 글 저장 -> marketcreatedto 사용해서 데이터 넘기기?
