@@ -1,7 +1,6 @@
 package site.book.project.web;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
-import site.book.project.domain.UsedBook;
 import site.book.project.domain.User;
 import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
@@ -75,7 +73,8 @@ public class ChatController {
             // 새로운 채팅 시작이라면
             log.info("새 채팅을 시작합니다!");
             // chat 생성 (+ txt 파일 생성)       
-            Integer newChatRoomId = chatService.createChat(usedBookId, sellerId, buyerId);       
+            Integer newChatRoomId = chatService.createChat(usedBookId, sellerId, buyerId);     
+            
             return "/chat?chatRoomId="+newChatRoomId;
         }
     }
@@ -97,16 +96,6 @@ public class ChatController {
         model.addAttribute("data", list);
         
         List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
-         
-        
-        // 최신 메세지 내용 불러 오기
-        List<String> cl = new ArrayList<>();
-        for (Chat c : myChats) {
-            log.info("방번호{}",c.getChatRoomId());
-            cl.add(chatService.readLastThreeLines(c));
-        }
-            model.addAttribute("recentMessage" ,cl);
-        
         
             // chatHistory 불러 오기
             List<ChatReadDto> chatHistory = chatService.readChatHistory(myChats.get(0));
@@ -114,21 +103,4 @@ public class ChatController {
             model.addAttribute("chatHistory", chatHistory);    // (주의) 지금은 가장 최신 채팅방 히스토리만 보이는 상태! JS 작업 해야 함
     }
     
-    // (홍찬) 내 대화 목록 불러오기
-    @GetMapping("/chat/list")
-    public String openMyChatList(@AuthenticationPrincipal UserSecurityDto userDto, Model model) throws IOException {
-        Integer loginUserId = userDto.getId();
-
-        log.info("잘 도착햇나{}",loginUserId);
-        // 최근에 업데이트된 날짜 순으로 받아온 내가 대화중인 대화들
-        List<Chat> chat = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
-        List<String> cl = new ArrayList<>();
-        for (Chat c : chat) {
-            log.info("방번호{}",c.getChatRoomId());
-            cl.add(chatService.readLastThreeLines(c));
-        }
-        
-        model.addAttribute("myChatList" ,cl);
-        return "chat";
-    }
 }

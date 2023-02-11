@@ -24,11 +24,24 @@ public class UserChatLog {
         return instance;
     }
     
-    public void setUser(String userName) throws Exception {
-        if (users.contains(userName)) {
-            throw new Exception("User already Exist/" + userName);
+    public void setUser(String nickName) throws Exception {
+        if (users.contains(nickName)) {
+            throw new Exception("User already Exist/" + nickName);
         }
-        users.add(userName);
+        users.add(nickName);
+        System.out.println("웹소켓 연결되어 있는 유저들");
+        for (String s : users) {
+            System.out.println("}"+s);
+            
+        }
     }
-
+    
+    public void unsetUser(String nickName) {
+        users.remove(nickName);
+        System.out.println("웹소켓 연결되어 있는 유저들");
+        for (String s : users) {
+            System.out.println("}"+s);
+            
+        }
+    }
 }

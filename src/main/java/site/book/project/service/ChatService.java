@@ -6,27 +6,27 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
+import site.book.project.domain.ChatAssist;
 import site.book.project.domain.UsedBook;
 import site.book.project.domain.UsedBookImage;
 import site.book.project.domain.User;
 import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
-import site.book.project.dto.UserSecurityDto;
+import site.book.project.repository.ChatAssistRepository;
 import site.book.project.repository.ChatRepository;
 import site.book.project.repository.UsedBookImageRepository;
 import site.book.project.repository.UsedBookRepository;
@@ -39,6 +39,7 @@ import site.book.project.repository.UserRepository;
 public class ChatService {
     
     private final ChatRepository chatRepository;
+    private final ChatAssistRepository chatAssistRepository;
     private final UserRepository userRepository;
     private final UsedBookRepository usedBookRepository;
     private final UsedBookImageRepository usedBookImageRepository;
@@ -53,8 +54,12 @@ public class ChatService {
         Chat chat = Chat.builder().usedBookId(usedBookId).sellerId(sellerId).buyerId(buyerId)
                     .createdTime(LocalDateTime.now()).modifiedTime(LocalDateTime.now())
                     .build();
-
+        
         chatRepository.save(chat);
+        ChatAssist chatAssist = ChatAssist.builder().chatRoomId(chat.getChatRoomId()).build();
+        
+        chatAssistRepository.save(chatAssist);
+        
         createFile(chat.getChatRoomId(), usedBookId);
         
         Chat dto = chatRepository.findByUsedBookIdAndBuyerId(usedBookId, buyerId);
@@ -157,6 +162,10 @@ public class ChatService {
         
         fos.close();
         
+        // (홍찬) chatAssist에 마지막 채팅 추가
+        ChatAssist assistDto = chatAssistRepository.findByChatRoomId(chatRoomId);
+        assistDto.updateLastChat(message, LocalDateTime.now());
+        
         // 읽음 여부 표시 기능 (TODO)
         /*
         if (senderId.equals(chat.getSellerId())) {
@@ -166,55 +175,57 @@ public class ChatService {
         } */
         
     }
-    
-    // (홍찬) 마지막 채팅 가져오기
-    public String readLastThreeLines (Chat chat) throws IOException {
-        // ChatReadDto recentChat = new ChatReadDto();
-        String recentMessage = "";
-        
-        // fileName 컬럼을 통해 파일의 경로 찾기, 파일 읽기
-        String pathName = fileUploadPath + chat.getFileName();
-        
-        // 1. RandomAcessFile, 마지막 라인을 담을 String, 읽을 라인 수 "r" 읽기모드
-        RandomAccessFile chatResourceFile = new RandomAccessFile(pathName, "r");
-        StringBuilder lastLine = new StringBuilder();
-        int lineCount = 2; // 마지막 2줄을 읽겠다는 내용!
+//    
+//    // (홍찬) 마지막 채팅 가져오기
+//    public String readLastThreeLines (Chat chat) throws IOException {
+//        // ChatReadDto recentChat = new ChatReadDto();
+//        String recentMessage = "";
+//        
+//        ChatAssist dto = chatAssistRepository.findByChatRoomId(chat.getChatRoomId());
+//        dto.setModifiedTime(chat.getModifiedTime());
+//        
+//        // fileName 컬럼을 통해 파일의 경로 찾기, 파일 읽기
+//        String pathName = fileUploadPath + chat.getFileName();
+//        
+//        // 1. RandomAcessFile, 마지막 라인을 담을 String, 읽을 라인 수 "r" 읽기모드
+//        RandomAccessFile chatResourceFile = new RandomAccessFile(pathName, "r");
+//        int lineCount = 2; // 마지막 2줄을 읽겠다는 내용!
+//
+//        // 2. 전체 파일 길이
+//        long fileLength = chatResourceFile.length();
+//
+//        // 3. 포인터를 이용하여 뒤에서부터 앞으로 데이터를 읽는다.
+//        for (long pointer = fileLength - 2; pointer >= 0; pointer--) {
+//
+//            // 3.1. pointer를 읽을 글자 앞으로 옮긴다.
+//            chatResourceFile.seek(pointer);
+//
+//            // 3.2. pointer 위치의 글자를 읽는다.
+//            char c = (char) chatResourceFile.read();
+//            
+//            // 3.3. 줄바꿈이 2번(lineCount) 나타나면 더 이상 글자를 읽지 않는다.
+//            if (c == '\n') {
+//                lineCount--;
+//                if (lineCount == 0) {
+//                    // 원하는 pointer가 위치해 있을 때 "UTF-8"이라는 변환을 한 후 그 줄의 readline으로 읽어옴.
+//                    recentMessage = new String(chatResourceFile.readLine().getBytes("ISO-8859-1"),"UTF-8");
+//                    break;
+//                }
+//            }
+//            
+//            // 3.4. 마지막 채팅을 db에 저장
+//            dto.setLastChat(recentMessage);
+//        }
+//        chatResourceFile.close();
+//        // 4. 결과 출력
+//        //System.out.println(lastLine);
+//        return recentMessage;
+//    }
 
-        // 2. 전체 파일 길이
-        long fileLength = chatResourceFile.length();
 
-        // 3. 포인터를 이용하여 뒤에서부터 앞으로 데이터를 읽는다.
-        for (long pointer = fileLength - 2; pointer >= 0; pointer--) {
-
-            // 3.1. pointer를 읽을 글자 앞으로 옮긴다.
-            chatResourceFile.seek(pointer);
-
-            // 3.2. pointer 위치의 글자를 읽는다.
-            char c = (char) chatResourceFile.read();
-            
-            // 3.3. 줄바꿈이 2번(lineCount) 나타나면 더 이상 글자를 읽지 않는다.
-            if (c == '\n') {
-                lineCount--;
-                if (lineCount == 0) {
-                    // 원하는 pointer가 위치해 있을 때 "UTF-8"이라는 변환을 한 후 그 줄의 readline으로 읽어옴.
-                    recentMessage = new String(chatResourceFile.readLine().getBytes("ISO-8859-1"),"UTF-8");
-                    break;
-                }
-            }
-            
-            // 3.4. 결과 문자열의 앞에 읽어온 글자(c)를 붙여준다.
-            lastLine.insert(0, c);
-        }
-        chatResourceFile.close();
-        // 4. 결과 출력
-        //System.out.println(lastLine);
-        return recentMessage;
-    }
-
-
-    private String toConvert (String Unicodestr) throws UnsupportedEncodingException {
-        return new String (Unicodestr.getBytes("8859_1"),"KSC5601");
-        }
+//    private String toConvert (String Unicodestr) throws UnsupportedEncodingException {
+//        return new String (Unicodestr.getBytes("8859_1"),"KSC5601");
+//        }
     
     
     // 내가 (판매자 혹은 구매자로) 포함된 모든 채팅방 불러와 dto에 데이터 추가
@@ -247,6 +258,15 @@ public class ChatService {
                     .status(usedBook.getStatus())
                     .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
                     .build();
+            // 최신 메세지 내용 불러 오기(채팅방 만들어지고 채팅이 하나도 없을 때)
+            if (chat.getCreatedTime().equals(chat.getModifiedTime())) {
+                String lastChat = " ";
+                dto.setRecentChat(lastChat);
+            } else { // 만들어진 채팅방이 있으면 거기에서 마지막 채팅을 불러옴.
+                String lastChat = chatAssistRepository.findByChatRoomId(chat.getChatRoomId()).getLastChat();
+                dto.setRecentChat(lastChat);
+            }
+            
             
             list.add(dto);
             
@@ -254,6 +274,4 @@ public class ChatService {
         return list;
         
     }
-    
-    
 }

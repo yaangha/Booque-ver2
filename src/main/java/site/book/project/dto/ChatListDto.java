@@ -19,6 +19,7 @@ public class ChatListDto {
 
     private Integer chatRoomId;
     private LocalDateTime modifiedTime;  // 채팅 최신 업뎃시간
+    private String recentChat; // 마지막 채팅
     
     private Integer usedBookId;    // 중고판매글 id
     private String usedBookImage;  // 상품 이미지(List[0])

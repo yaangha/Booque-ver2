@@ -61,11 +61,11 @@ public class ChattingController {
     
     // 채팅 로그 사용자 등록
     @CrossOrigin
-    @GetMapping("/registration/{userName}")
-    public ResponseEntity<Void> register(@PathVariable String userName){
-        log.info("register(username={})", userName);
+    @GetMapping("/registration/{nickName}")
+    public ResponseEntity<Void> register(@PathVariable String nickName){
+        log.info("register(username={})", nickName);
         try {
-            UserChatLog.getInstance().setUser(userName);
+            UserChatLog.getInstance().setUser(nickName);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -73,10 +73,25 @@ public class ChattingController {
         return ResponseEntity.ok().build();
     }
     
-    // 채팅창 가져오기
+    // 채팅 로그 사용자 등록 취소
     @CrossOrigin
-    @GetMapping("/fetchAllUsers")
-    public Set<String> fetchAll(){
-        return UserChatLog.getInstance().getUsers();
+    @GetMapping("/unregistration/{nickName}")
+    public ResponseEntity<Void> unregister(@PathVariable String nickName){
+        log.info("unregister(username={})", nickName);
+        UserChatLog.getInstance().unsetUser(nickName);
+        return ResponseEntity.ok().build();
     }
+    
+    @GetMapping("/onlineChk")
+    public boolean isExists(String nickName) {
+        boolean isexi = UserChatLog.getInstance().getUsers().contains(nickName);
+        System.out.println(UserChatLog.getInstance().getUsers());
+        return isexi;
+    }
+//    // 채팅창 가져오기
+//    @CrossOrigin
+//    @GetMapping("/fetchAllUsers")
+//    public Set<String> fetchAll(){
+//        return UserChatLog.getInstance().getUsers();
+//    }
 }

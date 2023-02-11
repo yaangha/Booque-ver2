@@ -89,7 +89,7 @@
                             <img class="rounded-circle" width="40" height="40" th:src = "${ chat.chatWithImage }" />
                             <span th:text="${ chat.chatWithName }"></span>
                             <span th:text="${ chat.modifiedTime }"></span><br/>
-                            <span th:text="${ recentMessage }"></span>
+                            <span th:text="${ chat.recentChat }"></span>
                         </div>
                         <div style="display:inline-block;">
                             <img width="auto" height="50" th:src = "${ '/market/api/view/'+ chat.usedBookImage }" />
@@ -106,7 +106,7 @@
                     <!-- 채팅 상대 정보 -->
                     <div>
                         <img class="rounded-circle" width="60" height="60" th:src = "${ data[0].chatWithImage }" />
-                        <span th:text="${ data[0].chatWithName }"></span>
+                        <span id="seller" th:text="${ data[0].chatWithName }"></span>
                         <span th:text="${ data[0].chatWithLevel }"></span>
                     </div>
                     
@@ -141,7 +141,7 @@
                                 <!--
                                 구매자(로그인유저):  <input type="text" th:value="${chatInfo.buyerId}" id="buyerId"/><br/>
                                 중고글id:  <input type="text" th:value="${chatInfo.usedBookId}" id="usedBookId"/><br/>
-                                판매자(작성자):  <input type="text" th:value="${chatInfo.sellerId}" id="sellerId"/><br/> -->
+                                <input type="text" th:value="${data.chatWithName}" id="sellerId"/><br/> -->
                                 <input type="hidden" th:value="${data[0].chatRoomId}" id="chatRoomId"/><br/>
                                 <input type="hidden" th:value="${loginUser.nickName}" id="loginUser"/>
                             </div>                    
