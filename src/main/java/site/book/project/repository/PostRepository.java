@@ -29,6 +29,8 @@ public interface PostRepository extends JpaRepository<Post, Integer>{
 	// select * from posts where book_book_id = 1; 예전꺼
 	List<Post> findByBookBookId(Integer bookId);
 	
+	List<Post> findByUserId(Integer userId);
+	
 	
 //	List<Post> findByBookId(Integer bookId);
 
@@ -48,6 +50,9 @@ public interface PostRepository extends JpaRepository<Post, Integer>{
 
 	// 조회수 순위로 Top 5 리스트 출력
     List<Post> findTop5ByOrderByHitDesc();
+
+    // (하은) 오름차순 정렬 필요
+    List<Post> findByUserIdOrderByCreatedTime(Integer id);
 
 	
 

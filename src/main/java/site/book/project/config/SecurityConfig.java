@@ -118,7 +118,7 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         // 메시지를 구독하는 요청 url prefix => 즉 메시지 받을 때 (subscribe, sub)
-        registry.enableSimpleBroker("/topic");
+        registry.enableSimpleBroker("/user");
 
         // 메시지를 발행하는 요청 url prefix => 즉 메시지 보낼 때 (publish, pub)
         registry.setApplicationDestinationPrefixes("/app");
