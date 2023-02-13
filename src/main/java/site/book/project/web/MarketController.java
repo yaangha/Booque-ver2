@@ -197,9 +197,11 @@ public class MarketController {
         // 책 정보 불러오기(bookId) -> postId로 bookId 찾기
         // 판매글 정보 불러오기
         // 판매글제목 & 가격 & 수정시간 & 지역 & 본문 & 판매여부 & 책상태 & 이미지
-        UsedBook usedBook = usedBookRepository.findById(usedBookId).get();        
+        UsedBook usedBook = usedBookRepository.findById(usedBookId).get(); 
+        log.info("usedBookId={}", usedBookId);
         UsedBookPost usedBookPost = usedBookPostRepository.findByUsedBookId(usedBookId);
         User user = userRepository.findById(usedBook.getUserId()).get(); // 작성자의 정보
+        log.info("id13={}", usedBook.getUserId());
         Book book = bookRepository.findById(usedBook.getBookId()).get();
         
         double bookPrice = book.getPrices();
@@ -312,27 +314,43 @@ public class MarketController {
 
     /**
      * 
-     * @param id 마이페이지에 표시될 user 
+     * @param userId 마이페이지에 표시될 user 
      * @param model
      */
     @GetMapping("/mypage") // /market/mypage 판매글작성자&마이페이지 이동
-    public void mypage(Integer userId,Model model) {
-        User user = userRepository.findById(userId).get();
-        log.info("userInfo좀 나와라ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ = {}", user);
-        List<UsedBook> usedBook = usedBookRepository.findByUserId(userId);
+    public void mypage(Integer userId, @AuthenticationPrincipal UserSecurityDto dto, Model model) {
         
-        List<MarketCreateDto> list = mainList(usedBook);
+    	Integer userId2 = dto.getId();
+    	System.out.println(userId2);
+    	User user=null;
+    	List<UsedBook> usedBook = null;
+        List<MarketCreateDto> list = null;
+    	log.info("id13={}", userId);
+    	
+    	if (userId==null) {
+    		user=userRepository.findById(userId2).get();
+    		usedBook = usedBookRepository.findByUserId(userId2);
+    	} else {
+    		user = userRepository.findById(userId).get();
+    		usedBook = usedBookRepository.findByUserId(userId);
+    	}
+    	
+    	list = mainList(usedBook);
+    	log.info("user={}", user);
+        log.info("userInfo좀 나와라ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ = {}", user);
+        
         
         log.info("list userBookInfo ddfdfdf= {}", list);
-        Book book = bookRepository.findById(userId).get();
+        Book book = bookRepository.findById(userId2).get();
         String userNickName = user.getNickName();
-        Integer postCount = postRepository.findByUserId(userId).size();
+        Integer postCount = postRepository.findByUserId(userId2).size();
         String soldout = "판매완료";
         
 //        Integer usedBookSellingCount = usedBookRepository.countUsedBookSellingPost(userId).size();
-        Integer usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId, soldout).size();
+        Integer usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId2, soldout).size();
         
         Integer usedBookSellingCount = postCount - usedBookSoldoutCount;
+        
 //        List<UsedBook> usedBookWishList = usedBookRepository.selectUsedBookIdfromUserId(userId);
 //        log.info("usedBookWishList = {}", usedBookWishList); // usedBookId를 가져오기 성공!
 //        List<MarketCreateDto> usedBookList = mainList(usedBookWishList);

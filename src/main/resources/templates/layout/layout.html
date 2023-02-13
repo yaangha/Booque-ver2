@@ -146,7 +146,7 @@
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">마이페이지</a>
                     <a th:href="@{ /post/list }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">내 블로그</a>
-                    <a th:href="@{ /market/mypage?userNickname={userNickname} (userNickname = ${ userNickname }) }" class="w3-bar-item w3-button" 
+                    <a th:href="@{ /market/mypage?userId={userId} (userId = ${ userId }) }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">마이부끄</a>
                     <a th:href="@{ /logout }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">로그아웃</a>
@@ -360,6 +360,8 @@
 </div>
 
 
+
+
 <!--/* footer.html fragment(HTML 조각)를 삽입  */-->
 
     <div th:replace="fragments/footer :: footer"></div>
@@ -394,9 +396,10 @@
     };
     </script>
     
+    <script type="text/javascript" th:inline="javascript">
+	
     
     
-    <script>
 function nothingKeywordCheck(){
     const form = document.querySelector('#searchingForm');
     const keyword = document.querySelector('#keyword').value;
@@ -413,7 +416,7 @@ function nothingKeywordCheck(){
     function openChatWindow(url) {
         console.log('챗창 오픈');
         chatWindow = window.open("", "Chat", 
-        "width=1200,height=800,left=350,top=150,dependent=yes,location=yes, menubar=no,status=no,resizable=no,toolbar=no,scrollbars=yes");
+        "width=1200,height=850,left=350,top=150,dependent=yes,location=yes, menubar=no,status=no,resizable=no,toolbar=no,scrollbars=yes");
         chatWindow.location.href = url;
         chatWindow.focus();
         return false;
