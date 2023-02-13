@@ -37,6 +37,8 @@ public class UsedBookService {
 	private final UsedBookImageRepository imgRepository;
 	private final UsedBookWishRepository usedBookWishRepository;
 	private final UsedBookPostRepository usedBookPostRepository;
+	private final UserRepository userRepository;
+	private final UsedBookImageRepository usedBookImgRepository;
 	
     @Value("${com.example.upload.path}")
     private String uploadPath;
@@ -237,6 +239,22 @@ public class UsedBookService {
                 usedBookList = usedBookRepository.searchPriceDesc2(region, mainKeyword);
             }
             
+        }
+        
+        return usedBookList;
+    }
+    
+    // (하은) 부끄마켓 찜한 목록 불러오기
+    public List<MarketCreateDto> searchWishList(Integer id) {
+        // USEDBOOKWISH에서 목록 찾기
+        // 해당 리스트에서 USEDBOOKID로 USEDBOOK 정보 찾기
+        List<UsedBookWish> wishList = usedBookWishRepository.findByUserId(id);
+        List<MarketCreateDto> usedBookList = new ArrayList<>();
+        
+        for (UsedBookWish u : wishList) {
+            UsedBook usedBook = usedBookRepository.findById(u.getUsedBookId()).get();
+            List<UsedBookImage> usedBookImage = usedBookImgRepository.findByUsedBookId(usedBook.getId());
+            User seller = userRepository.findById(usedBook.getUserId()).get();
         }
         
         return usedBookList;

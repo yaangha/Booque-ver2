@@ -121,10 +121,16 @@ public class MarketController {
     							Integer usedBookId) {
     	// 총 세개의 테이블을 크리에이트 해야함
         
+        List<String> defaultImg = new ArrayList<>();
+        defaultImg.add("booque_logo.jpg");
+        
         if(dto.getFileNames() != null) {
             usedBookService.createImg(usedBookId, dto.getFileNames());
-            
+            log.info("사진 들었느냐낭");   
+        } else {
+            usedBookService.createImg(usedBookId, defaultImg);
         }
+        log.info("사진 들었느냐낭");   
         
         dto.setUserId(userDto.getId());
         dto.setStorage(1); // storage 값을 1(저장)로 변경 => 디폴트 값은 0(임시저장)
@@ -169,10 +175,13 @@ public class MarketController {
     
     @PostMapping("/storage") // 임시저장 완료 후 부끄마켓 메인 페이지로 이동
     public String storage(@AuthenticationPrincipal UserSecurityDto userDto, MarketCreateDto dto, Integer usedBookId) {
+        List<String> defaultImg = new ArrayList<>();
+        defaultImg.add("booque_logo.jpg");
         
         if(dto.getFileNames()!= null) {
             usedBookService.createImg(usedBookId, dto.getFileNames());
-            
+        } else {
+            usedBookService.createImg(usedBookId, defaultImg);
         }
         
         log.info("안들어가니?? 왜 ?? {}", dto.getFileNames());
