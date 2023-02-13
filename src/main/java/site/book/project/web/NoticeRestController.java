@@ -28,6 +28,7 @@ import site.book.project.dto.ReplyReadDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.NoticeRepository;
 import site.book.project.repository.UsedBookPostRepository;
+import site.book.project.repository.UserRepository;
 import site.book.project.service.NoticeService;
 import site.book.project.service.ReplyService;
 import site.book.project.service.UsedBookService;
@@ -41,6 +42,7 @@ public class NoticeRestController {
     private final NoticeService noticeService;
     private final NoticeRepository noticeRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
   
     
     // (예진) 포스트에 새 댓글이 달리면 알림(notice) 만들어짐
@@ -79,10 +81,9 @@ public class NoticeRestController {
         return ResponseEntity.ok(1);
       
     }
-   
+  
     
-    
-    // (예진) userId(postWriter/subscribedBookId) 기준 새 댓글 알림 리스트(notice list) 불러오기
+    // (예진) userId(postWriter/subscribedBookId) 알림 리스트(notice list) 불러오기
     @GetMapping("/showNotice/{userId}")
     public ResponseEntity<List<NoticeDto>> showAllNotices(@PathVariable Integer userId) {
       

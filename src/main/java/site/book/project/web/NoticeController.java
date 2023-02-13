@@ -1,15 +1,11 @@
 package site.book.project.web;
 
-import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,21 +27,6 @@ public class NoticeController {
     private final UserService userService;
     private final UserRepository userRepository;
     
-//    @GetMapping("/notice/delete")
-//    public void deleteNotice(Integer noticeId) {
-//        log.info("노티스삭제(noticeId={})", noticeId);
-//        
-//        Notices n = noticeService.read(noticeId);
-//        
-//        noticeService.delete(noticeId);
-//        noticeRepository.deleteById(noticeId);
-//       // attrs.addFlashAttribute("deletedNoticeId", noticeId);
-//        log.info("노티스삭제 끝(noticeId={})", noticeId);
-//        
-//       //return "redirect:/post/detail?postId=" + n.getPostId()+"&bookId="+ n.getBookId();
-//    }
-
-   
     
     // (예진) 알림받을 BookId 등록
     @GetMapping("/register/notice")
@@ -55,7 +36,7 @@ public class NoticeController {
        user.setNoticeBookId(bookId);
        userRepository.save(user);
         
-       return  "redirect:/market/main";
+       return "/market/main";
     }
     
 }

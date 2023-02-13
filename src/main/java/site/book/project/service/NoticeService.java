@@ -26,7 +26,7 @@ public class NoticeService {
     private final UserService userService;
     private final BookService bookService;
     
-    // 새 댓글 등록 노티스
+    // 새 알림 생성
     public Integer create(NoticeDto dto) {
         
         Notices notice = null;
@@ -47,38 +47,33 @@ public class NoticeService {
         return notice.getNoticeId();
     }   
     
-    public List<NoticeDto> readNotices(Integer userId) {
-        log.info("read노티스(유저Id={})", userId);  // 알림 받을 userId
+    public List<NoticeDto> readNotices(Integer userId) {  // 알림 받을 userId
         
         List<Notices> list = noticeRepository.findByUserIdOrderByNoticeIdDesc(userId);
         List<NoticeDto> noticeList = new ArrayList<>();
-        PostReply r = null;
-        NoticeDto dto = null;
-        UsedBook ub = null;
-        
-        
+      
         for (Notices n : list) {
             
             if(n.getUsedBookId() == null) {
-                r = replyService.readRep(n.getReplyId());
+               PostReply r = replyService.readRep(n.getReplyId());
            
-                dto= NoticeDto.builder()
+               NoticeDto dto= NoticeDto.builder()
                               .noticeId(n.getNoticeId())
                               .postId(n.getPostId())
                               .bookId(n.getBookId())
                               .userId(n.getUserId())
                               .replyId(n.getReplyId())
                               .userImage(r.getUser().getUserImage())
-                               .nickName(r.getUser().getNickName())
+                              .nickName(r.getUser().getNickName())
                                .build();           
             
                 noticeList.add(dto);
                 
             } else {
-                    ub = usedBookService.read(n.getUsedBookId());
+                    UsedBook ub = usedBookService.read(n.getUsedBookId());
                     Book b = bookService.read(n.getBookId());
                 
-                    dto= NoticeDto.builder()
+                    NoticeDto dto= NoticeDto.builder()
                         .noticeId(n.getNoticeId())
                         .bookId(n.getBookId())
                         .userId(n.getUserId())
@@ -93,11 +88,10 @@ public class NoticeService {
             
         }
         
-        log.info("노티스디티오리스트={}",noticeList);
-        
         return noticeList;
     }
 
+    
     
     public Integer delete(Integer noticeId) {
      

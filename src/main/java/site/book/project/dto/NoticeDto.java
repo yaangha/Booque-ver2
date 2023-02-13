@@ -23,9 +23,10 @@ public class NoticeDto {
     
     private Integer noticeId;
     private Integer userId;  // postWriter id;
-    private Integer postId;
     private Integer bookId;
     
+    
+    private Integer postId;
     private PostReply reply;
     private Integer replyId;
     private String replyWriter;
@@ -33,7 +34,7 @@ public class NoticeDto {
     private String userImage; // replyWriter의 유저이미지
     
     private Integer usedBookId;
-  //  private String usedBooKUser;
+
     private String noticeBookId;
     private String bookName;
     private String bookImage;
