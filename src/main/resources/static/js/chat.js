@@ -3,7 +3,7 @@
  */
  
 window.addEventListener('DOMContentLoaded', () => {
-
+    
         var stompClient = null;
         var sender = $('#loginUser').val();
         var chatRoomId = $('#chatRoomId').val();
@@ -38,15 +38,36 @@ window.addEventListener('DOMContentLoaded', () => {
         function sendChat(json) {
             stompClient.send("/app/chat/"+ chatRoomId, {}, JSON.stringify(json));
         }
-        // 보내기 버튼 클릭시 실행되는 메서드
+        
+        
         const btnSend = document.querySelector('#btnSend');
-        btnSend.addEventListener('click', function(){
-		
-	
-		
-		send()
-		
-})
+        const messageInput = document.querySelector('#message');
+        const messageValue = document.querySelector('#message').val;
+        
+        // (지혜) 메시지 입력해야 보내기버튼 활성화되기
+        messageInput.addEventListener('keyup', activateBtnSend);
+        
+        btnSend.disabled = true;
+        
+        function activateBtnSend() {
+            
+            console.log('activateBtnSend 함수');
+            
+            if (messageValue == '') {
+                btnSend.disabled = true;
+                btnSend.style.color = "silver";
+                console.log('보내기버튼 비활성화');
+            } else {
+                btnSend.style.color = "dodgerblue";
+                btnSend.disabled = false;
+                console.log('보내기버튼 활성화');
+            }
+            
+        };
+        
+        
+        // 보내기 버튼 클릭시 실행되는 메서드
+        btnSend.addEventListener('click', send);
         
         const date = new Date();
             
@@ -64,22 +85,25 @@ window.addEventListener('DOMContentLoaded', () => {
                 'sendTime': getCurrentTime()
                 });
             $('#message').val("");
+            // 보낸 후 보내기버튼 비활성화
+            btnSend.disabled = true;
+            btnSend.style.color = "silver";
             
             
-            // 보내기 버튼 누를 때마다 채팅 리스트 변동 
-            console.log('보내기 버튼')
-				sendChatList(chatRoomId)	
+            const userId = document.querySelector('#userId').value
+            sendChatList(userId)
+            
         }
         
-        function sendChatList(chatRoomId){
-            axios.get('/chat/api/list?chatRoomId='+ chatRoomId)
-            	.then(response => {
-            console.log('보내기 ')
-					console.log(response.data)
-					})
-	
-	
-}
+        
+        function sendChatList(userId){
+            axios.get('/chat/api/list?userId='+ userId)
+                .then(response => {
+                        console.log('보내기 ')
+                        console.log(response.data)
+                    })
+            
+            }
         
         // 메시지 입력 창에서 Enter키가 보내기와 연동되도록 설정
         var inputMessage = document.getElementById('message'); 
@@ -104,20 +128,16 @@ window.addEventListener('DOMContentLoaded', () => {
         function createTextNode(messageObj) {
             if(messageObj.sender == sender){
                 return '<p><div align="right" id="newHistory" class="row"><div class="col_8">' +
-            messageObj.sender +
-            '</div><div class="col_4 text-right">' +
             messageObj.message+
-            '</div><div>[' +
+            '</div><div style="font-size:13px; color:grey;">' +
             messageObj.sendTime +
-            ']</div><span id="check">1</span></p>';
+            '</div><span id="check" style="font-color:blue;">1</span></p>';
             } else {
             return '<p><div id="newResponseHistory" class="row alert alert-info"><div class="col_8">' +
-            messageObj.sender +
-            '</div><div class="col_4 text-right">' +
             messageObj.message+
-            '</div><div>[' +
+            '</div><div style="font-size:13px; color:grey;">' +
             messageObj.sendTime +
-            ']</div></p>';
+            '</div></p>';
             }
         }
         
@@ -161,14 +181,24 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         
         
-        const btnSend2 = document.querySelector('#btnSend')
         
-        
-        
-        
-        
-        
-
+    // (지혜) 선택된 채팅창 배경색 바꾸기    
+    const pathname = window.location.pathname;   // 주소창 '?' 앞의 pathname 찾기 (/chat)
+    const url = window.location.search;  // 주소창 '/chat' 뒤에 오는 텍스트 찾기(예: ?chatRoomId=35)
+    const btnChatRoom = document.querySelectorAll('.btnChatRoom');   // 좌측 채팅방 리스트에서 각각의 채팅방 블럭 찾기
+    
+    btnChatRoom.forEach(others => {
+        others.style.backgroundColor = "";  // 다른 채팅방 블럭들의 배경색 제거
+    
+    btnChatRoom.forEach(btn => {
+       const href = btn.getAttribute('onclick');  // 선택된 채팅방 블럭의 href값 찾기
+       if (("location.href='" + pathname + url + "'") == href) {      // 주소창의 주소와 동일한 href 경로명을 가진 방 찾아서(=현재 선택된 방 찾아서)
+         btn.style.backgroundColor = "seashell";   // 배경색 바꿔 주기
+        };
+    });
+    });
+    
+    
 });
 
         // (지혜) 채팅창에서 프사,닉네임,책표지 클릭시 부모창 링크 변경(챗리스트에선 적용x)
@@ -177,3 +207,5 @@ window.addEventListener('DOMContentLoaded', () => {
             parent.location.href=url;
             // parent.focus();  부모창으로 포커스(크롬에서는 지원되지 않는다 함...ㅠㅠ)
         }
+        
+        

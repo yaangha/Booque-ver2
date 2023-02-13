@@ -224,8 +224,12 @@ public class ChatController {
     
     @GetMapping("/chat/api/list")
     @ResponseBody
-    public List<ChatListDto> chatlist(Integer chatRoomId){
-    	log.info("채팅창 리스트 바꿔야지ㅣ이ㅣ잉{}", chatRoomId);
+    public List<ChatListDto> chatlist(Integer userId) throws IOException{
+    	log.info("채팅창 리스트 바꿔야지ㅣ이ㅣ잉{}", userId);
+        List<ChatListDto> list = chatService.loadChatList(userId);
+        
+
+    	
     	return null;
     }
 }

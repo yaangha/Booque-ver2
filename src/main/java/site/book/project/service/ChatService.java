@@ -148,7 +148,7 @@ public class ChatService {
         String sendTime = dto.getSendTime();
         System.out.println("print:" + message);
         
-        String writeContent = sender + "\n" + message + "\n" + "[" +  sendTime + "]" + "\n";
+        String writeContent = sender + "\n" + message + "\n" +  sendTime + "\n";
         
         byte[] b = writeContent.getBytes();
         
