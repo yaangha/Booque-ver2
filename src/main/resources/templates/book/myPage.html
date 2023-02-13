@@ -19,6 +19,12 @@
         * {
             font-family: 'NanumBarunGothic';        
         }
+        
+        a {
+            text-decoration: none;
+            color: black;
+        }
+        
     </style>
 </head>
 <body>
@@ -298,10 +304,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                <tr th:each=" dto : ${ usedBookList } ">
+                    
+                    <td>
+                        <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ dto.usedBookId }) }">
+                            <div th:text="${ dto.title }"></div>
+                        </a>
+                    </td>
+                    <td><div th:text="${ dto.username }"></div></td>
+                    <td><div th:text="|${#numbers.formatInteger(dto.price, 0, 'COMMA')}원|"></div></td>
+                   
                 </tr>
             </tbody>
         </table>

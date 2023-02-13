@@ -253,8 +253,12 @@ public class UsedBookService {
         
         for (UsedBookWish u : wishList) {
             UsedBook usedBook = usedBookRepository.findById(u.getUsedBookId()).get();
-            List<UsedBookImage> usedBookImage = usedBookImgRepository.findByUsedBookId(usedBook.getId());
+            // List<UsedBookImage> usedBookImage = usedBookImgRepository.findByUsedBookId(usedBook.getId());
             User seller = userRepository.findById(usedBook.getUserId()).get();
+            MarketCreateDto dto = MarketCreateDto.builder().username(seller.getUsername()).bookTitle(usedBook.getBookTitle())
+                    .price(usedBook.getPrice()).location(usedBook.getLocation()).title(usedBook.getTitle())
+                    .usedBookId(usedBook.getId()).build();
+            usedBookList.add(dto);
         }
         
         return usedBookList;
