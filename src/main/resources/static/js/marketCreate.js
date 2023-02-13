@@ -37,8 +37,33 @@ btnSubmit.addEventListener('click', function () {
     const result = confirm('등록하시겠습니까?');
     if (result) {
      document.querySelector('#formCreate').submit();
+        formCreate.action = '/market/create';
+        formCreate.method = 'post';
+        formCreate.submit();
+        
+        checkContainingKeyword();
     }
+    
+    
 });
+    
+   // function checkKeyword(){
+   //    const contents = document.querySelector('#contents').value;
+   //     const usedBookId = document.querySelector('#usedBookId').value;
+   //     
+   //     const data ={
+   //          contents : contents,
+   //          usedBookId : usedBookId
+   //     }
+   //      
+   //     console.log(체크데이터);
+   //    console.log(data);
+   //     axios
+   //      .get('/notice/check', data)
+   //      .then(response => { newKeywordNotice(response.data) } )
+   //       .catch(err => { console.log(err); });
+   // };
+    
     
     
     
@@ -270,7 +295,7 @@ btnSubmit.addEventListener('click', function () {
         document.getElementById('marketCreate').style.display='none';
         
         const idDiv = document.querySelector('#usedId')
-        let used = '<input type="text" name=usedBookId value="'+usedBookId+'">';
+        let used = '<input type="text" id="usedBookId" name=usedBookId value="'+usedBookId+'">';
         idDiv.innerHTML = used
         
     }

@@ -46,13 +46,6 @@ window.addEventListener('DOMContentLoaded', () => {
             
         function send() {
             var message = $('#message').val();
-            
-            const finalChat = document.querySelectorAll('#finalChat')
-            
-            console.log('메세지 보자 재정렬를 해야함. ')
-            console.log(finalChat)
-            console.log(message)
-
             autoScroll();
             sendChat({
                 // 'chatRoomId': chatRoomId,
@@ -66,10 +59,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 });
             $('#message').val("");
         }
-        
-        
-        
-        
         
         // 메시지 입력 창에서 Enter키가 보내기와 연동되도록 설정
         var inputMessage = document.getElementById('message'); 
@@ -99,9 +88,9 @@ window.addEventListener('DOMContentLoaded', () => {
             messageObj.message+
             '</div><div>[' +
             messageObj.sendTime +
-            ']</div></p>';
+            ']</div><span id="check">1</span></p>';
             } else {
-            return '<p><div id="newHistory" class="row alert alert-info"><div class="col_8">' +
+            return '<p><div id="newResponseHistory" class="row alert alert-info"><div class="col_8">' +
             messageObj.sender +
             '</div><div class="col_4 text-right">' +
             messageObj.message+
@@ -109,6 +98,27 @@ window.addEventListener('DOMContentLoaded', () => {
             messageObj.sendTime +
             ']</div></p>';
             }
+        }
+        
+        
+        $('#message').focus(function(){
+            
+            let nm = document.getElementById('newResponseHistory');
+            nm.className = "row";
+            nm.removeAttribute('id');
+            if(sender == sender){
+                console.log("확인해주세요!")
+        setInterval( CheckPageFocus, 200 );
+        }
+        });
+        
+        function CheckPageFocus() {
+        //var info = document.getElementById("message");
+        if ( document.hasFocus() ) {
+            let nm = document.getElementById('check');
+            nm.style.visibility = 'hidden';
+            nm.removeAttribute('id');
+         } 
         }
         
         
@@ -129,4 +139,12 @@ window.addEventListener('DOMContentLoaded', () => {
             $("#content").html($("#content").html() + message);
         }
         
+
 });
+
+        // (지혜) 채팅창에서 프사,닉네임,책표지 클릭시 부모창 링크 변경(챗리스트에선 적용x)
+        function changeParentPage(url) {
+            parent = window.opener;
+            parent.location.href=url;
+            // parent.focus();  부모창으로 포커스(크롬에서는 지원되지 않는다 함...ㅠㅠ)
+        }

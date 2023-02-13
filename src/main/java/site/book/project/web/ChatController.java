@@ -101,9 +101,26 @@ public class ChatController {
         List<ChatListDto> list = chatService.loadChatList(loginUserId);
         
         // 뷰에 보여 줄 채팅방 정보들(리스트)
-        model.addAttribute("data", list);
         
         List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
+         
+        
+        // 최신 메세지 내용 불러 오기
+        List<String> cl = new ArrayList<>();
+        for (Chat c : myChats) {
+            log.info("방번호{}",c.getChatRoomId());
+            cl.add(chatService.readLastThreeLines(c));
+        }
+            model.addAttribute("recentMessage" ,cl);
+            
+            // 최신 메세지 내용 불러 오기  Dto에 넣어서 보냄
+        for(int i=0; i<list.size(); i++) {
+        	String last = chatService.readLastThreeLines(myChats.get(i));
+        	list.get(i).setLastMessage(last);
+        	
+        }
+        
+        model.addAttribute("data", list);
         
         List<ChatReadDto> chatHistory = null;
         if(chatRoomId==null) {
@@ -128,7 +145,10 @@ public class ChatController {
             ChatListDto usedbook = ChatListDto.builder().usedBookImage(img.getFileName())
                                                 .price(u.getPrice()).status(u.getStatus())
                                                 .usedTitle(u.getTitle())
+                                                .usedBookTitle(u.getBookTitle())
                                                 .chatRoomId(chatRoomId)
+                                                .price(u.getPrice()).status(u.getStatus()).usedTitle(u.getTitle())
+                                                .chatRoomId(chatRoomId).usedBookId(u.getId())
                                                 .build();
 
 
@@ -137,12 +157,12 @@ public class ChatController {
                 User chatWith = userRepository.findById(chatById.getBuyerId()).get();
 
                 chatPerson = ChatListDto.builder().chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
-                                .chatWithName(chatWith.getNickName()).build();
+                                .chatWithName(chatWith.getNickName()).chatWithId(chatWith.getId()).build();
             } else {
                 User chatWith = userRepository.findById(chatById.getSellerId()).get();
 
                 chatPerson = ChatListDto.builder().chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
-                .chatWithName(chatWith.getNickName()).build();
+                .chatWithName(chatWith.getNickName()).chatWithId(chatWith.getId()).build();
 
             }
 
@@ -171,10 +191,8 @@ public class ChatController {
         }
         
         model.addAttribute("myChatList" ,cl);
-        return "";
+        return "chat";
     }
-    
-    
     // (지혜) 최신 업데이트시간을 ㅇ초 전, ㅇ분 전, ㅇ시간 전, ㅇ일 전 식으로 바꿔 출력하기
     public static String convertTime(LocalDateTime modifiedTime) {
         

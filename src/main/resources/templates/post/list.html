@@ -178,7 +178,7 @@
     </thead>
     <tbody>
         <tr th:each="post : ${ list }">
-            <td class="py-5" style="cursor: pointer;" th:onclick="|location.href='@{ /post/detail?postId={postId}&bookId={bookId} (postId = ${ post.postId }, bookId = ${ post.bookId } )}'|">
+            <td class="py-5" style= "cursor: pointer;" th:onclick="|location.href='@{ /post/detail?postId={postId}&bookId={bookId} (postId = ${ post.postId }, bookId = ${ post.bookId } )}'|">
                 <!-- haeun test -->
                 <div>
                     <span th:text="${ post.postId }"></span>

@@ -83,6 +83,10 @@ public class User {
     @Builder.Default
     private String booqueLevel = "새싹부끄";
     
+    @Setter
+    private Integer noticeUsedBookId;  // (예진) usedBookId 알림 설정
+    
+    
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<UserRole> roles = new HashSet<>();

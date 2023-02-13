@@ -12,11 +12,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +45,7 @@ import site.book.project.repository.UserRepository;
 import site.book.project.service.PostService;
 import site.book.project.service.SearchService;
 import site.book.project.service.UsedBookService;
+import site.book.project.service.UserService;
 
 @Slf4j
 @Controller
@@ -60,6 +63,8 @@ public class MarketController {
     private final UsedBookImageRepository usedBookImageRepository;
     private final PostService postService;
     private final PostRepository postRepository;
+    private final UserService userService;
+  
     
     
     
@@ -129,6 +134,8 @@ public class MarketController {
     	return "redirect:/market/detail?usedBookId="+usedBookId;
     }
     
+    
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/storage") // 메인화면 -> 상품등록에서 작성하던 글 이어서 작성하기 버튼 눌렀을 때!
     public void storage(@AuthenticationPrincipal UserSecurityDto userDto, Model model) {
         // (1) 사용자 글에서 임시저장 목록 뽑기 -> userid로 작성한 글 리스트업(내림차순) -> [0]번째 글 저장 -> marketcreatedto 사용해서 데이터 넘기기?
@@ -432,5 +439,7 @@ public class MarketController {
         
         return list;
     }
+    
+   
     
 }
