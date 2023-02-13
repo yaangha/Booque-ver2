@@ -44,6 +44,12 @@
             object-fit: cover;
          }
          
+         input::-webkit-outer-spin-button,
+         input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+         }
+         
     </style>
     
 </head>
@@ -116,7 +122,7 @@
         </li>
         <li>
             <div class="contents">가격<span style="color: red;">*</span></div>
-            <div><input class="form-control" id="price" name="price" type="text" placeholder="숫자만 입력해주세요!" style="width: 300px; height: 50px; display: inline-block;"/> 원</div>
+            <div><input class="form-control" id="price" name="price" type="number" placeholder="숫자만 입력해주세요!" style="width: 300px; height: 50px; display: inline-block;"/> 원</div>
         </li>
         <li>
             <div class="contents">설명<span style="color: red;">*</span></div>

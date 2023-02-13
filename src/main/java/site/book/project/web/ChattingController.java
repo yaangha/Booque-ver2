@@ -1,6 +1,7 @@
 package site.book.project.web;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ import oracle.net.aso.l;
 import site.book.project.domain.Chat;
 import site.book.project.domain.Chatting;
 import site.book.project.domain.UserChatLog;
+import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
 import site.book.project.service.ChatService;
 
@@ -79,4 +83,7 @@ public class ChattingController {
     public Set<String> fetchAll(){
         return UserChatLog.getInstance().getUsers();
     }
+    
+
+    
 }
