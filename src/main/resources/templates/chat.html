@@ -89,7 +89,7 @@
                 <!-- 내 정보, 검색, 정렬 -->
                 <div id="chatListHead" style="border-bottom: 2px solid lightgrey; height: 140px; padding: 10px;">
                     <!-- 내 프로필사진, 닉네임 -->
-                    <div th:data-url="@{ /market/mypage(id=${ loginUser.id }) }" 
+                    <div th:data-url="@{ /market/mypage(userId=${ loginUser.id }) }" 
                         onclick="changeParentPage(this.getAttribute('data-url'))"
                     	style="cursor:pointer;">
                         <img class="rounded-circle" width="40" height="40" th:src = "${ loginUser.userImage }" />
@@ -143,7 +143,7 @@
                             <tr>
                                 <td style="width:10%; padding:5px; padding-left:10px;">
                                     <img class="rounded-circle" width="50" height="50" th:src = "${ chatWith.chatWithImage }"
-                                    th:data-url="@{ /market/mypage(id=${ chatWith.chatWithId }) }" 
+                                    th:data-url="@{ /market/mypage(userId=${ chatWith.chatWithId }) }" 
                                     onclick="changeParentPage(this.getAttribute('data-url'))"
                                     style="cursor:pointer;" />
                                 </td>
