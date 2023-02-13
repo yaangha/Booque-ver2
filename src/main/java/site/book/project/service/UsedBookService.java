@@ -257,7 +257,7 @@ public class UsedBookService {
             User seller = userRepository.findById(usedBook.getUserId()).get();
             MarketCreateDto dto = MarketCreateDto.builder().username(seller.getUsername()).bookTitle(usedBook.getBookTitle())
                     .price(usedBook.getPrice()).location(usedBook.getLocation()).title(usedBook.getTitle())
-                    .usedBookId(usedBook.getId()).build();
+                    .usedBookId(usedBook.getId()).bookId(usedBook.getBookId()).build();
             usedBookList.add(dto);
         }
         

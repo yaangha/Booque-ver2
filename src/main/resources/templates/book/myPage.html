@@ -31,7 +31,6 @@
 
     <!-- 상단에 프로필 넣고자(like 교보문고) -->
     <div class="w-75 container">
-
     <div class="row"> <!-- 메인 데이터 -->
     
         <div class="col-2 m-4 p-2" style="height:800px;">
@@ -91,18 +90,17 @@
 
         <div class="col-8 container">
 
-
-            <h4>최근 주문 내역</h4>
+            <div style="font-weight: bold; font-size: 21px; border-bottom: 3px solid black;">주문내역</div>
             <table class="table">
                 <thead>
-                    <tr class="border-top border-4" >
-                        <th> 주문날짜</th>
+                    <tr style="font-weight: bold; border-bottom: 3px solid black;">
+                        <th>주문날짜</th>
                         <th>주문상세</th>
                         <th>주문번호</th>
                         <th>결제금액</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="border-bottom: 3px solid black;">
                     <tr id="bookTotal"  th:each=" order : ${ orderList }">
                         <td class="align-middle" style="text-align: center;">
                             <div class="container">
@@ -258,30 +256,31 @@
     <br/><br/>
     
      <!-- <div class="col-8 container"> -->
-                    <h4>작성된 한줄평~!</h4>
+            <div style="font-weight: bold; font-size: 21px; border-bottom: 3px solid black;">한줄평 목록</div>
             <table class="table">
                 <thead>
-                    <tr class="border-top border-4">
+                    <tr style="font-weight: bold; border-bottom: 3px solid black;">
                         <th>책이름(책으로 넘어가기)</th>
                         <th>내용(좋아요)</th>
-                        <th>작성날짜 / 수정날짜</th>
+                        <th>날짜</th>
                         <th>수정/삭제</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="border-bottom: 3px solid black;">
                     <tr th:each=" comment : ${ commentList }">
                         <td class="align-middle">
-                        <a th:href="@{ /detail?id={bookId} (bookId = ${ comment.bookId})}" th:bookId="${ comment.bookId}" ><img class="mx-2" style="width: 70px; height: 100px;" alt="" th:src="${ comment.bookImage }"></a> 
-                        <span class="h6" style="font-weight: bold;" th:text="${ comment.bookName }"></span>
+                            <a th:href="@{ /detail?id={bookId} (bookId = ${ comment.bookId})}" th:bookId="${ comment.bookId}" >
+                                <img class="mx-2" style="width: 70px; height: 100px; display: inline-block;" alt="" th:src="${ comment.bookImage }">
+                            </a> 
+                            <div class="text-truncate" style="font-weight: bold; display: inline-block; width:190px;" th:text="${ comment.bookName }"></div>
                         </td>
-                        <td class="align-middle">
-                            <p th:text="${ comment.commentText }"></p>
+                        <td class="align-middle" style="width: 250px;">
+                            <div class="text-truncate" th:text="${ comment.commentText }" style="width: 250px;"></div>
                             <img style="width: 15px" alt="" src="images/likeFull.png">    <span th:text="${ comment.likes }"></span>
                         </td>
-                        <td class="align-middle">
-                            <span id="commentDate" th:text="${ comment.createdTime }" ></span>
-                            <br>
-                            <span id="commentDate" th:text="${ comment.modifiedTime }" ></span>
+                        <td class="align-middle" style="width: 150px;">
+                            <!-- <small id="commentDate" th:text="${ comment.createdTime }" style="display: block;"></small> -->
+                            <small id="commentDate" th:text="${ comment.modifiedTime }" style="display: block;"></small>
                         </td>
                         <td class="align-middle">
                             <button id="btnDelete" class="btn btn-outline-success">수정</button>
@@ -293,27 +292,31 @@
             </table>
             <!-- </div> -->
     
-    <div><!-- 부끄장터 위시리스트 -->
-        <div style="font-weight: bold; font-size: 21px;">부끄장터 찜목록</div>
+    <div style="margin-top: 50px;"><!-- 부끄장터 위시리스트 -->
+        <div style="font-weight: bold; font-size: 21px; border-bottom: 3px solid black;">부끄장터 찜목록</div>
         <table class="table">
             <thead>
-                <tr>
+                <tr style="font-weight: bold; border-bottom: 3px solid black;">
+                    <td>책제목</td>
                     <td>판매글</td>
                     <td>판매자</td>
                     <td>가격</td>
                 </tr>
             </thead>
-            <tbody>
+            <tbody style="border-bottom: 3px solid black;">
                 <tr th:each=" dto : ${ usedBookList } ">
-                    
                     <td>
-                        <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ dto.usedBookId }) }">
-                            <div th:text="${ dto.title }"></div>
+                        <a th:href="@{ /detail?id={bookId} (bookId = ${ dto.bookId})}">
+                            <div class="text-truncate" th:text="${ dto.bookTitle }" style="width: 250px; font-weight: bold;"></div>
                         </a>
                     </td>
-                    <td><div th:text="${ dto.username }"></div></td>
-                    <td><div th:text="|${#numbers.formatInteger(dto.price, 0, 'COMMA')}원|"></div></td>
-                   
+                    <td>
+                        <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ dto.usedBookId }) }">
+                            <div class="text-truncate" th:text="${ dto.title }" style="width: 370px;"></div>
+                        </a>
+                    </td>
+                    <td><div class="text-truncate" th:text="${ dto.username }"></div></td>
+                    <td><div class="text-truncate" th:text="|${#numbers.formatInteger(dto.price, 0, 'COMMA')}원|"></div></td>
                 </tr>
             </tbody>
         </table>
