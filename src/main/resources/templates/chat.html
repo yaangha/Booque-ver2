@@ -128,8 +128,8 @@
                 <!-- 채팅방 리스트  -->
                 <div id="chatList">
                     <table>
-                        <tbody>
-                            <tr id="chatListTr" class="btnChatRoom" th:each="chat : ${ data}" 
+                        <tbody id="chatListTbody">
+                            <tr id="chatListTbody" class="btnChatRoom" th:each="chat : ${ data}" 
                             th:onclick="|location.href='@{/chat?chatRoomId={chatRoomId} (chatRoomId = ${ chat.chatRoomId})}'|"
                             style="cursor:pointer; background-color:none;">
                                 <td style="padding-left:10px; width:20%;">
@@ -145,6 +145,7 @@
                                 </td>
                             </tr>
                         </tbody>
+                        <tbody id="newChatListTbody"></tbody>
                     </table>
                 </div>
                 
