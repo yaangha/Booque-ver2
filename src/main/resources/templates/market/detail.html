@@ -19,7 +19,6 @@
 		#profile {
 			margin-top: 25px;
 			margin-bottom: 25px;
-			padding-bottom: 25px;
 			border-bottom: 1px solid silver;
 		}
 		
@@ -83,7 +82,7 @@
     </div>
             
     <div id="profile"> <!-- profile -->
-    	<a th:href="@{ /market/mypage(id=${ user.id }) }"><!-- 작성자 부끄마켓 개인 페이지로 이동 -->
+    	<a th:href="@{ /market/mypage(userId=${ user.id }) }"><!-- 작성자 부끄마켓 개인 페이지로 이동 -->
             <img style="width:80px; height:80px; display:inline-block; margin-right: 10px;" th:src="${ user.userImage }">
         	<div class="align-middle" style="display: inline-block; padding-right: 20px; margin-right: 30px;">
     	    	<div style="font-weight: bold; font-size:23px; display:inline-block" th:text="${ user.nickName + '(' + user.username + ')' }"></div>
@@ -106,7 +105,7 @@
         
     	<div class="align-middle float-end" style="display: inline-block;" th:if="${ user.username } != ${ #authentication.name }">
 	    	 <!-- 채팅하기 -->
-            <button id="startChat" type="button" class=" btn btn-primary" style="width:120px; height:40px; margin-left: 20px;">채 팅 하 기</button>
+            <button id="startChat" type="button" class=" btn btn-primary" style="width:120px; height:40px; margin-left: 20px;"><i class="bi bi-chat" style="margin-right:10px;"></i><span> 채팅보내기</span></button>
             <input id="sellerId" name="sellerId" type="hidden" th:value="${ user.id }" />
     	</div>
         
@@ -128,45 +127,44 @@
                     <input id="usedBookId" name="usedBookId" type="hidden" th:value="${ usedBook.id }" />
             </div>
     	</div>
-    </div>
-    
-    <!-- 작성자 블로그로 연결하기 -->
-    <div class="row bg-dark p-2 text-dark bg-opacity-10 rounded-4" style="height: 100px; margin-bottom: 30px; overflow: hidden; padding-right: none;">
-        <div class="col-1" style="margin: auto;">
-            <i class="bi bi-bookmarks-fill" style="font-size: 25px; margin: 30px;"></i>
-        </div>
-        <div class="col" style="margin: auto;"><!-- 블로그 목록 1개(임시) -->
-            <div th:if="${ thisBookPost == null }"><!-- 해당 책 리뷰가 없을시 최신 리뷰 보여주기 -->
-                <div th:if="${ latestPost == null }" style="margin: auto; font-size: 18px; font-weight: bold;"><span th:text="${ '[' + user.username + ']' }"></span>님이 작성하신 리뷰가 아직 없어요!</div>
-                <div th:unless="${ latestPost == null }">
-                    <div style="color: gray; font-size: small;"><span th:text="${ user.username }"></span>님의 최신 리뷰 ↓</div>
-                    <a th:href="@{ /post/detail(postId=${ latestPost.postId }, bookId=${ book.bookId }, username=${ user.username }) }">
-                    <div class="text-truncate" style="font-weight: bold; font-size: 21px;" th:text="${ latestPost.title }"></div>
-                    <!-- <div class="text-truncate" th:text="${ latestPost.postContent }"></div> -->
+        
+        <!-- 작성자 블로그로 연결하기 -->
+        <div class="row bg-dark p-2 text-dark bg-opacity-10 rounded-4" style="height: 100px; margin: 15px 0; overflow: hidden; padding-right: none;">
+            <div class="col-1" style="margin: auto;">
+                <i class="bi bi-bookmarks-fill" style="font-size: 25px; margin: 30px;"></i>
+            </div>
+            <div class="col" style="margin: auto;"><!-- 블로그 목록 1개(임시) -->
+                <div th:if="${ thisBookPost == null }"><!-- 해당 책 리뷰가 없을시 최신 리뷰 보여주기 -->
+                    <div th:if="${ latestPost == null }" style="margin: auto; font-size: 18px; font-weight: bold;"><span th:text="${ '[' + user.username + ']' }"></span>님이 작성하신 리뷰가 아직 없어요!</div>
+                    <div th:unless="${ latestPost == null }">
+                        <div style="color: gray; font-size: small;"><span th:text="${ user.username }"></span>님의 최신 리뷰 ↓</div>
+                        <a th:href="@{ /post/detail(postId=${ latestPost.postId }, bookId=${ book.bookId }, username=${ user.username }) }">
+                        <div class="text-truncate" style="font-weight: bold; font-size: 21px;" th:text="${ latestPost.title }"></div>
+                        <!-- <div class="text-truncate" th:text="${ latestPost.postContent }"></div> -->
+                        <div style="font-size: small; color: gray;">
+                            <i class="bi bi-clock"></i><span th:text="${ ' ' + #temporals.format(latestPost.modifiedTime , 'yyyy/MM/dd HH:mm') }"></span>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                <div th:unless="${ thisBookPost == null }"><!-- 해당 리뷰가 있을시 보여주기 -->
+                    <div style="color: gray; font-size: small;"><span th:text="${ user.username }"></span>님의 <span th:text="${ '<' + book.bookName + '>' }" style="font-weight: bold;"></span> 리뷰 ↓</div>
+                    <a th:href="@{ /post/detail(postId=${ thisBookPost.postId }, bookId=${ book.bookId }, username=${ user.username }) }">
+                    <div class="text-truncate" style="font-weight: bold; font-size: 21px;" th:text="${ thisBookPost.title }"></div>
+                    <!-- <div class="text-truncate" th:text="${ thisBookPost.postContent }"></div> -->
                     <div style="font-size: small; color: gray;">
-                        <i class="bi bi-clock"></i><span th:text="${ ' ' + #temporals.format(latestPost.modifiedTime , 'yyyy/MM/dd HH:mm') }"></span>
+                        <i class="bi bi-clock"></i><span th:text="${ ' ' + #temporals.format(thisBookPost.modifiedTime , 'yyyy/MM/dd HH:mm') }"></span>
                     </div>
                     </a>
                 </div>
             </div>
-            <div th:unless="${ thisBookPost == null }"><!-- 해당 리뷰가 있을시 보여주기 -->
-                <div style="color: gray; font-size: small;"><span th:text="${ user.username }"></span>님의 <span th:text="${ '<' + book.bookName + '>' }" style="font-weight: bold;"></span> 리뷰 ↓</div>
-                <a th:href="@{ /post/detail(postId=${ thisBookPost.postId }, bookId=${ book.bookId }, username=${ user.username }) }">
-                <div class="text-truncate" style="font-weight: bold; font-size: 21px;" th:text="${ thisBookPost.title }"></div>
-                <!-- <div class="text-truncate" th:text="${ thisBookPost.postContent }"></div> -->
-                <div style="font-size: small; color: gray;">
-                    <i class="bi bi-clock"></i><span th:text="${ ' ' + #temporals.format(thisBookPost.modifiedTime , 'yyyy/MM/dd HH:mm') }"></span>
-                </div>
-                </a>
+            <div class="col-4" style="margin: auto; text-align: right;">
+                <a th:href="@{ /post/list(postWriter=${ user.username }) }" class="btn btn-dark" style="border: 1px solid black; padding: 16px 18px; margin:16px;"><span th:text="${ '[' + user.nickName + '] 님의 블로그 구경하기' }"></span>
+                <i class="bi bi-house-door"></i></a>
             </div>
-        </div>
-        <div class="col-3" style="margin: auto;">
-            <a th:href="@{ /post/list(postWriter=${ user.username }) }" class="btn btn-dark" style="border: 1px solid black; padding: 16px 18px; margin:16px;"><span th:text="${ '[' + user.nickName + ']' }"></span>님의 블로그 구경하기
-            <i class="bi bi-house-door"></i></a>
-        </div>
-    </a>
-    </div><!-- 작성자 블로그 end -->
-    
+        </a>
+        </div><!-- 작성자 블로그 end -->
+    </div>
     
     <div class="row" style="margin-bottom: 30px;"> <!-- content -->        
         <div class="col-8"> <!-- content left -->

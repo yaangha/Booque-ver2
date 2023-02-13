@@ -19,6 +19,12 @@
         * {
             font-family: 'NanumBarunGothic';        
         }
+        
+        a {
+            text-decoration: none;
+            color: black;
+        }
+        
     </style>
 </head>
 <body>
@@ -286,6 +292,32 @@
                 </tbody>
             </table>
             <!-- </div> -->
+    
+    <div><!-- 부끄장터 위시리스트 -->
+        <div style="font-weight: bold; font-size: 21px;">부끄장터 찜목록</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>판매글</td>
+                    <td>판매자</td>
+                    <td>가격</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each=" dto : ${ usedBookList } ">
+                    
+                    <td>
+                        <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ dto.usedBookId }) }">
+                            <div th:text="${ dto.title }"></div>
+                        </a>
+                    </td>
+                    <td><div th:text="${ dto.username }"></div></td>
+                    <td><div th:text="|${#numbers.formatInteger(dto.price, 0, 'COMMA')}원|"></div></td>
+                   
+                </tr>
+            </tbody>
+        </table>
+    </div><!-- 부끄장터 위시리스트 end -->
     
     </div>  
     
