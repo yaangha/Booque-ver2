@@ -34,7 +34,7 @@ public class ChatAssist {
     private Integer chatRoomId;
     
     @Column
-    private Integer userId; 
+    private String nickName; 
     
     @Column
     private Integer readChk; // 읽었으면 0, 안읽었으면 1
@@ -54,8 +54,8 @@ public class ChatAssist {
         return this;
     }
     
-    public ChatAssist updateReadChk(Integer userId, Integer readChk, Integer readCount) {
-        this.userId = userId;
+    public ChatAssist updateReadChk(String nickName, Integer readChk, Integer readCount) {
+        this.nickName = nickName;
         this.readChk = readChk;
         this.readCount = readCount;
         return this;

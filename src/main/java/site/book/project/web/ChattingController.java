@@ -8,10 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +24,12 @@ import site.book.project.domain.Chat;
 import site.book.project.domain.Chatting;
 import site.book.project.domain.UserChatLog;
 import site.book.project.dto.ChatReadDto;
+import site.book.project.dto.UserRegisterDto;
+import site.book.project.dto.UserSecurityDto;
+import site.book.project.repository.ChatRepository;
+import site.book.project.repository.UserRepository;
 import site.book.project.service.ChatService;
+import site.book.project.service.UserService;
 
 @RestController
 @Slf4j
@@ -33,6 +41,11 @@ public class ChattingController {
     
     @Autowired
     private ChatService chatService;
+    
+    @Autowired
+    private ChatRepository chatRepository;
+    @Autowired
+    private UserRepository userRepository;
     
     // 메시지 컨트롤러
 //    @MessageMapping("/chat/{userName}")
@@ -57,7 +70,17 @@ public class ChattingController {
         simpMessagingTemplate.convertAndSend(url, new ChatReadDto(dto.getSender(), dto.getMessage(), dto.getSendTime())); 
 
     }
-
+    
+    // (홍찬) 메세지 알림을 위해 읽음 푸시
+    @MessageMapping("/chat/read/{chatRoomId}")
+    public void notification(@DestinationVariable Integer chatRoomId, ChatReadDto dto) throws IOException {
+        String nickName = dto.getSender();
+        log.info("@@@@@@{},{}",chatRoomId,nickName);
+        chatService.updateReadChat(nickName, chatRoomId, 1);
+        String url2 = "/user/" + chatRoomId + "/queue/notification/" + nickName;
+        log.info(url2);
+        simpMessagingTemplate.convertAndSend(url2, nickName);
+    }
     
     // 채팅 로그 사용자 등록
     @CrossOrigin
@@ -82,11 +105,18 @@ public class ChattingController {
         return ResponseEntity.ok().build();
     }
     
-    @GetMapping("/onlineChk")
-    public boolean isExists(String nickName) {
-        boolean isexi = UserChatLog.getInstance().getUsers().contains(nickName);
-        System.out.println(UserChatLog.getInstance().getUsers());
-        return isexi;
+    // 채팅하고 있는 상대가 웹소켓에 연결중인지 확인
+    @PostMapping("/onlineChk")
+    public Integer isExists(String nickName, Integer chatRoomId) {
+        log.info("isExists{},{}",nickName,chatRoomId);
+        boolean isexist = UserChatLog.getInstance().getUsers().contains(nickName);
+        if (isexist) {
+            log.info("상대방 상태: online입니다.");
+            return 3; // TODO
+        } else {
+            log.info("상대방 상태: offline입니다.");
+            return chatService.updateReadChat(nickName, chatRoomId, 0);
+        }
     }
 //    // 채팅창 가져오기
 //    @CrossOrigin

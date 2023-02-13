@@ -31,6 +31,7 @@ import site.book.project.repository.ChatRepository;
 import site.book.project.repository.UsedBookImageRepository;
 import site.book.project.repository.UsedBookRepository;
 import site.book.project.repository.UserRepository;
+import site.book.project.web.ChatController;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -175,57 +176,53 @@ public class ChatService {
         } */
         
     }
-//    
-//    // (홍찬) 마지막 채팅 가져오기
-//    public String readLastThreeLines (Chat chat) throws IOException {
-//        // ChatReadDto recentChat = new ChatReadDto();
-//        String recentMessage = "";
-//        
-//        ChatAssist dto = chatAssistRepository.findByChatRoomId(chat.getChatRoomId());
-//        dto.setModifiedTime(chat.getModifiedTime());
-//        
-//        // fileName 컬럼을 통해 파일의 경로 찾기, 파일 읽기
-//        String pathName = fileUploadPath + chat.getFileName();
-//        
-//        // 1. RandomAcessFile, 마지막 라인을 담을 String, 읽을 라인 수 "r" 읽기모드
-//        RandomAccessFile chatResourceFile = new RandomAccessFile(pathName, "r");
-//        int lineCount = 2; // 마지막 2줄을 읽겠다는 내용!
-//
-//        // 2. 전체 파일 길이
-//        long fileLength = chatResourceFile.length();
-//
-//        // 3. 포인터를 이용하여 뒤에서부터 앞으로 데이터를 읽는다.
-//        for (long pointer = fileLength - 2; pointer >= 0; pointer--) {
-//
-//            // 3.1. pointer를 읽을 글자 앞으로 옮긴다.
-//            chatResourceFile.seek(pointer);
-//
-//            // 3.2. pointer 위치의 글자를 읽는다.
-//            char c = (char) chatResourceFile.read();
-//            
-//            // 3.3. 줄바꿈이 2번(lineCount) 나타나면 더 이상 글자를 읽지 않는다.
-//            if (c == '\n') {
-//                lineCount--;
-//                if (lineCount == 0) {
-//                    // 원하는 pointer가 위치해 있을 때 "UTF-8"이라는 변환을 한 후 그 줄의 readline으로 읽어옴.
-//                    recentMessage = new String(chatResourceFile.readLine().getBytes("ISO-8859-1"),"UTF-8");
-//                    break;
-//                }
-//            }
-//            
-//            // 3.4. 마지막 채팅을 db에 저장
-//            dto.setLastChat(recentMessage);
-//        }
-//        chatResourceFile.close();
-//        // 4. 결과 출력
-//        //System.out.println(lastLine);
-//        return recentMessage;
-//    }
+    
+    // (홍찬) 마지막 채팅 가져오기
+    public String readLastThreeLines (Chat chat) throws IOException {
+        // ChatReadDto recentChat = new ChatReadDto();
+        String recentMessage = "";
+        
+        ChatAssist dto = chatAssistRepository.findByChatRoomId(chat.getChatRoomId());
+        dto.setModifiedTime(chat.getModifiedTime());
+        
+        // fileName 컬럼을 통해 파일의 경로 찾기, 파일 읽기
+        String pathName = fileUploadPath + chat.getFileName();
+        
+        // 1. RandomAcessFile, 마지막 라인을 담을 String, 읽을 라인 수 "r" 읽기모드
+        RandomAccessFile chatResourceFile = new RandomAccessFile(pathName, "r");
+        int lineCount = 2; // 마지막 2줄을 읽겠다는 내용!
 
+        // 2. 전체 파일 길이
+        long fileLength = chatResourceFile.length();
 
-//    private String toConvert (String Unicodestr) throws UnsupportedEncodingException {
-//        return new String (Unicodestr.getBytes("8859_1"),"KSC5601");
-//        }
+        // 3. 포인터를 이용하여 뒤에서부터 앞으로 데이터를 읽는다.
+        for (long pointer = fileLength - 2; pointer >= 0; pointer--) {
+
+            // 3.1. pointer를 읽을 글자 앞으로 옮긴다.
+            chatResourceFile.seek(pointer);
+
+            // 3.2. pointer 위치의 글자를 읽는다.
+            char c = (char) chatResourceFile.read();
+            
+            // 3.3. 줄바꿈이 2번(lineCount) 나타나면 더 이상 글자를 읽지 않는다.
+            if (c == '\n') {
+                lineCount--;
+                if (lineCount == 0) {
+                    // 원하는 pointer가 위치해 있을 때 "UTF-8"이라는 변환을 한 후 그 줄의 readline으로 읽어옴.
+                    recentMessage = new String(chatResourceFile.readLine().getBytes("ISO-8859-1"),"UTF-8");
+                    break;
+                }
+            }
+            
+            // 3.4. 마지막 채팅을 db에 저장
+            dto.setLastChat(recentMessage);
+        }
+        chatResourceFile.close();
+        // 4. 결과 출력
+        //System.out.println(lastLine);
+        return recentMessage;
+    }
+
     
     
     // 내가 (판매자 혹은 구매자로) 포함된 모든 채팅방 불러와 dto에 데이터 추가
@@ -240,23 +237,30 @@ public class ChatService {
         for (Chat chat : myChats) {
             
             // 채팅 상대 정보 불러 오기
+            log.info("loginUserId={}, sellerID={}", loginUserId, chat.getSellerId());
             
-            if (loginUserId == chat.getSellerId()) {    // 내가 판매자면
+            if (loginUserId.equals(chat.getSellerId())) {    // 내가 판매자면
                 chatWith = userRepository.findById(chat.getBuyerId()).get();
+                log.info("나는 판매자임 {}");
             } else {   // 내가 구매자면
                 chatWith = userRepository.findById(chat.getSellerId()).get();
+                log.info("나는 구매자 {}, {}", loginUserId, chat.getSellerId());
             }
             
+            log.info("누구랑 채팅하나?? {}",chatWith);
             // 중고판매글 정보 불러 오기
             Integer usedBookId = chat.getUsedBookId();
             UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
             List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(usedBookId);
             
             ChatListDto dto = ChatListDto.builder()
-                    .chatRoomId(chat.getChatRoomId()).modifiedTime(chat.getModifiedTime())
-                    .usedBookId(usedBookId).usedBookImage(imgList.get(0).getFileName()).usedBookTitle(usedBook.getTitle()).price(usedBook.getPrice())
+                    .chatRoomId(chat.getChatRoomId()).modifiedTime(ChatController.convertTime(chat.getModifiedTime()))
+                    .usedBookId(usedBookId).usedBookImage(imgList.get(0).getFileName()).price(usedBook.getPrice())
                     .status(usedBook.getStatus())
                     .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
+                    .usedTitle(usedBook.getTitle())
+                    .usedBookTitle(usedBook.getBookTitle())
+                    .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel()).chatWithId(chatWith.getId())
                     .build();
             // 최신 메세지 내용 불러 오기(채팅방 만들어지고 채팅이 하나도 없을 때)
             if (chat.getCreatedTime().equals(chat.getModifiedTime())) {
@@ -273,5 +277,27 @@ public class ChatService {
         }
         return list;
         
+    }
+    
+    // 안읽은 메세지 저장(안읽음=1, 읽음=0)
+    public Integer updateReadChat(String nickName, Integer chatRoomId, Integer unread) {
+        ChatAssist entity = chatAssistRepository.findByChatRoomId(chatRoomId);
+        // 메세지를 읽은 경우
+        if (unread == 1) { // 읽었을 경우 -> DB 사용 x(마지막 메세지가 저장될 때까지)
+            return 0;
+        }
+        // 메세지를 안읽은 경우
+        if (entity.getReadCount()!=null) { // 안읽은 메세지 개수 갱신하는 경우
+            if (nickName.equals(entity.getNickName())) { // 닉네임이 같으면 안읽음개수 추가
+                entity.updateReadChk(nickName, unread, entity.getReadCount()+1);
+                return 1;
+            } else { // 닉네임이 다르면 유저 갱신후 안읽음 1 추가(닉네임이 다를 때: 처음 만들어지는 경우)
+                entity.updateReadChk(nickName, unread, 1);
+                return 0; // 안읽음이 역전되었으니 상대방 입장에서 읽음.
+            }
+        } else { // 처음 만들어지는 경우
+            entity.updateReadChk(nickName, unread, 1);
+            return 1;
+        }
     }
 }
