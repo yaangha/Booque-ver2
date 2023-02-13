@@ -3,7 +3,7 @@
  */
  
 window.addEventListener('DOMContentLoaded', () => {
-    
+
         var stompClient = null;
         var sender = $('#loginUser').val();
         var chatRoomId = $('#chatRoomId').val();
@@ -40,7 +40,13 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         // 보내기 버튼 클릭시 실행되는 메서드
         const btnSend = document.querySelector('#btnSend');
-        btnSend.addEventListener('click', send);
+        btnSend.addEventListener('click', function(){
+		
+	
+		
+		send()
+		
+})
         
         const date = new Date();
             
@@ -58,7 +64,22 @@ window.addEventListener('DOMContentLoaded', () => {
                 'sendTime': getCurrentTime()
                 });
             $('#message').val("");
+            
+            
+            // 보내기 버튼 누를 때마다 채팅 리스트 변동 
+            console.log('보내기 버튼')
+				sendChatList(chatRoomId)	
         }
+        
+        function sendChatList(chatRoomId){
+            axios.get('/chat/api/list?chatRoomId='+ chatRoomId)
+            	.then(response => {
+            console.log('보내기 ')
+					console.log(response.data)
+					})
+	
+	
+}
         
         // 메시지 입력 창에서 Enter키가 보내기와 연동되도록 설정
         var inputMessage = document.getElementById('message'); 
@@ -138,6 +159,14 @@ window.addEventListener('DOMContentLoaded', () => {
         function showBroadcastMessage(message) {
             $("#content").html($("#content").html() + message);
         }
+        
+        
+        const btnSend2 = document.querySelector('#btnSend')
+        
+        
+        
+        
+        
         
 
 });

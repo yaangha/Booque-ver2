@@ -221,4 +221,11 @@ public class ChatController {
         return ago;
         
     }
+    
+    @GetMapping("/chat/api/list")
+    @ResponseBody
+    public List<ChatListDto> chatlist(Integer chatRoomId){
+    	log.info("채팅창 리스트 바꿔야지ㅣ이ㅣ잉{}", chatRoomId);
+    	return null;
+    }
 }
