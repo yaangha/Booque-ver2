@@ -13,47 +13,38 @@ btnSubmit.addEventListener('click', function () {
     const price = document.querySelector('#price').value;
     const contents = document.querySelector('#contents').value;
     
+    const bookId = document.querySelector('#book-Id').value;
+    const usedBookId = document.querySelector('#usedBook-Id').value;
+    
     if (sample3_address == '' || title == '' || price == '' || contents == '') {
         alert('필수항목을 모두 채워주세요!');
         return;
     }
-    
-    
-    
-    
+   
     const result = confirm('등록하시겠습니까?');
     if (result) {
         formCreate.action = '/market/create';
         formCreate.method = 'post';
         formCreate.submit();
         
-        // checkKeyword();
+        checkBookId(bookId,usedBookId);
     }
     
     
 });
+        //(예진) 새 포스트 등록시 생성해야 할 노티스 있는지 체크
+        //(해당 bookId 알림 받기 한 유저가 있다면 노티스 생성)
+       function checkBookId(bookId,usedBookId) {
+           
+        const data = { bookId : bookId, usedBookId : usedBookId }
+      
+        axios
+        .post('/notice/check', data)
+        .then(response => {  alert('성공') })
+        .catch(err => { alert(err) });
     
-   // function checkKeyword(){
-   //    const contents = document.querySelector('#contents').value;
-   //     const usedBookId = document.querySelector('#usedBookId').value;
-   //     
-   //     const data ={
-   //          contents : contents,
-   //          usedBookId : usedBookId
-   //     }
-   //      
-   //     console.log(체크데이터);
-   //    console.log(data);
-   //     axios
-   //      .get('/notice/check', data)
-   //      .then(response => { newKeywordNotice(response.data) } )
-   //       .catch(err => { console.log(err); });
-   // };
-    
-    
-    
-    
-    
+       };
+
 
     const uploadResults = document.querySelector('#uploadResults');
     
@@ -221,18 +212,31 @@ btnSubmit.addEventListener('click', function () {
                     
                     // Map을 통해서 리턴하면 여러개의 타입을 받을 수 있음. key 값만 주면 됨.
                     console.log(response.data.book)
+                    console.log(response.data.book.bookId)
                     console.log(response.data.usedBookId)
                     bookSelect(response.data.book, response.data.usedBookId)
-                        
+                    
+                    check(response.data.book.bookId, response.data.usedBookId)   
                 })
             
         })
     })
     
-
-        
-        
+      
     }
+    
+    // (예진)
+    function check(bookId, usedBookId) {
+          console.log(bookId);
+          console.log(usedBookId);
+     
+        const divBookIds = document.querySelector('#divBookIds')
+        let s ='';
+         s ='<input type="hidden" id="book-Id" value="'+bookId+'" /><input type="hidden" id="usedBook-Id" value="'+usedBookId+'" />';
+            
+            divBookIds.innerHTML = s;
+        
+    };
     
     /** 판매할 책 선택 후 html에서 보여줄 선택된 책의 정보!
         c는 book정보, a는 UsedBook의 PK

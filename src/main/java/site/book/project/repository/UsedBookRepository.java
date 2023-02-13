@@ -86,7 +86,10 @@ public interface UsedBookRepository extends JpaRepository<UsedBook, Integer> {
 
     // (하은) userId, storage로 임시저장 목록 찾기
     List<UsedBook> findByUserIdOrderByModifiedTimeDesc(Integer id);
+
+ 
     
+
     
     // select * from USEDBOOK ub inner join USEDBOOKPOST p
     // on ub.id = p.usedBookId 

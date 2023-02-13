@@ -36,7 +36,7 @@ public class UsedBookService {
 	private final UsedBookPostRepository postRepository;
 	private final UsedBookImageRepository imgRepository;
 	private final UsedBookWishRepository usedBookWishRepository;
-	private final UsedBookPostRepository usedBookPostRepository;
+
 	
     @Value("${com.example.upload.path}")
     private String uploadPath;
@@ -229,6 +229,13 @@ public class UsedBookService {
         
         return usedBookList;
     }
+
+    public UsedBook read(Integer usedBookId) {
+        UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
+        return usedBook;
+    }
+
+   
     
     
     

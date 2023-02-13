@@ -2,11 +2,13 @@ package site.book.project.web;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
@@ -43,17 +45,17 @@ public class NoticeController {
 //       //return "redirect:/post/detail?postId=" + n.getPostId()+"&bookId="+ n.getBookId();
 //    }
 
-//    
-//    // (예진) 알림받을 키워드 등록
-//    @PostMapping("/market/register/subsKeyword")
-//    public String registerSubsKeyword(String subsKeyword, @AuthenticationPrincipal UserSecurityDto dto) {
-//        
-//       User user = userService.read(dto.getId());
-//       user.setSubsKeyword(subsKeyword);
-//    
-//       userRepository.save(user);
-//        
-//       return  "redirect:/market/main";
-//    }
+   
+    
+    // (예진) 알림받을 BookId 등록
+    @GetMapping("/register/notice")
+    public String registerBookId(Integer bookId, @AuthenticationPrincipal UserSecurityDto dto) {
+        
+       User user = userService.read(dto.getId());
+       user.setNoticeBookId(bookId);
+       userRepository.save(user);
+        
+       return  "redirect:/market/main";
+    }
     
 }
