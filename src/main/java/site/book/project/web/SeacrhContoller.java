@@ -45,15 +45,24 @@ public class SeacrhContoller {
     private final BookHitsService bookHitsService;
     
     @GetMapping("")
-    public String search() {
+    public String search(@AuthenticationPrincipal UserSecurityDto userSecurityDto, Model model) {
         log.info("MainSearch()");
+        if(userSecurityDto != null) { // (예진) 알림 리스트 불러올 uId
+            model.addAttribute("uId", userSecurityDto.getId());
+        }
+        
         return "/search";
     } 
     
     // 검색 기능 - 검색 결과 정렬(type, keyword를 가지고 다시 order by ?, ?부분만 원하는 order에 따라 바꿔서 검색
     @GetMapping("/s")
-    public String search(SearchQueryDataDto dto, Model model, @PageableDefault(size = 5) Pageable pageable) {
+    public String search(@AuthenticationPrincipal UserSecurityDto userSecurityDto ,SearchQueryDataDto dto, Model model, @PageableDefault(size = 5) Pageable pageable) {
         log.info("테스트~~~ 검색 다쉬(type={}, keyword={}, order={})", dto.getType(), dto.getKeyword(), dto.getOrder());
+        
+        if(userSecurityDto != null) { // (예진) 알림 리스트 불러올 uId
+            model.addAttribute("uId", userSecurityDto.getId());
+        }
+        
         String type = dto.getType();
         String keyword = dto.getKeyword();
         String order = dto.getOrder();

@@ -58,6 +58,7 @@ public class OrderController {
           model.addAttribute("order", order);
           model.addAttribute("orderNo", orderNo);
           model.addAttribute("total", total);
+          model.addAttribute("uId", userSecurityDto.getId());
           
           return "book/order";
       }

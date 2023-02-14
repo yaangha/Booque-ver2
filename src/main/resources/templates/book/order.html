@@ -24,7 +24,7 @@
 <body>
 
     <div class="w-100 container"><!-- 메인 블록 start -->
-    
+     <input type="hidden" id="uId" th:value="${ uId }"/>
         <!-- 진행 순서 보여주기 -->
         <ul class="h5 list-group list-group-horizontal justify-content-center">
             <li class="list-group-item border-0" style="color:gray;">01 CART</li>
@@ -164,6 +164,7 @@
     <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnCloseLayer" style="cursor:pointer;position:absolute;right:-3px;top:-3px;z-index:1" onclick="closeDaumPostcode()" alt="닫기 버튼">
     </div>
     
+ <script th:src="@{ /js/notice.js }"></script>
     <!-- (하은) 주소 API -->
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>

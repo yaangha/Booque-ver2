@@ -56,8 +56,14 @@ public class PostController {
     public String list(@AuthenticationPrincipal UserSecurityDto userSecurityDto, String postWriter, Model model) {
         log.info("list()");
 //        bookService.readPostCountByAllBookId();
-     
-     
+       
+        
+        if(userSecurityDto != null) { // (예진) 알림 리스트 불러올 uId
+            Integer uId = userSecurityDto.getId();
+            model.addAttribute("uId", uId);
+        }
+        
+        
         User user = null; 
         List<PostListDto> postList = new ArrayList<>();
         
@@ -69,7 +75,7 @@ public class PostController {
             
                
         } else if (postWriter == null) {
-            
+         
             Integer userId = userSecurityDto.getId();
             user = userService.read(userId);
             log.info("id= {}",userId);
@@ -78,6 +84,7 @@ public class PostController {
         
               
         }  else if(userSecurityDto.getUsername().equals(postWriter)) {
+           
             
             Integer userId = userSecurityDto.getId();
              user = userService.read(userId);
@@ -87,6 +94,8 @@ public class PostController {
         
         
         } else if(!userSecurityDto.getUsername().equals(postWriter)) {
+         
+            
             user = userService.read(postWriter);
             Integer userId = user.getId();
             
@@ -146,8 +155,11 @@ public class PostController {
     @GetMapping({ "/detail", "/modify" })
     public void detail(@AuthenticationPrincipal UserSecurityDto userDto,
             Integer postId, String username ,Integer bookId, Integer replyId, Integer noticeId, Model model) {
-        log.info("detail(postId= {}, bookId={}, postWriter={})", postId, bookId, username);
-        log.info("리플아이디???={}",replyId);
+        
+        if(userDto != null) { // (예진) 알림 리스트 불러올 uId
+            Integer uId = userDto.getId();
+            model.addAttribute("uId", uId);
+        }
         
         List<PostReadDto> recomList = postService.postRecomm(username, bookId);  // 1)
         

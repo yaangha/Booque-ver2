@@ -60,7 +60,7 @@ public class MyPageController {
         model.addAttribute("wishBookInfo", wishBookInfo);
         model.addAttribute("orderList", orderList);
         model.addAttribute("user", user);
-        
+        model.addAttribute("uId", u.getId());
         return "/book/myPage";
     }
     

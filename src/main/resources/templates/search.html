@@ -21,7 +21,7 @@
 
     <hr/>
     <div class="container" style="width:75%; padding-right:150px;" > <!-- container-fluid : START -->
-    
+         <input type="hidden" id="uId" th:value="${ uId }"/>
         <div>총 검색된 결과 : <span th:text="${searchList.totalElements}"></span></div>
         <!-- 검색 상단바 START -->
         <div class="selectRearrange d-inline-flex px-2 my-1 border rounded text-secondary" style="padding: 10px; padding-left: 15px;" align ="left"> 
@@ -130,7 +130,7 @@
 </div> <!-- container-fluid : END -->
 <th:block layout:fragment="script" th:inline="javascript">
     
-    
+     <script th:src="@{ /js/notice.js }"></script>
     <!-- bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>

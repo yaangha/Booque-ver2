@@ -54,6 +54,7 @@ public class CartController {
         model.addAttribute("user", user);
         model.addAttribute("total", total);
         model.addAttribute("cartList", cartList);
+        model.addAttribute("uId", userSecurityDto.getId());
 
         return "book/cart";
         

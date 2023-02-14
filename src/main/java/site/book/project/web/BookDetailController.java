@@ -48,9 +48,13 @@ public class BookDetailController {
 	private final UsedBookService usedBookService;
     
     @GetMapping("/detail")
-    public String detail(Integer id, 
+    public String detail(Integer id, @AuthenticationPrincipal UserSecurityDto userSecurityDto,
 //            Integer userId,     // 유저 정보도 띄우기( [  ] 님이 보고 계신 책은...)
             Model model) {
+        
+        Integer uId = userSecurityDto.getId();  //알림 라스트 불러올 유저아이디
+        model.addAttribute("uId", uId);
+        
         
         Book book = bookService.read(id);
         BookIntro bookIntro = bookIntroService.introByIsbn(book.getIsbn());
@@ -143,10 +147,10 @@ public class BookDetailController {
     public String create(@AuthenticationPrincipal UserSecurityDto userSecurityDto, Integer id, Model model) {
         log.info("책 상세(bookId={})",id);
     
-          Integer userId = userSecurityDto.getId();
-          log.info("userId= {}",userId);
+          Integer uId = userSecurityDto.getId();
+          model.addAttribute("uId", uId);
 
-          User user = userService.read(userId);
+          User user = userService.read(uId);
           model.addAttribute("user", user);
           
           Book book = bookService.read(id);

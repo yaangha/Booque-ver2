@@ -116,8 +116,8 @@ public class HomeController {
            model.addAttribute("nick", nick); 
            
            // (예진) 알림 리스트 불러오기위해 userId
-           Integer userId = userSecurityDto.getId();
-           model.addAttribute("userId", userId); 
+           Integer uId = userSecurityDto.getId();
+           model.addAttribute("uId", uId); 
         }
         
         

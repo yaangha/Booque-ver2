@@ -72,7 +72,7 @@
   
 </head>
 <body>
-    
+     <input type="hidden" id="uId" th:value="${ uId }"/>
     <div class="w-70 container">
     <!-- usedBook에 저장되이미지 -->
     <div id="uploadResults" class="container-fluid d-flex" style="flex-wrap: wrap;">
@@ -219,6 +219,7 @@
     <!-- (하은) 주소 API -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script th:src="@{ /js/imgCreate2.js }"></script>
+ <script th:src="@{ /js/notice.js }"></script>
 <script>
 
 

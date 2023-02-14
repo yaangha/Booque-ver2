@@ -74,6 +74,7 @@
 </head>
 <body>
 
+ <input type="hidden" id="uId" th:value="${ uId }"/>
         <!-- 도서 간단 정보 및 장바구니, 구매하기 버튼 블록 -->
         <div class="w-50 container">
             <div class="row my-5">
@@ -312,6 +313,7 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script th:inline="javascript">// 로그인 유저 정보 넣을 예정</script>
         <script th:src="@{ /js/comment.js }"></script>
+         <script th:src="@{ /js/notice.js }"></script>
 
         <!-- choi -->
         <script th:src="@{ /js/bookDetailPost.js }"></script>

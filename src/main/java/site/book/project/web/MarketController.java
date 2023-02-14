@@ -104,7 +104,7 @@ public class MarketController {
         List<MarketCreateDto> list = mainList(usedBookList);
 
         if(userDto != null) {
-            model.addAttribute("userId", userDto.getId());       
+            model.addAttribute("uId", userDto.getId());       
         }
         
         
@@ -116,7 +116,8 @@ public class MarketController {
 
     @GetMapping("/create") // /market/create 중고판매글 작성 페이지 이동
     public void create(@AuthenticationPrincipal UserSecurityDto userDto, Model model) {
-       
+        
+        model.addAttribute("uId", userDto.getId());
     }
     
     @PostMapping("/create")
@@ -217,6 +218,7 @@ public class MarketController {
         // userId, usedBookId가 있으니
         if(userDto != null) {
             wish = usedBookWishRepository.findByUserIdAndUsedBookId(userDto.getId(), usedBookId);
+            model.addAttribute("uId", userDto.getId());
         }
 
         // (하은) 이미지 넘기기 -> 메인 1개 + 나머지 리스트
@@ -324,6 +326,8 @@ public class MarketController {
     public void mypage(Integer userId, @AuthenticationPrincipal UserSecurityDto dto, Model model) {
         
     	Integer userId2 = dto.getId();
+    	model.addAttribute("uId", userId2);
+    	
     	System.out.println(userId2);
     	User user=null;
     	List<UsedBook> usedBook = null;
@@ -372,7 +376,10 @@ public class MarketController {
     }
     
     @GetMapping("/modify")
-    public void modify(Integer usedBookId, Model model) {
+    public void modify(Integer usedBookId, Model model, @AuthenticationPrincipal UserSecurityDto userSecurityDto) {
+        
+        model.addAttribute("uId", userSecurityDto.getId());
+        
         UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
         UsedBookPost usedBookPost = usedBookPostRepository.findByUsedBookId(usedBookId);   
         Book book = bookRepository.findById(usedBook.getBookId()).get();
@@ -425,7 +432,8 @@ public class MarketController {
         List<MarketCreateDto> list = mainList(takeList);
         
         if(userDto != null) {
-            model.addAttribute("userNickname", userDto.getNickName());       
+            model.addAttribute("userNickname", userDto.getNickName());    
+            model.addAttribute("uId", userDto.getId());
         }
         
         // (예진) 키워드 포함된 책 제목 => 이런 중고책 찾으세요? 
