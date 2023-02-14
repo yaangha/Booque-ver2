@@ -18,6 +18,10 @@ public interface UsedBookRepository extends JpaRepository<UsedBook, Integer> {
     Optional<UsedBook> findById(Integer userId);
     List<UsedBook> findByUserId(Integer userId);
     
+    /* (정혁) 임시저장글 뺴고 불러오기 시도!
+    @Query("select u.usedBookId from USEDBOOKPOST u where storage = 1")
+    List<UsedBook> selectUsedBookByStorage(@Param(value="userId") Integer userId);
+    */
 
     @Query("select u.usedBookId from USEDBOOKWISH u where userId = :userId")
     List<UsedBook> selectUsedBookIdfromUserId(@Param(value="userId") Integer userId);
