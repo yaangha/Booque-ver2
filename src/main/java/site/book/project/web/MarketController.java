@@ -321,61 +321,113 @@ public class MarketController {
      * @param userId 마이페이지에 표시될 user 
      * @param model
      */
-    @GetMapping("/mypage") // /market/mypage 판매글작성자&마이페이지 이동
-    public void mypage(Integer userId, @AuthenticationPrincipal UserSecurityDto dto, Model model) {
-        
-    	Integer userId2 = dto.getId();
-    	System.out.println(userId2);
-    	User user=null;
-    	List<UsedBook> usedBook = null;
-        List<MarketCreateDto> list = null;
-    	log.info("id13={}", userId2);
-    	
-    	String soldout = "판매완료";
-    	
-    	Integer usedBookSoldoutCount = null;
-    	
-    	if (userId==null) {
-    		user=userRepository.findById(userId2).get();
-    		usedBook = usedBookRepository.findByUserId(userId2);
-    		usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId2, soldout).size();
-
-    	} else {
-    		user = userRepository.findById(userId).get();
-    		usedBook = usedBookRepository.findByUserId(userId);
-    		usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId, soldout).size();
-
-    	}
-    	log.info("usedBookSoldoutCount = {}", usedBookSoldoutCount);
-    	
-    	list = mainList(usedBook);
-    	log.info("user={}", user);
-        log.info("userInfo좀 나와라ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ = {}", user);
-        
-
-    	Integer postCount = postRepository.findByUserId(userId2).size();
-    	log.info("왜2개야ㅑㅑㅑㅑㅑㅑㅑ = {}", postRepository.findByUserId(userId2));
-    	log.info("postCount 크기어떻게해ㅐㅐㅐㅐㅐㅐㅐㅐ = {}", postCount);
-        
-        log.info("list userBookInfo ddfdfdf= {}", list);
-        Book book = bookRepository.findById(userId2).get();
-        String userNickName = user.getNickName();
-        
-//        Integer usedBookSellingCount = usedBookRepository.countUsedBookSellingPost(userId).size();
-        
-        Integer usedBookSellingCount = usedBookSoldoutCount;
-        
-//        List<UsedBook> usedBookWishList = usedBookRepository.selectUsedBookIdfromUserId(userId);
-//        log.info("usedBookWishList = {}", usedBookWishList); // usedBookId를 가져오기 성공!
-//        List<MarketCreateDto> usedBookList = mainList(usedBookWishList);
+//    @GetMapping("/mypage") // /market/mypage 판매글작성자&마이페이지 이동
+//    public void mypage(Integer userId, @AuthenticationPrincipal UserSecurityDto dto, Model model) {
 //        
+////        User user = new User(); // 사용자 저장할 객체 생성
+//        Integer usedBookSoldoutCount = null; // 판매완료된 책
+//        List<UsedBook> usedBookAll = new ArrayList<>(); // 사용자에 따른 중고책 판매 리스트
+//        List<UsedBook> usedBook = new ArrayList<>(); // usedBookAll에서 임시저장 제외한 리스트(메인에 표시될 목록)
+//        Integer postCount = 0;
+//                
+//        if (dto == null && userId != 0) { // 본인이 아닌 다른 유저가 마이페이지 들어가고자 할 때
+////            user = userRepository.findById(userId).get();
+////            log.info("하은 USER 확인 ={}", user.getName());
+//            usedBookAll = usedBookRepository.findByUserId(userId);
+//            
+//            for (UsedBook u : usedBookAll) {
+//                UsedBookPost usedBookPost = usedBookPostRepository.findByUsedBookId(u.getId());
+//                if (usedBookPost.getStorage() == 1) {
+//                    usedBook.add(u);
+//                }
+//            }
+//            
+//            usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId, "판매완료").size();
+//            postCount = postRepository.findByUserId(userId).size();
+//        } else if (dto != null && userId == 0) { // 본인이 자신의 마이페이지 들어가려고 할 때
+////            user = userRepository.findById(dto.getId()).get();
+////            log.info("하은 USER 확인 ={}", user.getName());
+//
+//            usedBookAll = usedBookRepository.findByUserId(dto.getId());
+//            
+//            for (UsedBook u : usedBookAll) {
+//                UsedBookPost usedBookPost = usedBookPostRepository.findByUsedBookId(u.getId());
+//                if (usedBookPost.getStorage() == 1) {
+//                    usedBook.add(u);
+//                }
+//            }
+//            
+//            usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(dto.getId(), "판매완료").size();
+//            postCount = postRepository.findByUserId(dto.getId()).size();
+//        }
+//        
+//        
+//        List<MarketCreateDto> list = mainList(usedBook); // 
+//
+//    	
+////        Book book = bookRepository.findById(userId2).get();
+////        String userNickName = user.getNickName();
+//        
+////        Integer usedBookSellingCount = usedBookRepository.countUsedBookSellingPost(userId).size();
+//        
+//        Integer usedBookSellingCount = usedBookSoldoutCount;
+//        
+////        List<UsedBook> usedBookWishList = usedBookRepository.selectUsedBookIdfromUserId(userId);
+////        log.info("usedBookWishList = {}", usedBookWishList); // usedBookId를 가져오기 성공!
+////        List<MarketCreateDto> usedBookList = mainList(usedBookWishList);
+////        
+//        
+////        model.addAttribute("usedBookList", usedBookList);
+//        model.addAttribute("list", list);
+////    	model.addAttribute("userNickName", userNickName);
+////        model.addAttribute("user", user);
+//        model.addAttribute("usedBook", usedBook);
+////        model.addAttribute("book", book);
+//        model.addAttribute("postCount", postCount);
+//        model.addAttribute("usedBookSellingCount", usedBookSellingCount);
+//        model.addAttribute("usedBookSoldoutCount", usedBookSoldoutCount);
+//        
+//    }
+    
+    @GetMapping("/mypage") // /market/mypage 판매글작성자&마이페이지 이동
+    public void mypage(Integer userId, Model model) {
         
-//        model.addAttribute("usedBookList", usedBookList);
-        model.addAttribute("list", list);
-    	model.addAttribute("userNickName", userNickName);
+        User user = userRepository.findById(userId).get();
+        List<UsedBook> usedBookAll = new ArrayList<>(); // 사용자에 따른 중고책 판매 리스트
+        List<UsedBook> usedBook = new ArrayList<>(); // usedBookAll에서 임시저장 제외한 리스트(메인에 표시될 목록)
+                
+        usedBookAll = usedBookRepository.findByUserId(userId);
+            
+        for (UsedBook u : usedBookAll) {
+            UsedBookPost usedBookPost = usedBookPostRepository.findByUsedBookId(u.getId());
+            if (usedBookPost.getStorage() == 1) {
+                usedBook.add(u);
+            }
+        }
+        
+        List<MarketCreateDto> list = mainList(usedBook); 
+        
+        List<UsedBookWish> wishList = usedBookWishRepository.findByUserId(userId); // 사용자가 찜한 리스트
+        List<UsedBook> wishUsedBook = new ArrayList<>();
+        
+        for (UsedBookWish u : wishList) {
+            UsedBook usedBookCHK = usedBookRepository.findById(u.getUsedBookId()).get();
+            if (usedBookCHK.getId() == u.getUsedBookId()) {
+                wishUsedBook.add(usedBookCHK);
+            }
+        }
+        List<MarketCreateDto> wishListCHK = mainList(wishUsedBook); // 찜한 리스트 중 화면에 보여줄 목록
+        
+        // 리뷰 + 판매중 + 판매완료 개수
+        Integer postCount = postRepository.findByUserId(userId).size();
+        Integer usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId, "판매완료").size();
+        Integer countAllUsedBook = usedBook.size();
+        Integer usedBookSellingCount = countAllUsedBook - usedBookSoldoutCount;
+        
+        model.addAttribute("wishListCHK", wishListCHK);
         model.addAttribute("user", user);
+        model.addAttribute("list", list);
         model.addAttribute("usedBook", usedBook);
-        model.addAttribute("book", book);
         model.addAttribute("postCount", postCount);
         model.addAttribute("usedBookSellingCount", usedBookSellingCount);
         model.addAttribute("usedBookSoldoutCount", usedBookSoldoutCount);
@@ -476,7 +528,7 @@ public class MarketController {
                         .userImage(user.getUserImage()).nickName(user.getNickName())
                         .bookTitle(book.getBookName()).price(ub.getPrice())
                         .location(ub.getLocation()).level(ub.getBookLevel()).title(ub.getTitle()).modifiedTime(ub.getModifiedTime()).hits(ub.getHits()).wishCount(ub.getWishCount())
-                       .imgUsed(imgList.get(0).getFileName())
+                       .imgUsed(imgList.get(0).getFileName()).status(ub.getStatus())
                         .build();
                 list.add(dto);
         
