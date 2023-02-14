@@ -45,6 +45,31 @@
   
 </head>
 <body>
+
+
+    <!-- (예진) 검색어 포험된 책 리스트(최대 4개) 보여주기 + 원하는 책 새 글 알림 등록 -->
+        <div class="col-3 border-bottom mb-3 border-dark pb-2"> 
+              <h6 class="mb-1 fw-bold" style="font-size: 15px; font-style: italic;">&nbsp;이런 책 찾으시나요?</h6>
+              <h6 class="border-bottom mb-3 border-dark" style="font-size: 13px; font-style: italic;">&nbsp;원하는 책 클릭하고, 새 글 알림 받아보세요!</h6>
+             <div class="rounded" th:each="x : ${ list4 }">
+                <div class="row g-0 mb-2 p-1">
+                    <div class="col-md-3">
+                        <a th:href="@{ /detail?id={bookId} (bookId = ${ x.bookId })}">
+                        <img th:src="${ x.bookImage }" style="width: 70px;" /></a>
+                    </div>
+                   
+                     <div class="col-md-9" style="text-align: left;">
+                         <small class="d-inline-flex px-1 my-1  border rounded text-secondary">  
+                             <span th:text="${ x.bookgroup }"></span><span> / </span><span th:text="${ x.category }"></span> 
+                         </small>&nbsp;&nbsp;&nbsp;&nbsp;<a class="m-1" th:href="@{ /register/notice (bookId = ${ x.bookId }) }"><img src="/images/nu.png" width="15"><small>클릭</small></a> 
+                         <div  style="border:none; font-size: 15px;" class="w-100 fw-bold"  th:text="${ x.bookName }"></div> 
+                         <div><span style="font-size: 12px;">지은이 : </span><small th:text ="${ x.author }"></small> </div> 
+                         <div><small th:text ="${ x.publisher }"></small><span style="font-size: 12px;"> 출판</span></div>  
+                   </div>
+                </div>
+             </div>
+         </div> 
+
     
     <div class="w-70 container">
     
@@ -163,12 +188,12 @@
     const formOrder= document.querySelector('#formSearchL')
     
     btnSearch.addEventListener('click', function(){
-    	
+        
         // form으로 넘겨야 겠지?
         const formSearch = document.querySelector('#formSearch')
         
         console.log(formSearch)
-    	
+        
     })
     
     function changeStatus(){
@@ -177,7 +202,7 @@
     
     function searchOrderby(){
         formOrder.submit();
-    	
+        
     }
 
     

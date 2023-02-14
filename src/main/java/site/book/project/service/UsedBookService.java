@@ -39,6 +39,7 @@ public class UsedBookService {
 	private final UsedBookPostRepository usedBookPostRepository;
 	private final UserRepository userRepository;
 	private final UsedBookImageRepository usedBookImgRepository;
+
 	
     @Value("${com.example.upload.path}")
     private String uploadPath;
@@ -243,6 +244,13 @@ public class UsedBookService {
         
         return usedBookList;
     }
+
+    public UsedBook read(Integer usedBookId) {
+        UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
+        return usedBook;
+    }
+
+   
     
     // (하은) 부끄마켓 찜한 목록 불러오기
     public List<MarketCreateDto> searchWishList(Integer id) {

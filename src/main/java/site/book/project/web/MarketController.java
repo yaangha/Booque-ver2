@@ -1,6 +1,7 @@
 package site.book.project.web;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ import site.book.project.repository.UsedBookRepository;
 import site.book.project.repository.UsedBookWishRepository;
 import site.book.project.repository.UserRepository;
 import site.book.project.service.PostService;
-import site.book.project.service.SearchService;
+import site.book.project.service.BookService;
 import site.book.project.service.UsedBookService;
 import site.book.project.service.UserService;
 
@@ -64,6 +65,8 @@ public class MarketController {
     private final PostService postService;
     private final PostRepository postRepository;
     private final UserService userService;
+    private final BookService bookService;
+    
   
     
     
@@ -425,12 +428,17 @@ public class MarketController {
             model.addAttribute("userNickname", userDto.getNickName());       
         }
         
+        // (예진) 키워드 포함된 책 제목 => 이런 중고책 찾으세요? 
+        // List<UsedBook> bookTitleList = usedBookService.searchByBookTitle(mainKeyword);
+        List<Book> list4 = bookService.searchByBookName(mainKeyword);
+        log.info("제목 탑 4 리스트 ={}", list4);
+        
         model.addAttribute("status", status);
         model.addAttribute("orderSlt", orderSlt);
         model.addAttribute("list", list);
         model.addAttribute("region", region);
         model.addAttribute("mainKeyword", mainKeyword);
-        
+        model.addAttribute("list4", list4);
         
         
     }

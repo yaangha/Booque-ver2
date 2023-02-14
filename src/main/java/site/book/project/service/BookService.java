@@ -89,6 +89,11 @@ public class BookService {
     public List<Book> read() {
         
         return bookRepository.findByOrderByBookIdDesc();
+    }
+    
+    public List<Book> searchByBookName(String Keyword) {
+        List<Book> titleList = bookRepository.findTop4ByBookNameIgnoreCaseContaining(Keyword);
+        return titleList;
     }   
 	
 }
