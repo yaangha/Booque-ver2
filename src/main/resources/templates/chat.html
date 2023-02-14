@@ -105,7 +105,7 @@
                 <!-- 내 정보, 검색, 정렬 -->
                 <div id="chatListHead" style="border-bottom: 2px solid lightgrey; height: 140px; padding: 10px;">
                     <!-- 내 프로필사진, 닉네임 -->
-                    <input id="userId"  th:value="${ loginUser.id }">
+                    <input id="userId" type="hidden" th:value="${ loginUser.id }">
                     <div th:data-url="@{ /market/mypage(userId=${ loginUser.id }) }" 
                         onclick="changeParentPage(this.getAttribute('data-url'))"
                         style="cursor:pointer;">
@@ -230,7 +230,7 @@
                                 <input type="hidden" th:value="${loginUser.nickName}" id="loginUser"/>           
                         </div>
                 </div>  <!-- 채팅 상세 창 End -->
-                
+               
         </div> <!-- container End -->
     
     

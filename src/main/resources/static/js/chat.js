@@ -3,7 +3,8 @@
  */
  
 window.addEventListener('DOMContentLoaded', () => {
-    
+
+        
         var stompClient = null;
         var sender = $('#loginUser').val();
         var chatRoomId = $('#chatRoomId').val();
@@ -119,9 +120,6 @@ window.addEventListener('DOMContentLoaded', () => {
                const htmlStr = `
                             <tr  class="btnChatRoom" 
                             onclick="location.href='/chat?chatRoomId=${ x.chatRoomId}'"
-                            
-                            
-                            
                             style="cursor:pointer; background-color:none;">
                                 <td style="padding-left:10px; width:20%;">
                                     <img class="rounded-circle" width="40" height="40" src = "${ x.chatWithImage }" />
@@ -141,8 +139,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 
             })
             
-       
-            
+        const chatTr = document.querySelectorAll('.btnChatRoom')
+        chatTr[0].style.backgroundColor = "seashell";
         }
         
         
