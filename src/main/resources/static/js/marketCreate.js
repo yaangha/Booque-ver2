@@ -40,7 +40,7 @@ btnSubmit.addEventListener('click', function () {
         formCreate.method = 'post';
         formCreate.submit();
         
-        checkContainingKeyword();
+   
         checkBookId(bookId,usedBookId);
     }
     
@@ -54,7 +54,7 @@ btnSubmit.addEventListener('click', function () {
       
         axios
         .post('/notice/check', data)
-        .then(response => {  alert('성공') })
+        .then(response => {  console.log('성공') })
         .catch(err => { alert(err) });
     
        };
