@@ -92,6 +92,17 @@ public class NoticeRestController {
         return ResponseEntity.ok(list);
     }
     
+    
+    // (예진) 알림받을 BookId 등록
+    @GetMapping("/register/notice/{bookId}")
+    public ResponseEntity<Integer> registerBookId(@PathVariable Integer bookId, @AuthenticationPrincipal UserSecurityDto dto) {
+        
+       User user = userService.read(dto.getId());
+       user.setNoticeBookId(bookId);
+       userRepository.save(user);
+        
+       return ResponseEntity.ok(1);
+    }
    
     @DeleteMapping("/notice/delete/{noticeId}")
     public void deleteNotice(@PathVariable Integer noticeId){
