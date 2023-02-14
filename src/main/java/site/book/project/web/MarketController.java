@@ -318,13 +318,24 @@ public class MarketController {
         List<MarketCreateDto> list = null;
     	log.info("id13={}", id);
     	
+    	String soldout = "판매완료";
+    	
+    	Integer postCount = null;
+    	Integer usedBookSoldoutCount = null;
+    	
     	if (id==null) {
     		user=userRepository.findById(userId).get();
     		usedBook = usedBookRepository.findByUserId(userId);
+    		postCount = postRepository.findByUserId(userId).size();
+    		usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId, soldout).size();
     	} else {
     		user = userRepository.findById(id).get();
     		usedBook = usedBookRepository.findByUserId(id);
+    		postCount = postRepository.findByUserId(id).size();
+    		usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(id, soldout).size();
     	}
+    	log.info("postCount 갯수가 왜 안ㅁ자우 = {}", postCount);
+    	log.info("usedBookSoldoutCount = {}", usedBookSoldoutCount);
     	
     	list = mainList(usedBook);
     	log.info("user={}", user);
@@ -334,11 +345,6 @@ public class MarketController {
         log.info("list userBookInfo ddfdfdf= {}", list);
         Book book = bookRepository.findById(userId).get();
         String userNickName = user.getNickName();
-        Integer postCount = postRepository.findByUserId(userId).size();
-        String soldout = "판매완료";
-        
-//        Integer usedBookSellingCount = usedBookRepository.countUsedBookSellingPost(userId).size();
-        Integer usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId, soldout).size();
         
         Integer usedBookSellingCount = postCount - usedBookSoldoutCount;
 //        List<UsedBook> usedBookWishList = usedBookRepository.selectUsedBookIdfromUserId(userId);
