@@ -25,86 +25,79 @@
             color: black;
         }
         
+        a:hover {
+            color:gray;
+        }
+        
     </style>
 </head>
 <body>
 
-    <!-- 상단에 프로필 넣고자(like 교보문고) -->
-    <div class="w-75 container">
-
-    <div class="row"> <!-- 메인 데이터 -->
+    <div style="margin: 30px 200px;">
+    <div style="display: inline-block; width: 250px; margin: 10px; vertical-align: top;"> <!-- left data -->
     
-        <div class="col-2 m-4 p-2" style="height:800px;">
-                <div class="card" align="left" style="margin:20px; width: 200px; "><!-- 프로필  -->
-                    <img th:src="${user.userImage}" width=200px; /><!-- (예진)프로필 이미지 -->
-                  
-                    <!-- (예진) 프로필 사진 업데이트 버튼 -->
-                    <div class="m-2">
-                        <img onclick="imagePop()" src="/images/im.png" width=25px; align="right" />
-                    </div>
-                    
-              <a class="btn btn-outline-secondary" th:href="@{ /post/list?postWriter={postWriter} (postWriter = ${ user.username })}">내 블로그
-              <img style="width: 18px" alt="" src="https://cdn-icons-png.flaticon.com/512/609/609803.png">  </a>
+        <div class="card" style="width: 200px; "><!-- 프로필  -->
+            <img th:src="${user.userImage}" width=200px; /><!-- (예진)프로필 이미지 -->
           
-                    <form id="profileM">
-                             
-                             <br/>
-                             <label class="btn" >아이디  
-                             </label> 
-                             <label >[[${ user.username }]] <img style=" width: 20px;" alt="" src="https://cdn-icons-png.flaticon.com/512/8146/8146767.png"></label>
-                             
-                             <label class="btn">닉네임</label> <input name="nickName"  class="btn btn-secondary"  th:value="${ user.nickName }"  >
-                             <label class="btn">이메일</label> <input name="email"  class="btn btn-secondary"  th:value="${ user.email }"  >
-                             <label class="btn">번호</label> <input name="phone" class="btn btn-secondary"  th:value="${ user.phone }"  >
-                    </form>
-                    <button id="modify" class="btn btn"> <img style="width: 15px; height: 15px;" alt="" th:src="@{ https://cdn-icons-png.flaticon.com/512/738/738853.png }"> </button>
-                    <button id="modify" class="btn btn-outline-danger"><span>아이디/비밀번호</span> <img style="width: 15px; height: 15px;" alt="" th:src="@{ https://cdn-icons-png.flaticon.com/512/738/738853.png }"> </button>
-                    
-            </div><!-- 프로필 끝 -->   
+            <!-- (예진) 프로필 사진 업데이트 버튼 -->
+            <div class="m-2">
+                <img onclick="imagePop()" src="/images/im.png" width=25px; align="right" />
+            </div>
             
+          <a class="btn btn-outline-secondary" th:href="@{ /post/list?postWriter={postWriter} (postWriter = ${ user.username })}">내 블로그
+          <img style="width: 18px" alt="" src="https://cdn-icons-png.flaticon.com/512/609/609803.png">  </a>
+  
+            <form id="profileM"><br/>
+                <label class="btn" >아이디</label> 
+                <label >[[${ user.username }]] <img style=" width: 20px;" alt="" src="https://cdn-icons-png.flaticon.com/512/8146/8146767.png"></label>
+                <label class="btn">닉네임</label> <input name="nickName"  class="btn btn-secondary"  th:value="${ user.nickName }"  >
+                <label class="btn">이메일</label> <input name="email"  class="btn btn-secondary"  th:value="${ user.email }"  >
+                <label class="btn">번호</label> <input name="phone" class="btn btn-secondary"  th:value="${ user.phone }"  >
+            </form>
+            <button id="modify" class="btn btn"> <img style="width: 15px; height: 15px;" alt="" th:src="@{ https://cdn-icons-png.flaticon.com/512/738/738853.png }"> </button>
+            <button id="modify" class="btn btn-outline-danger"><span>아이디/비밀번호</span> <img style="width: 15px; height: 15px;" alt="" th:src="@{ https://cdn-icons-png.flaticon.com/512/738/738853.png }"> </button>
             
-            <h4 class="my-2">나의 쇼핑정보</h4>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item text-secondary">주문내역조회</li>
-                <li class="list-group-item text-secondary">반품내역</li>
-                <li class="list-group-item text-secondary">책 리뷰</li>
-                <br/><br/>
-            </ul>
-            <h4 class="my-2">나의 계정설정</h4>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item text-secondary">회원정보수정</li>
-                <li class="list-group-item text-secondary">회원등급</li>
-                <li class="list-group-item text-secondary">포인트조회</li>
-                <br/><br/>
-            </ul>
-            <h4 class="my-2">고객센터</h4>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item text-secondary">1대1문의</li>
-                <li class="list-group-item text-secondary">공지사항</li>
-                <br/><br/>
-            </ul>
-                            
-        </div> <!-- col end -->
-
-
+        </div><!-- 프로필 끝 -->   
         
-
-        <div class="col-8 container">
-
-
-            <h4>최근 주문 내역</h4>
+        <div style="width:200px;"> 
+        <h4 class="my-2">나의 쇼핑정보</h4>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item text-secondary">주문내역조회</li>
+            <li class="list-group-item text-secondary">반품내역</li>
+            <li class="list-group-item text-secondary">책 리뷰</li>
+            <br/><br/>
+        </ul>
+        <h4 class="my-2">나의 계정설정</h4>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item text-secondary">회원정보수정</li>
+            <li class="list-group-item text-secondary">회원등급</li>
+            <li class="list-group-item text-secondary">포인트조회</li>
+            <br/><br/>
+        </ul>
+        <h4 class="my-2">고객센터</h4>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item text-secondary">1대1문의</li>
+            <li class="list-group-item text-secondary">공지사항</li>
+            <br/><br/>
+        </ul>
+        </div>
+    </div><!-- left end -->
+    
+    <div style="display: inline-block; margin: 10px; width: 1150px;"> <!--right data -->
+        <div><!-- 주문내역 -->
+            <div style="font-weight: bold; font-size: 25px; border-bottom: 3px solid black;">주문내역</div>
             <table class="table">
                 <thead>
-                    <tr class="border-top border-4" >
-                        <th> 주문날짜</th>
+                    <tr style="font-weight: bold; font-size:small; border-bottom: 3px solid black;">
+                        <th>주문날짜</th>
                         <th>주문상세</th>
                         <th>주문번호</th>
                         <th>결제금액</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="border-bottom: 3px solid black;">
                     <tr id="bookTotal"  th:each=" order : ${ orderList }">
-                        <td class="align-middle" style="text-align: center;">
+                        <td class="align-middle" style="text-align: left;">
                             <div class="container">
                             <ul style="list-style: none;">
                                 <li>
@@ -174,152 +167,103 @@
                     </tr>
                 </tbody>
             </table>
-
-
+        </div><!-- 주문내역 -->
         
-        </div> <!-- col end -->
+        <div style="font-weight: bold; font-size: 25px; border-bottom: 3px solid black; margin-top: 70px;">My Heart <img style="width: 18px;" alt="" src="images/likeFull.png"></div>
 
-
-    </div> <!-- (row) 메인 데이터 end -->
-    
-    <div class="row"> <!-- wish row -->
-    <div class="col-2 m-4 p-2" style="height:500px; visibility : hidden;" >
-                        <h4 class="my-2">나의 쇼핑정보</h4>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item text-secondary">주문내역조회</li>
-                <li class="list-group-item text-secondary">반품내역</li>
-                <li class="list-group-item text-secondary">책 리뷰</li>
-                <br/><br/>
-            </ul>
-            <h4 class="my-2">나의 계정설정</h4>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item text-secondary">회원정보수정</li>
-                <li class="list-group-item text-secondary">회원등급</li>
-                <li class="list-group-item text-secondary">포인트조회</li>
-                <br/><br/>
-            </ul>
-            <h4 class="my-2">고객센터</h4>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item text-secondary">1대1문의</li>
-                <li class="list-group-item text-secondary">공지사항</li>
-                <br/><br/>
-            </ul>
-    
-    
+        <div th:if="${ wishBookInfo }">
+        <!-- <span class="h4" th:text="${ user.nickName }"></span><span>님의 <img  style="width: 25px;" alt="" src="images/likeFull.png"> 목록</span> -->
+        <div class="w-100 ">
+            <div style="font-size:18px; font-weight: bold; vertical-align: bottom; padding-top: 10px;">Books</div>
+            <div th:each="bookWishDto : ${ wishBookInfo }" style="display: inline-block;">
+                <div class="card" style="width: 14rem; height:31rem; margin-right: 10px; margin-bottom: 10px;">
+                    <a th:href="@{ /detail(id=${ bookWishDto.getBookId }) }">
+                        <img th:src="${ bookWishDto.getBookImage }" class="card-img-top" style="height:22rem; object-fit: cover;">
+                    </a>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div><small class="d-inline-flex px-2 my-1 border rounded text-secondary">
+                                 <span th:text="${ bookWishDto.getBookgroup }"></span><span> / </span><span th:text="${ bookWishDto.getCategory }"></span>
+                                 </small>
+                            </div>
+                            <div class="fw-bold text-truncate" th:text="${ bookWishDto.getBookName }" style="width: 178px;"></div>
+                            <span th:text="${ bookWishDto.getAuthor }"></span><br/>
+                            <!-- <span th:text="|${#numbers.formatInteger(bookWishDto.getPrices, 0, 'COMMA')}원|"></span> -->
+                            <span id="bookWishId" style="display: none;">[[${ bookWishDto.bookWishId }]]</span>
+                    <form action="/myPage/delete" method="post">
+                        <input name="bookWishId" style="display: none;" th:value="${ bookWishDto.bookWishId }" >
+                        <label for="btnDeleteW"  class="btn btn-danger btn-sm">
+                            <img  style="width: 15px;" alt="" src="images/likeEmpty.png"  > <span>삭제</span>
+                        </label>
+                        <input id="btnDeleteW" type="submit" style="display: none;">
+                    </form>
+                        </div>
+                    </div> <!-- card body end -->
+                </div> <!-- card end -->
+            </div> <!-- col end -->
+        </div>
     
     </div>
     
-    
-    
-    <br/><br/>
-    
-    
-    
-    
-    
-    <div class="col-8 container">
-        <div th:if="${ wishBookInfo }">
-        <span class="h4" th:text="${ user.nickName }"></span><span>님의 <img  style="width: 25px;" alt="" src="images/likeFull.png"> 목록</span>
-        <div class="w-100 ">
-            <div class="row container">
-                <div class="col" th:each="bookWishDto : ${ wishBookInfo }">
-                    <div class="card my-2" style="width: 14rem; height:32rem">
-                        <a th:href="@{ /detail(id=${ bookWishDto.getBookId }) }">
-                            <img th:src="${ bookWishDto.getBookImage }" class="card-img-top" style="height:22rem">
-                        </a>
-                        <div class="card-body">
-                            <div class="card-text">
-                                <div><small class="d-inline-flex px-2 my-1 border rounded text-secondary">
-                                     <span th:text="${ bookWishDto.getBookgroup }"></span><span> / </span><span th:text="${ bookWishDto.getCategory }"></span>
-                                     </small>
-                                </div>
-                                <span class="fw-bold" th:text="${ bookWishDto.getBookName }"></span><br/>
-                                <span th:text="${ bookWishDto.getAuthor }"></span><br/>
-                                <span th:text="|${#numbers.formatInteger(bookWishDto.getPrices, 0, 'COMMA')}원|"></span>
-                                <br>
-                                <span id="bookWishId" style="display: none;">[[${ bookWishDto.bookWishId }]]</span>
-                        <form action="/myPage/delete" method="post">
-                            <input name="bookWishId" style="display: none;" th:value="${ bookWishDto.bookWishId }" >
-                            <label for="btnDeleteW"  class="btn btn-danger btn-sm" style="float: right;">
-                                <img  style="width: 15px;" alt="" src="images/likeEmpty.png"  > <span>삭제</span>
-                            </label>
-                            
-                            <input id="btnDeleteW" type="submit" style="display: none;">
-                        </form>
-                            </div>
-                        </div> <!-- card body end -->
-                    </div> <!-- card end -->
-                </div> <!-- col end -->
-            </div> <!-- row end -->
-        </div>
-    
+    <div style="font-size:18px; font-weight: bold; vertical-align: bottom; border-top: 1px solid silver; margin-top: 50px; padding-top: 10px;">Booque Market</div>
+    <div style="border-bottom: 3px solid black;">
+    <div th:each=" dto : ${ usedBookList } " style="display: inline-block;">
+    <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ dto.usedBookId }) }">
+        <div class="card" style="width: 210px; height:320px; margin-right: 10px; margin-bottom: 10px;">
+            <img class="card-img-top" id="img" alt="" th:src="${ '/market/api/view/'+ dto.imgUsed }"  style="height:200px; object-fit: cover;">
+            <div class="card-body">
+                <div class="card-text">
+                    <div class="text-truncate" th:text="${ '책 <' + dto.bookTitle + '>' }" style="font-weight: bold;"></div>
+                    <div class="text-truncate" th:text="${ dto.title }" style="font-size: small;"></div>
+                    <div class="text-truncate" th:text="|${#numbers.formatInteger(dto.price, 0, 'COMMA')}원|" style="font-size: small;"></div>
+                    <div th:text="${ '판매자: ' + dto.username }" style="font-size: small; text-align: right; color: gray;"></div>
+                </div>
+            </div> <!-- card body end -->
+        </div> <!-- card end -->
+    </a>
+    </div> <!-- col end -->
     </div>
     
     <br/><br/>
     
      <!-- <div class="col-8 container"> -->
-                    <h4>작성된 한줄평~!</h4>
-            <table class="table">
-                <thead>
-                    <tr class="border-top border-4">
-                        <th>책이름(책으로 넘어가기)</th>
-                        <th>내용(좋아요)</th>
-                        <th>작성날짜 / 수정날짜</th>
-                        <th>수정/삭제</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each=" comment : ${ commentList }">
-                        <td class="align-middle">
-                        <a th:href="@{ /detail?id={bookId} (bookId = ${ comment.bookId})}" th:bookId="${ comment.bookId}" ><img class="mx-2" style="width: 70px; height: 100px;" alt="" th:src="${ comment.bookImage }"></a> 
-                        <span class="h6" style="font-weight: bold;" th:text="${ comment.bookName }"></span>
-                        </td>
-                        <td class="align-middle">
-                            <p th:text="${ comment.commentText }"></p>
-                            <img style="width: 15px" alt="" src="images/likeFull.png">    <span th:text="${ comment.likes }"></span>
-                        </td>
-                        <td class="align-middle">
-                            <span id="commentDate" th:text="${ comment.createdTime }" ></span>
-                            <br>
-                            <span id="commentDate" th:text="${ comment.modifiedTime }" ></span>
-                        </td>
-                        <td class="align-middle">
-                            <button id="btnDelete" class="btn btn-outline-success">수정</button>
-                            <button id="btnDelete" class="btn btn-outline-danger">삭제</button>
-                        </td>
-                        
-                    </tr>
-                </tbody>
-            </table>
+    <div style="font-weight: bold; font-size: 21px; border-bottom: 3px solid black;">한줄평 목록</div>
+    <table class="table">
+        <thead>
+            <tr style="font-weight: bold; font-size: small;border-bottom: 3px solid black;">
+                <th>책이름</th>
+                <th>내용</th>
+                <th>마지막 수정일</th>
+                <th>수정/삭제</th>
+            </tr>
+        </thead>
+        <tbody style="border-bottom: 3px solid black;">
+            <tr th:each=" comment : ${ commentList }">
+                <td class="align-middle">
+                    <a th:href="@{ /detail?id={bookId} (bookId = ${ comment.bookId})}" th:bookId="${ comment.bookId}" >
+                        <img class="mx-2" style="width: 70px; height: 100px; display: inline-block;" alt="" th:src="${ comment.bookImage }">
+                    </a> 
+                    <div class="text-truncate" style="font-weight: bold; display: inline-block; width:190px;" th:text="${ comment.bookName }"></div>
+                </td>
+                <td class="align-middle" style="width: 250px;">
+                    <div class="text-truncate" th:text="${ comment.commentText }" style="width: 250px;"></div>
+                    <img style="width: 15px" alt="" src="images/likeFull.png">    <span th:text="${ comment.likes }"></span>
+                </td>
+                <td class="align-middle" style="width: 150px;">
+                    <!-- <small id="commentDate" th:text="${ comment.createdTime }" style="display: block;"></small> -->
+                    <small id="commentDate" th:text="${ comment.modifiedTime }" style="display: block;"></small>
+                </td>
+                <td class="align-middle">
+                    <button id="btnDelete" class="btn btn-outline-success">수정</button>
+                    <button id="btnDelete" class="btn btn-outline-danger">삭제</button>
+                </td>
+                
+            </tr>
+        </tbody>
+    </table>
             <!-- </div> -->
     
-    <div><!-- 부끄장터 위시리스트 -->
-        <div style="font-weight: bold; font-size: 21px;">부끄장터 찜목록</div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <td>판매글</td>
-                    <td>판매자</td>
-                    <td>가격</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each=" dto : ${ usedBookList } ">
-                    
-                    <td>
-                        <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ dto.usedBookId }) }">
-                            <div th:text="${ dto.title }"></div>
-                        </a>
-                    </td>
-                    <td><div th:text="${ dto.username }"></div></td>
-                    <td><div th:text="|${#numbers.formatInteger(dto.price, 0, 'COMMA')}원|"></div></td>
-                   
-                </tr>
-            </tbody>
-        </table>
-    </div><!-- 부끄장터 위시리스트 end -->
-    
-    </div>  
+    </div> <!-- right data end -->
     
      <!-- 프사 이미지 변경 모달 -->
         <div class="modal" id ="imageModal" tabindex="-1">
@@ -343,10 +287,10 @@
         </div>
    
       
-</div> <!-- wish row -->
     
     
-</div>
+    
+    </div> <!-- w-75 end -->
     
       
   <!-- 모달 부트스트랩 -->
