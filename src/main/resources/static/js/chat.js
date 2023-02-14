@@ -198,3 +198,67 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         
         
+    const usedBookId = document.querySelector('#usedBookId').value;
+    const buyerId = document.querySelector('#chatWithId').value;
+    const buyerName = document.querySelector('#chatWithName').value;
+        
+    // (지혜) 판매자가 '거래 예약' 클릭시
+    function reserve() {
+        
+        console.log('usedBookId = '+usedBookId+', buyerId = '+buyerId+', buyerName = '+buyerName);
+        confirm(buyerName+'님과 거래 예약하시겠습니까?');
+
+        const reserveDto = {
+            usedBookId : usedBookId,
+            userId : buyerId
+        }
+        
+        if(confirm){
+            axios.post('/chat/reserve', reserveDto)
+             .then(response =>{
+                 alert(buyerName +'님과 거래 예약되었습니다!');
+                 console.log(response);
+                 window.location.reload();    // 페이지 새로고침
+             });
+        };
+    };
+    
+    
+    // (지혜) 판매자가 '거래 취소' 클릭시
+    function cancel() {
+        
+        console.log('usedBookId = '+usedBookId+', buyerName = '+buyerName);
+        confirm(buyerName+'님과의 예약을 취소하시겠습니까?');
+        
+        if(confirm){
+            axios.post('/chat/cancel',null, { params: { usedBookId : usedBookId }})
+             .then(response =>{
+                 alert(buyerName +'님과의 거래가 취소되었습니다!');
+                 console.log(response);
+                 window.location.reload();    // 페이지 새로고침
+             });
+        };
+    };
+    
+    
+    
+    // (지혜) 판매자가 '거래 완료' 클릭시
+    function sold() {
+        
+        console.log('usedBookId = '+usedBookId+', buyerName = '+buyerName);
+        confirm(buyerName+'님과의 거래가 완료됐나요?');
+
+        if(confirm){
+            axios.post('/chat/sold', null, { params: { usedBookId : usedBookId }})
+             .then(response =>{
+                 alert(buyerName +'님과의 거래가 완료되었습니다!');
+                 console.log(response);
+                 window.location.reload();    // 페이지 새로고침
+             })
+             .catch(err => {
+                console.log(err);
+            });
+        };
+        
+    };
+        
