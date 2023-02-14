@@ -322,28 +322,28 @@ public class MarketController {
      * @param model
      */
     @GetMapping("/mypage") // /market/mypage 판매글작성자&마이페이지 이동
-    public void mypage(Integer id, @AuthenticationPrincipal UserSecurityDto dto, Model model) {
+    public void mypage(Integer userId, @AuthenticationPrincipal UserSecurityDto dto, Model model) {
         
-    	Integer userId = dto.getId();
-    	System.out.println(userId);
+    	Integer userId2 = dto.getId();
+    	System.out.println(userId2);
     	User user=null;
     	List<UsedBook> usedBook = null;
         List<MarketCreateDto> list = null;
-    	log.info("id13={}", userId);
+    	log.info("id13={}", userId2);
     	
     	String soldout = "판매완료";
     	
     	Integer usedBookSoldoutCount = null;
     	
-    	if (id==null) {
-    		user=userRepository.findById(userId).get();
-    		usedBook = usedBookRepository.findByUserId(userId);
-    		usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId, soldout).size();
+    	if (userId==null) {
+    		user=userRepository.findById(userId2).get();
+    		usedBook = usedBookRepository.findByUserId(userId2);
+    		usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId2, soldout).size();
 
     	} else {
-    		user = userRepository.findById(id).get();
-    		usedBook = usedBookRepository.findByUserId(id);
-    		usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(id, soldout).size();
+    		user = userRepository.findById(userId).get();
+    		usedBook = usedBookRepository.findByUserId(userId);
+    		usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId, soldout).size();
 
     	}
     	log.info("usedBookSoldoutCount = {}", usedBookSoldoutCount);
@@ -353,12 +353,12 @@ public class MarketController {
         log.info("userInfo좀 나와라ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ = {}", user);
         
 
-    	Integer postCount = postRepository.findByUserId(userId).size();
-    	log.info("왜2개야ㅑㅑㅑㅑㅑㅑㅑ = {}", postRepository.findByUserId(userId));
+    	Integer postCount = postRepository.findByUserId(userId2).size();
+    	log.info("왜2개야ㅑㅑㅑㅑㅑㅑㅑ = {}", postRepository.findByUserId(userId2));
     	log.info("postCount 크기어떻게해ㅐㅐㅐㅐㅐㅐㅐㅐ = {}", postCount);
         
         log.info("list userBookInfo ddfdfdf= {}", list);
-        Book book = bookRepository.findById(userId).get();
+        Book book = bookRepository.findById(userId2).get();
         String userNickName = user.getNickName();
         
 //        Integer usedBookSellingCount = usedBookRepository.countUsedBookSellingPost(userId).size();
