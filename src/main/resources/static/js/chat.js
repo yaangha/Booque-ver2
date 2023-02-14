@@ -7,6 +7,7 @@ window.addEventListener('DOMContentLoaded', () => {
         var stompClient = null;
         var sender = $('#loginUser').val();
         var chatRoomId = $('#chatRoomId').val();
+        var chatWithImage = $('#chatWithImage').val();
         // invoke when DOM(Documents Object Model; HTML(<head>, <body>...etc) is ready
         $(document).ready(connect());
         
@@ -42,7 +43,6 @@ window.addEventListener('DOMContentLoaded', () => {
         
         const btnSend = document.querySelector('#btnSend');
         const messageInput = document.querySelector('#message');
-        const messageValue = document.querySelector('#message').val;
         
         // (지혜) 메시지 입력해야 보내기버튼 활성화되기
         messageInput.addEventListener('keyup', activateBtnSend);
@@ -51,7 +51,9 @@ window.addEventListener('DOMContentLoaded', () => {
         
         function activateBtnSend() {
             
-            console.log('activateBtnSend 함수');
+            const messageValue = document.querySelector('#message').value;
+            
+            console.log('activateBtnSend 함수 - value: '+messageValue);
             
             if (messageValue == '') {
                 btnSend.disabled = true;
@@ -116,13 +118,16 @@ window.addEventListener('DOMContentLoaded', () => {
             messageObj.message+
             '</div><div style="font-size:13px; color:grey;">' +
             messageObj.sendTime +
-            '</div><span id="check" style="font-color:blue;">1</span></p>';
+            '</div><span id="check" style="color:dodgerblue;">1</span></div></p>';
             } else {
-            return '<p><div id="newResponseHistory" class="row alert alert-info"><div class="col_8">' +
+            return '<div id="newResponseHistory"><div style="float:left;">' +
+            '<img class="rounded-circle" width="40" height="40" src="' +
+            chatWithImage + 
+            '" style="margin-right:10px;"></div><div><span>' +
             messageObj.message+
-            '</div><div style="font-size:13px; color:grey;">' +
+            '</span><br/></div><div style="font-size:13px; color:grey;"><span>' +
             messageObj.sendTime +
-            '</div></p>';
+            '<span><br/><br/></div></div>';
             }
         }
         
@@ -130,7 +135,6 @@ window.addEventListener('DOMContentLoaded', () => {
         $('#message').focus(function(){
             
             let nm = document.getElementById('newResponseHistory');
-            nm.className = "row";
             nm.removeAttribute('id');
             if(sender == sender){
                 console.log("확인해주세요!")
