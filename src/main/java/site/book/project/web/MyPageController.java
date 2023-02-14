@@ -55,6 +55,8 @@ public class MyPageController {
         
         List<MarketCreateDto> usedBookList = usedBookService.searchWishList(user.getId());
         
+        
+        
         model.addAttribute("usedBookList", usedBookList);
         model.addAttribute("commentList", commentList);
         model.addAttribute("wishBookInfo", wishBookInfo);

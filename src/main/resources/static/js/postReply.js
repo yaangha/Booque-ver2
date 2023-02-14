@@ -44,6 +44,7 @@
                    clearInputContent();
                     readAllReplies();
                     updateReplyCount();
+                    
                     newReplyNotion(response.data);
                 })
                 .catch(error => {
@@ -51,16 +52,9 @@
                 });
     }      
 
-    // (예진) 댓글 등록 확인 버튼 누를때 새 notice 생성
+    // (예진) 새 댓글 달리면 알림(notice) 만들어짐
     function newReplyNotion(data){
-          // const userId = document.querySelector('#userId').value;
-          // const postId = document.querySelector('#postId').value;
-           console.log('댓글등록 성공 데이터 넘어오싼');
-           console.log(data);
-                const divNo = document.querySelector('#divNo');
-                let str =+ `${data.userId}${data.postId}${data.replyId}`;
-                    divNo.innerHTML =str;
-                    
+      
            axios.post('/notice', data)
            .then(response => {
                console.log('노티스 저장성공');
@@ -73,16 +67,16 @@
     }
     
    
-  
-    
-    
     
     // 댓글 목록 함수
     function readAllReplies(){
         const postId = document.querySelector('#postId').value;
         axios
         .get('/api/reply/all/' + postId)  
-        .then(response => { updateReplyList(response.data) } )
+        .then(response => { 
+            console.log('리스폰스.데이터')
+            console.log(response.data)
+            updateReplyList(response.data) } )
         .catch(err => { console.log(err) });
     }    
     function updateReplyList(data){
@@ -117,7 +111,10 @@
             if(r.replyId == repId) {  
                str +='<div class="bgColor" id="bgColorBtn" style="background-color: #e6f2ff;">';
             }
-                  
+            
+            if(r.replyId != repId) {
+                 str +='<div class="bgColor" id="bgColorBtn">';
+                 }
             str +=`<div class="flex-shrink-0"><a href="/post/list?postWriter=${r.replyWriter}">`
                 + '<img class="rounded-circle m-2" width="45" height="45" src="' + r.userImage + '" alt="..." />'
                 + `<span class="fw-bold m-2">${r.nickName}</span></a></div>`
@@ -134,16 +131,15 @@
             }
             
             str += '</div>';
-          
-            if(r.replyId == repId) {    
-               str +='</div>';
-            }
-            
+            str += '</div>';
+     
+       
         }
         
         divReplies.innerHTML = str;
         
         
+        // (예진) 새 댓글에 준 백그라운드 컬러 댓글 클릭하면 없어지게
         const bg = document.querySelector('.bgColor');
         
         bg.addEventListener('click', function(){

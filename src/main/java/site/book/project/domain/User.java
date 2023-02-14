@@ -84,7 +84,7 @@ public class User {
     private String booqueLevel = "새싹부끄";
     
     @Setter
-    private Integer noticeUsedBookId;  // (예진) usedBookId 알림 설정
+    private Integer noticeBookId;  // (예진) 알림 설정할 BookId
     
     
     @ElementCollection(fetch = FetchType.LAZY)

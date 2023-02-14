@@ -1,8 +1,10 @@
 package site.book.project.web;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +45,7 @@ import site.book.project.repository.UsedBookRepository;
 import site.book.project.repository.UsedBookWishRepository;
 import site.book.project.repository.UserRepository;
 import site.book.project.service.PostService;
-import site.book.project.service.SearchService;
+import site.book.project.service.BookService;
 import site.book.project.service.UsedBookService;
 import site.book.project.service.UserService;
 
@@ -64,6 +66,8 @@ public class MarketController {
     private final PostService postService;
     private final PostRepository postRepository;
     private final UserService userService;
+    private final BookService bookService;
+    
   
     
     
@@ -318,38 +322,48 @@ public class MarketController {
      * @param model
      */
     @GetMapping("/mypage") // /market/mypage 판매글작성자&마이페이지 이동
-    public void mypage(Integer userId, @AuthenticationPrincipal UserSecurityDto dto, Model model) {
+    public void mypage(Integer id, @AuthenticationPrincipal UserSecurityDto dto, Model model) {
         
-    	Integer userId2 = dto.getId();
-    	System.out.println(userId2);
+    	Integer userId = dto.getId();
+    	System.out.println(userId);
     	User user=null;
     	List<UsedBook> usedBook = null;
         List<MarketCreateDto> list = null;
     	log.info("id13={}", userId);
     	
-    	if (userId==null) {
-    		user=userRepository.findById(userId2).get();
-    		usedBook = usedBookRepository.findByUserId(userId2);
-    	} else {
-    		user = userRepository.findById(userId).get();
+    	String soldout = "판매완료";
+    	
+    	Integer usedBookSoldoutCount = null;
+    	
+    	if (id==null) {
+    		user=userRepository.findById(userId).get();
     		usedBook = usedBookRepository.findByUserId(userId);
+    		usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId, soldout).size();
+
+    	} else {
+    		user = userRepository.findById(id).get();
+    		usedBook = usedBookRepository.findByUserId(id);
+    		usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(id, soldout).size();
+
     	}
+    	log.info("usedBookSoldoutCount = {}", usedBookSoldoutCount);
     	
     	list = mainList(usedBook);
     	log.info("user={}", user);
         log.info("userInfo좀 나와라ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ = {}", user);
         
+
+    	Integer postCount = postRepository.findByUserId(userId).size();
+    	log.info("왜2개야ㅑㅑㅑㅑㅑㅑㅑ = {}", postRepository.findByUserId(userId));
+    	log.info("postCount 크기어떻게해ㅐㅐㅐㅐㅐㅐㅐㅐ = {}", postCount);
         
         log.info("list userBookInfo ddfdfdf= {}", list);
-        Book book = bookRepository.findById(userId2).get();
+        Book book = bookRepository.findById(userId).get();
         String userNickName = user.getNickName();
-        Integer postCount = postRepository.findByUserId(userId2).size();
-        String soldout = "판매완료";
         
 //        Integer usedBookSellingCount = usedBookRepository.countUsedBookSellingPost(userId).size();
-        Integer usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId2, soldout).size();
         
-        Integer usedBookSellingCount = postCount - usedBookSoldoutCount;
+        Integer usedBookSellingCount = usedBookSoldoutCount;
         
 //        List<UsedBook> usedBookWishList = usedBookRepository.selectUsedBookIdfromUserId(userId);
 //        log.info("usedBookWishList = {}", usedBookWishList); // usedBookId를 가져오기 성공!
@@ -425,12 +439,17 @@ public class MarketController {
             model.addAttribute("userNickname", userDto.getNickName());       
         }
         
+        // (예진) 키워드 포함된 책 제목 => 이런 중고책 찾으세요? 
+        // List<UsedBook> bookTitleList = usedBookService.searchByBookTitle(mainKeyword);
+        List<Book> list4 = bookService.searchByBookName(mainKeyword);
+    
+        
         model.addAttribute("status", status);
         model.addAttribute("orderSlt", orderSlt);
         model.addAttribute("list", list);
         model.addAttribute("region", region);
         model.addAttribute("mainKeyword", mainKeyword);
-        
+        model.addAttribute("list4", list4);
         
         
     }

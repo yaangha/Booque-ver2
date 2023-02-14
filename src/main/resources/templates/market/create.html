@@ -130,6 +130,7 @@
         </li>
     </ul>
     <div style="margin-left: 850px; margin-bottom: 30px;">
+        <span id="divBookIds"></span>
         <input class="btn btn-danger" style="width: 200px; height:50px; margin: 5px; font-size: 18px;" type="button" id="btnSaveYet" value="임 시 저 장" />
         <input class="btn btn-success" style="width: 200px; height:50px; margin: 5px; font-size: 18px;" type="button" id="btnSubmit" value="등 록 하 기" />
     </div>
@@ -153,7 +154,7 @@
 
 const btnSaveYet = document.querySelector('#btnSaveYet');
 btnSaveYet.addEventListener('click', function() {
-	
+    
     const uploads = document.querySelector('#uploads');
     const files = uploadResults.querySelectorAll('img');
     let htmlStr = '';
@@ -162,7 +163,7 @@ btnSaveYet.addEventListener('click', function() {
         htmlStr += `<input type="hidden" name="fileNames" value="${imgLink}" />`;
     });
     uploads.innerHTML = htmlStr;
-	
+    
     formCreate.action = '/market/storage';
     formCreate.method = 'post';
     formCreate.submit();

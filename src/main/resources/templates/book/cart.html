@@ -38,7 +38,7 @@
     <br/><br/>
     
     <!-- 약간의 개인정보 넣어두기 (헷갈리지 않게) -->
-    <input type="hidden" name="userId" id="userId" th:value="${ user.id }" />
+    <input name="userId" id="userId" th:value="${ user.id }" />
     <input type="hidden" id="un" th:value="${#authentication.name}">
 	<!-- table AJax로 만듦 -->
     <div id="cList"></div>

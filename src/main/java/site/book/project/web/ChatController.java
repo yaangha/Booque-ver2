@@ -228,8 +228,18 @@ public class ChatController {
     	log.info("채팅창 리스트 바꿔야지ㅣ이ㅣ잉{}", userId);
         List<ChatListDto> list = chatService.loadChatList(userId);
         
+        // 뷰에 보여 줄 채팅방 정보들(리스트)
+        
+        List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(userId, userId);
 
-    	
-    	return null;
+        // 최신 메세지 내용 불러 오기  Dto에 넣어서 보냄
+        for(int i=0; i<list.size(); i++) {
+            String last = chatService.readLastThreeLines(myChats.get(i));
+            list.get(i).setLastMessage(last);
+        
+        }
+        
+        
+    	return list;
     }
 }

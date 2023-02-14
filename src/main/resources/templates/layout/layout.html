@@ -79,8 +79,9 @@
      .under-line:hover {
         border-bottom: 2px solid #39d9c8;
     }
-      
+ 
     </style>
+ 
 
 </head>
 
@@ -117,10 +118,12 @@
                 <button class="w3-button" id="btnAlarm" style="color:white; margin-top:8px; margin-right:30px;">
                     <i class="fa fa-bell-o"></i><span class="position-absolute top-60 start-85 translate-middle badge rounded-pill bg-danger m-1" id="noticeCount"></span>
                 </button>
+
                 <input type="hidden" id="userId" th:value="${ userId }"/>
                  <div class="w3-dropdown-content w3-card-4 w3-bar-block mb-2" style="top:66px; right:46px;">
+
                      <!-- (예진) 댓글 알림 리스트 보여줄 영역 -->
-                     <div id="divNotices"></div>
+                     <div id="divNotices" class="notices"></div>
                  </div>
             </div>
             
@@ -381,9 +384,10 @@
     <script>
     const userId = document.querySelector('#userId').value;
     
+    // (예진) 알림 클릭하면 알림 확인한 것으로 보고 notice 삭제
     function deleteNotice() {
         const noticeId = document.querySelector('#noticeId').value;
-        alert(noticeId);
+     
         axios.delete('/notice/delete/'+ noticeId)
         .then(response => {
             console.log('삭제성공');
