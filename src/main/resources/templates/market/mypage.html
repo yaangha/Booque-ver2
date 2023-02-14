@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org/"
     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{ layout/layout }">
+    layout:decorate="~{ layout/layoutM }">
 
 <div layout:fragment="content">
 
@@ -87,6 +87,7 @@
             <div style="font-weight: bold; font-size: 25px; border-bottom: 3px solid black; margin-top: 30px;">판매 물품</div>
             
             <div style="border-bottom: 3px solid black; margin-bottom: 30px;">
+            <div th:unless="${ #lists.isEmpty(list) }">
     			<div class="container" th:each="marketCreateDto : ${ list }" style="width: 230px; margin: 10px; display: inline-block;">
     				<a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ marketCreateDto.usedBookId }) }" th:myname="${ marketCreateDto.usedBookId }" onclick="usedBookHits(this.getAttribute('myname'))">
     				<img alt="" th:src="${ '/market/api/view/'+marketCreateDto.imgUsed }" style="height: 230px; width: 230px; margin-bottom: 10px; object-fit: cover;">
@@ -108,9 +109,14 @@
     				</a>
     			</div>
             </div>
+            <div th:if="${ #lists.isEmpty(list) }">
+                <div style="height:300px; font-weight: bold; font-size: 50px; color: red; text-align: center; padding-top: 100px;">아직 판매한 상품이 없습니다!</div>
+            </div>
+            </div>
             
+            <!-- 부끄장터 위시리스트 목록 -->
+            <div th:unless="${ #lists.isEmpty(wishListCHK) }">
             <div style="font-weight: bold; font-size: 25px; border-bottom: 3px solid black; margin-top: 50px;">My Heart</div>
-			
             <div style="border-bottom: 3px solid black; margin-bottom: 30px;">
                 <div class="container" th:each="wishDto : ${ wishListCHK }" style="width: 230px; margin: 10px; display: inline-block;">
                     <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ wishDto.usedBookId }) }" th:myname="${ wishDto.usedBookId }" onclick="usedBookHits(this.getAttribute('myname'))">
@@ -135,7 +141,7 @@
                     </a>
                 </div>
             </div>
-
+        </div>
 		</div>
 		<!-- w-70 end -->
 

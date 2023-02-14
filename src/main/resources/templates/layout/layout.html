@@ -149,7 +149,7 @@
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">마이페이지</a>
                     <a th:href="@{ /post/list }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">내 블로그</a>
-                    <a th:href="@{ /market/mypage?userId={userId} (userId = ${ userId }) }" class="w3-bar-item w3-button" 
+                    <a onclick="moveMypage()" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">마이부끄</a>
                     <a th:href="@{ /logout }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">로그아웃</a>
@@ -172,6 +172,7 @@
       <!-- 유저네임 표시 -->
       <div class="w3-right" style="margin-top:25px; padding-right:40px; border-right:2px solid grey;">님</div>
       <div class="w3-right" sec:authentication="principal.nickName" style="margin-top:25px; margin-right:7px; color:cornflowerblue; font-weight:bold;"></div>
+      <div id="userId2" sec:authentication="principal.id" style="display: none;"></div>
       </th:block>
 
       
@@ -426,6 +427,16 @@ function nothingKeywordCheck(){
         return false;
     }
 </script>
+
+<script>
+function moveMypage() {
+    const userId = document.querySelector('#userId2').innerText;
+    console.log(userId);
+    window.location.href = '/market/mypage?userId=' + userId;
+}
+
+</script>
+
     </th:block>
     <!-- 상단/사이드바, 모달 등 모든 페이지에 들어가는 공통 자바스크립트 -->
     <script th:src="@{ /js/script.js }"></script>
