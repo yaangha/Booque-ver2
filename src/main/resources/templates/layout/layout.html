@@ -119,7 +119,7 @@
                     <i class="fa fa-bell-o"></i><span class="position-absolute top-60 start-85 translate-middle badge rounded-pill bg-danger m-1" id="noticeCount"></span>
                 </button>
                 <input type="hidden" id="userId" th:value="${ userId }"/>
-                 <div class="w3-dropdown-content w3-card-4 w3-bar-block mb-2" style="top:66px; right:86px;">
+                 <div class="w3-dropdown-content w3-card-4 w3-bar-block mb-2" style="top:66px; right:46px;">
                      <!-- (예진) 댓글 알림 리스트 보여줄 영역 -->
                      <div id="divNotices"></div>
                  </div>
@@ -139,12 +139,12 @@
                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
                     </svg>
                 </button>
-                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="top:66px; right:86px;">
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="top:66px; right:98px;">
                     <a th:href="@{ /myPage }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">마이페이지</a>
                     <a th:href="@{ /post/list }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">내 블로그</a>
-                    <a th:href="@{ /market/mypage?userNickname={userNickname} (userNickname = ${ userNickname }) }" class="w3-bar-item w3-button" 
+                    <a th:href="@{ /market/mypage?userId={userId} (userId = ${ userId }) }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">마이부끄</a>
                     <a th:href="@{ /logout }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">로그아웃</a>
@@ -411,7 +411,7 @@ function nothingKeywordCheck(){
     function openChatWindow(url) {
         console.log('챗창 오픈');
         chatWindow = window.open("", "Chat", 
-        "width=1200,height=800,left=350,top=150,dependent=yes,location=yes, menubar=no,status=no,resizable=no,toolbar=no,scrollbars=yes");
+        "width=1200,height=850,left=350,top=150,dependent=yes,location=yes, menubar=no,status=no,resizable=no,toolbar=no,scrollbars=yes");
         chatWindow.location.href = url;
         chatWindow.focus();
         return false;

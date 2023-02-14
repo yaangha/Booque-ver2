@@ -153,7 +153,7 @@ public class ChatService {
         String sendTime = dto.getSendTime();
         System.out.println("print:" + message);
         
-        String writeContent = sender + "\n" + message + "\n" + "[" +  sendTime + "]" + "\n";
+        String writeContent = sender + "\n" + message + "\n" +  sendTime + "\n";
         
         byte[] b = writeContent.getBytes();
         
@@ -263,13 +263,13 @@ public class ChatService {
                     .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel()).chatWithId(chatWith.getId())
                     .build();
             // 최신 메세지 내용 불러 오기(채팅방 만들어지고 채팅이 하나도 없을 때)
-            if (chat.getCreatedTime().equals(chat.getModifiedTime())) {
-                String lastChat = " ";
-                dto.setRecentChat(lastChat);
-            } else { // 만들어진 채팅방이 있으면 거기에서 마지막 채팅을 불러옴.
-                String lastChat = chatAssistRepository.findByChatRoomId(chat.getChatRoomId()).getLastChat();
-                dto.setRecentChat(lastChat);
-            }
+//            if (chat.getCreatedTime().equals(chat.getModifiedTime())) {
+//                String lastChat = " ";
+//                dto.setRecentChat(lastChat);
+//            } else { // 만들어진 채팅방이 있으면 거기에서 마지막 채팅을 불러옴.
+//                String lastChat = chatAssistRepository.findByChatRoomId(chat.getChatRoomId()).getLastChat();
+//                dto.setRecentChat(lastChat);
+//            }
             
             
             list.add(dto);
