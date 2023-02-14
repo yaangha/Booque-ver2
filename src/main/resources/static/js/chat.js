@@ -261,4 +261,26 @@ window.addEventListener('DOMContentLoaded', () => {
         };
         
     };
+    
+    
+    // (지혜) 검색칸에 입력하는 내용(중고책 제목)에 맞춰 채팅방 리스트 필터링
+    // 아직 구현 중!! 미완성
+    function chatSearch() {
+        
+        let input = document.querySelector('#chatSearch');
+        const filter = input.value.toUpperCase();
+        
+        let chatRoom = document.querySelectorAll('.btnChatRoom');
+        for (i = 0; i < chatRoom.length; i++) {
+            let usedBookTitle = document.querySelector('#usedBookTitle');
+            if (usedBookTitle) {
+                txtValue = usedBookTitle.textContent || usedBookTitle.value;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    chatRoom[i].style.display = "";
+                } else {
+                    chatRoom[i].style.display = "none";
+                }
+            }
+        }
+    }
         
