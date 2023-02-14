@@ -3,6 +3,7 @@ package site.book.project.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -121,10 +122,16 @@ public class MarketController {
     							Integer usedBookId) {
     	// 총 세개의 테이블을 크리에이트 해야함
         
+        List<String> defaultImg = new ArrayList<>();
+        defaultImg.add("booque_logo.jpg");
+        
         if(dto.getFileNames() != null) {
             usedBookService.createImg(usedBookId, dto.getFileNames());
-            
+            log.info("사진 들었느냐낭");   
+        } else {
+            usedBookService.createImg(usedBookId, defaultImg);
         }
+        log.info("사진 들었느냐낭");   
         
         dto.setUserId(userDto.getId());
         dto.setStorage(1); // storage 값을 1(저장)로 변경 => 디폴트 값은 0(임시저장)
@@ -169,10 +176,13 @@ public class MarketController {
     
     @PostMapping("/storage") // 임시저장 완료 후 부끄마켓 메인 페이지로 이동
     public String storage(@AuthenticationPrincipal UserSecurityDto userDto, MarketCreateDto dto, Integer usedBookId) {
+        List<String> defaultImg = new ArrayList<>();
+        defaultImg.add("booque_logo.jpg");
         
         if(dto.getFileNames()!= null) {
             usedBookService.createImg(usedBookId, dto.getFileNames());
-            
+        } else {
+            usedBookService.createImg(usedBookId, defaultImg);
         }
         
         log.info("안들어가니?? 왜 ?? {}", dto.getFileNames());
@@ -305,7 +315,7 @@ public class MarketController {
 
     /**
      * 
-     * @param id 마이페이지에 표시될 user 
+     * @param userId 마이페이지에 표시될 user 
      * @param model
      */
     @GetMapping("/mypage") // /market/mypage 판매글작성자&마이페이지 이동
@@ -316,37 +326,42 @@ public class MarketController {
     	User user=null;
     	List<UsedBook> usedBook = null;
         List<MarketCreateDto> list = null;
-    	log.info("id13={}", id);
+    	log.info("id13={}", userId);
     	
     	String soldout = "판매완료";
     	
-    	Integer postCount = null;
     	Integer usedBookSoldoutCount = null;
     	
     	if (id==null) {
     		user=userRepository.findById(userId).get();
     		usedBook = usedBookRepository.findByUserId(userId);
-    		postCount = postRepository.findByUserId(userId).size();
     		usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId, soldout).size();
+
     	} else {
     		user = userRepository.findById(id).get();
     		usedBook = usedBookRepository.findByUserId(id);
-    		postCount = postRepository.findByUserId(id).size();
     		usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(id, soldout).size();
+
     	}
-    	log.info("postCount 갯수가 왜 안ㅁ자우 = {}", postCount);
     	log.info("usedBookSoldoutCount = {}", usedBookSoldoutCount);
     	
     	list = mainList(usedBook);
     	log.info("user={}", user);
         log.info("userInfo좀 나와라ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ = {}", user);
         
+
+    	Integer postCount = postRepository.findByUserId(userId).size();
+    	log.info("왜2개야ㅑㅑㅑㅑㅑㅑㅑ = {}", postRepository.findByUserId(userId));
+    	log.info("postCount 크기어떻게해ㅐㅐㅐㅐㅐㅐㅐㅐ = {}", postCount);
         
         log.info("list userBookInfo ddfdfdf= {}", list);
         Book book = bookRepository.findById(userId).get();
         String userNickName = user.getNickName();
         
-        Integer usedBookSellingCount = postCount - usedBookSoldoutCount;
+//        Integer usedBookSellingCount = usedBookRepository.countUsedBookSellingPost(userId).size();
+        
+        Integer usedBookSellingCount = usedBookSoldoutCount;
+        
 //        List<UsedBook> usedBookWishList = usedBookRepository.selectUsedBookIdfromUserId(userId);
 //        log.info("usedBookWishList = {}", usedBookWishList); // usedBookId를 가져오기 성공!
 //        List<MarketCreateDto> usedBookList = mainList(usedBookWishList);
