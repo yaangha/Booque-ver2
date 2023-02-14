@@ -227,7 +227,11 @@
     <br/><br/>
     
      <!-- <div class="col-8 container"> -->
-    <div style="font-weight: bold; font-size: 21px; border-bottom: 3px solid black;">한줄평 목록</div>
+    <div style="font-weight: bold; font-size: 25px; border-bottom: 3px solid black;">한줄평 목록</div>
+    <div th:if="${ #lists.isEmpty(commentList) }">
+        <div style="height:100px; font-size: 20px; text-align: center;">아직 작성하신 한줄평이 없습니다!</div>
+    </div>
+    <div th:unless="${ #lists.isEmpty(commentList) }">
     <table class="table">
         <thead>
             <tr style="font-weight: bold; font-size: small;border-bottom: 3px solid black;">
@@ -261,8 +265,8 @@
             </tr>
         </tbody>
     </table>
-            <!-- </div> -->
-    
+    </div>
+        
     </div> <!-- right data end -->
     
      <!-- 프사 이미지 변경 모달 -->
