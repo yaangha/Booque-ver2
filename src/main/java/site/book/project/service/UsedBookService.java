@@ -36,6 +36,9 @@ public class UsedBookService {
 	private final UsedBookPostRepository postRepository;
 	private final UsedBookImageRepository imgRepository;
 	private final UsedBookWishRepository usedBookWishRepository;
+	private final UsedBookPostRepository usedBookPostRepository;
+	private final UserRepository userRepository;
+	private final UsedBookImageRepository usedBookImgRepository;
 
 	
     @Value("${com.example.upload.path}")
@@ -90,8 +93,9 @@ public class UsedBookService {
 	    UsedBookImage entity = null;
 	    
 	    for(String f : fileNames) {
+	        String orgFileName = f.split("_")[1];
 	        
-	        entity = UsedBookImage.builder().usedBookId(usedBookId).fileName("/market/api/view/"+f).filePath(uploadPath+f).build();
+	        entity = UsedBookImage.builder().usedBookId(usedBookId).fileName(f).filePath(uploadPath+f).origFileName(orgFileName).build();
 	        imgRepository.save(entity);
 	    }
 	    
@@ -150,7 +154,18 @@ public class UsedBookService {
     public List<UsedBook> readOtherUsedBook(Integer bookId) {
         log.info("하은 중고책의 책 정보를 가진 아이디는? = {}", bookId);
         
-        List<UsedBook> otherUsedBookList = usedBookRepository.findByBookId(bookId);
+        // (1) 같은 책의 중고판매글 리스트
+        List<UsedBook> otherUsedBookListAll = usedBookRepository.findByBookId(bookId); 
+        
+        // (2) 임시저장 글 제외한 리스트 재생성
+        List<UsedBook> otherUsedBookList = new ArrayList<>();
+        
+        for (UsedBook u : otherUsedBookListAll) {
+            UsedBookPost storageChk = usedBookPostRepository.findByUsedBookId(u.getId());
+            if (storageChk.getStorage() != 0) {
+                otherUsedBookList.add(u);
+            }
+        }
         
         return otherUsedBookList;
     }
@@ -236,6 +251,26 @@ public class UsedBookService {
     }
 
    
+    
+    // (하은) 부끄마켓 찜한 목록 불러오기
+    public List<MarketCreateDto> searchWishList(Integer id) {
+        // USEDBOOKWISH에서 목록 찾기
+        // 해당 리스트에서 USEDBOOKID로 USEDBOOK 정보 찾기
+        List<UsedBookWish> wishList = usedBookWishRepository.findByUserId(id);
+        List<MarketCreateDto> usedBookList = new ArrayList<>();
+        
+        for (UsedBookWish u : wishList) {
+            UsedBook usedBook = usedBookRepository.findById(u.getUsedBookId()).get();
+            // List<UsedBookImage> usedBookImage = usedBookImgRepository.findByUsedBookId(usedBook.getId());
+            User seller = userRepository.findById(usedBook.getUserId()).get();
+            MarketCreateDto dto = MarketCreateDto.builder().username(seller.getUsername()).bookTitle(usedBook.getBookTitle())
+                    .price(usedBook.getPrice()).location(usedBook.getLocation()).title(usedBook.getTitle())
+                    .usedBookId(usedBook.getId()).build();
+            usedBookList.add(dto);
+        }
+        
+        return usedBookList;
+    }
     
     
     
