@@ -310,7 +310,7 @@ public class MarketController {
         // (예진) 키워드 포함된 책 제목 => 이런 중고책 찾으세요? 
         // List<UsedBook> bookTitleList = usedBookService.searchByBookTitle(mainKeyword);
         List<Book> list4 = bookService.searchByBookName(mainKeyword);
-        log.info("제목 탑 4 리스트 ={}", list4);
+    
         
         model.addAttribute("status", status);
         model.addAttribute("orderSlt", orderSlt);
