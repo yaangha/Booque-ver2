@@ -254,6 +254,8 @@ public class UsedBookService {
     
     // (하은) 부끄마켓 찜한 목록 불러오기
     public List<MarketCreateDto> searchWishList(Integer id) {
+        log.info("보이시나요 제가???? {}  ", id);
+        
         // USEDBOOKWISH에서 목록 찾기
         // 해당 리스트에서 USEDBOOKID로 USEDBOOK 정보 찾기
         List<UsedBookWish> wishList = usedBookWishRepository.findByUserId(id);
