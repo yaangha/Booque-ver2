@@ -184,10 +184,8 @@ window.addEventListener('DOMContentLoaded', () => {
         }
             $.post("/onlineChk", data)
             .done(response => { 
-                if(response == true){ // true: 상대가 online
-                    return true;
-                } else { // false: 상대가 offline
-                    
+                if(response == 1){ // true: 상대가 online
+                     
                 }
             })
             .fail(err => console.log("온라인/오프라인 오류"))

@@ -57,7 +57,7 @@ public class ChatService {
                     .build();
         
         chatRepository.save(chat);
-        ChatAssist chatAssist = ChatAssist.builder().chatRoomId(chat.getChatRoomId()).build();
+        ChatAssist chatAssist = ChatAssist.builder().chatRoomId(chat.getChatRoomId()).readCount(0).build();
         
         chatAssistRepository.save(chatAssist);
         
@@ -263,13 +263,13 @@ public class ChatService {
                     .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel()).chatWithId(chatWith.getId())
                     .build();
             // 최신 메세지 내용 불러 오기(채팅방 만들어지고 채팅이 하나도 없을 때)
-//            if (chat.getCreatedTime().equals(chat.getModifiedTime())) {
-//                String lastChat = " ";
-//                dto.setRecentChat(lastChat);
-//            } else { // 만들어진 채팅방이 있으면 거기에서 마지막 채팅을 불러옴.
-//                String lastChat = chatAssistRepository.findByChatRoomId(chat.getChatRoomId()).getLastChat();
-//                dto.setRecentChat(lastChat);
-//            }
+            if (chat.getCreatedTime().equals(chat.getModifiedTime())) {
+                String lastChat = " ";
+                dto.setRecentChat(lastChat);
+            } else { // 만들어진 채팅방이 있으면 거기에서 마지막 채팅을 불러옴.
+                String lastChat = chatAssistRepository.findByChatRoomId(chat.getChatRoomId()).getLastChat();
+                dto.setRecentChat(lastChat);
+            }
             
             
             list.add(dto);
@@ -282,18 +282,20 @@ public class ChatService {
     // 안읽은 메세지 저장(안읽음=1, 읽음=0)
     public Integer updateReadChat(String nickName, Integer chatRoomId, Integer unread) {
         ChatAssist entity = chatAssistRepository.findByChatRoomId(chatRoomId);
-        // 메세지를 읽은 경우
-        if (unread == 1) { // 읽었을 경우 -> DB 사용 x(마지막 메세지가 저장될 때까지)
+        log.info("ncu={}{}{}",nickName, chatRoomId,unread);
+        // 메세지를 읽은 경우| nickName : 기준이 되는 사람 닉네임, unread : 안읽었으면 1/읽었으면 0
+        if (unread == 1 && nickName.equals(entity.getNickName())) { // 읽었을 경우
+            entity.updateReadChk(nickName, 0, 0);
             return 0;
         }
         // 메세지를 안읽은 경우
-        if (entity.getReadCount()!=null) { // 안읽은 메세지 개수 갱신하는 경우
+        if (entity.getReadCount()!= 0) { // 안읽은 메세지 개수 갱신하는 경우
             if (nickName.equals(entity.getNickName())) { // 닉네임이 같으면 안읽음개수 추가
                 entity.updateReadChk(nickName, unread, entity.getReadCount()+1);
                 return 1;
             } else { // 닉네임이 다르면 유저 갱신후 안읽음 1 추가(닉네임이 다를 때: 처음 만들어지는 경우)
                 entity.updateReadChk(nickName, unread, 1);
-                return 0; // 안읽음이 역전되었으니 상대방 입장에서 읽음.
+                return 1; // 안읽음이 역전되었으니 상대방 입장에서 읽음.
             }
         } else { // 처음 만들어지는 경우
             entity.updateReadChk(nickName, unread, 1);

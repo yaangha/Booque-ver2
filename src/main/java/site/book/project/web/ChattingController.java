@@ -21,11 +21,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import oracle.net.aso.l;
 import site.book.project.domain.Chat;
+import site.book.project.domain.ChatAssist;
 import site.book.project.domain.Chatting;
 import site.book.project.domain.UserChatLog;
 import site.book.project.dto.ChatReadDto;
 import site.book.project.dto.UserRegisterDto;
 import site.book.project.dto.UserSecurityDto;
+import site.book.project.repository.ChatAssistRepository;
 import site.book.project.repository.ChatRepository;
 import site.book.project.repository.UserRepository;
 import site.book.project.service.ChatService;
@@ -46,7 +48,8 @@ public class ChattingController {
     private ChatRepository chatRepository;
     @Autowired
     private UserRepository userRepository;
-    
+    @Autowired
+    private ChatAssistRepository chatAssistRepository;
     // 메시지 컨트롤러
 //    @MessageMapping("/chat/{userName}")
 //    public void sendMessage (@DestinationVariable String userName, Chatting chat) {
@@ -75,10 +78,18 @@ public class ChattingController {
     @MessageMapping("/chat/read/{chatRoomId}")
     public void notification(@DestinationVariable Integer chatRoomId, ChatReadDto dto) throws IOException {
         String nickName = dto.getSender();
-        log.info("@@@@@@{},{}",chatRoomId,nickName);
-        chatService.updateReadChat(nickName, chatRoomId, 1);
+//        ChatAssist CA = chatAssistRepository.findByChatRoomId(chatRoomId);
+//        Integer unreadCount = CA.getReadCount();
+//        String nickNameCmp = CA.getNickName();
+//        log.info("@@@@@@{},{},{}",chatRoomId,nickName, nickNameCmp);
+//        if (unreadCount != 0 ) {
+//            if (nickName.equals(nickNameCmp)) {
+//                chatService.updateReadChat(nickNameCmp, chatRoomId, 1); // 상대방의 글을 읽고 내 글을 보낼 때
+//            } else {
+//                chatService.updateReadChat(nickNameCmp, chatRoomId, 0); // 상대방이 내 글을 읽지 않고 안읽음 추가
+//            }   
+//        } 
         String url2 = "/user/" + chatRoomId + "/queue/notification/" + nickName;
-        log.info(url2);
         simpMessagingTemplate.convertAndSend(url2, nickName);
     }
     

@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
+import site.book.project.domain.ChatAssist;
 import site.book.project.domain.UsedBook;
 import site.book.project.domain.UsedBookImage;
 import site.book.project.domain.User;
 import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
 import site.book.project.dto.UserSecurityDto;
+import site.book.project.repository.ChatAssistRepository;
 import site.book.project.repository.ChatRepository;
 import site.book.project.repository.UsedBookImageRepository;
 import site.book.project.repository.UsedBookRepository;
@@ -60,7 +62,9 @@ public class ChatController {
     private UsedBookRepository usedBookRepository;
     @Autowired
     private UsedBookImageRepository usedBookImageRepository;
- 
+    @Autowired
+    private ChatAssistRepository chatAssistRepository;
+    
     // 중고판매글에서 '채팅하기' 버튼 클릭시
     @PostMapping("/chat")
     @ResponseBody
@@ -77,7 +81,7 @@ public class ChatController {
             // 이미 채팅을 하고 있다면
             log.info("이미 채팅 중입니다!");
             User dto = userRepository.findById(sellerId).get();
-            Integer whenRead = chatService.updateReadChat(dto.getNickName(), chatExistsOrNot.getChatRoomId(), 0);
+            Integer whenRead = chatService.updateReadChat(dto.getNickName(), chatExistsOrNot.getChatRoomId(), 1);
             model.addAttribute("read", whenRead);
             return "/chat?chatRoomId="+chatExistsOrNot.getChatRoomId();
             
@@ -98,7 +102,7 @@ public class ChatController {
         
         Integer loginUserId = userDto.getId();
         User loginUser = userRepository.findById(loginUserId).get();
-        
+        String loginNickName = loginUser.getNickName();
         // 뷰에 보여 줄 내 정보
         model.addAttribute("loginUser", loginUser);
         
@@ -108,7 +112,7 @@ public class ChatController {
         
         List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
 
-         
+        
         
         // 최신 메세지 내용 불러 오기
         List<String> cl = new ArrayList<>();
@@ -135,6 +139,20 @@ public class ChatController {
              model.addAttribute("usedBook", usedbook);
              // chatListDto를 같
              model.addAttribute("chatWith", usedbook);
+             // 안읽은 메세지 개수
+             ChatAssist CA = chatAssistRepository.findByChatRoomId(myChats.get(0).getChatRoomId());
+             Integer unreadCount = CA.getReadCount();
+             String withName = CA.getNickName();
+             if(unreadCount != 0) {
+                 if (loginNickName.equals(withName)) {
+                     unreadCount = chatService.updateReadChat(withName, myChats.get(0).getChatRoomId(), 1);
+                     model.addAttribute("rcount", unreadCount);
+                 } else {
+                 model.addAttribute("rcount", unreadCount);
+                 }
+                 } else {
+                     model.addAttribute("rcount", 0);
+                 }
         } else {
 
             Chat chatById = chatRepository.findByChatRoomId(chatRoomId);
@@ -174,11 +192,28 @@ public class ChatController {
 
             model.addAttribute("usedBook", usedbook);
             model.addAttribute("chatWith", chatPerson);
+            // 안읽은 메세지 개수
+            ChatAssist CA = chatAssistRepository.findByChatRoomId(chatRoomId);
+            Integer unreadCount = CA.getReadCount();
+            String withName = CA.getNickName();
+            if(unreadCount != 0) {
+                if (loginNickName.equals(withName)) {
+                    unreadCount = chatService.updateReadChat(withName, chatRoomId, 1);
+                    model.addAttribute("rcount", unreadCount);
+                } else {
+                model.addAttribute("rcount", unreadCount);
+                }
+            } else {
+                model.addAttribute("rcount", 0);
+            }
+            
         }
 
             // chatHistory 불러 오기
             //chatHistory Model에 저장해 View로 전달
             model.addAttribute("chatHistory", chatHistory);
+            
+            
     }
     
 //    // (홍찬) 내 대화 목록 불러오기

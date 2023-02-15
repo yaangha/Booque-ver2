@@ -200,7 +200,7 @@
             
                     <!-- 출력 창(chatHistory) -->
                     <div id="content" class="chat-history">
-                        <div th:each="chat : ${chatHistory}">
+                        <div th:each="chat, i : ${chatHistory}">
                             <div th:style="${chat.sender != loginUser.nickName } ? 'display: block; float: left;' : 'display:none;'">
                                 <img class="rounded-circle" width="40" height="40" th:src = "${ chatWith.chatWithImage }" style="margin-right:10px;">
                             </div>
@@ -209,8 +209,11 @@
                                 <span id="chatMessage" th:text="${chat.message}"></span><br/>
                             </div>
                             <div th:style="${chat.sender == loginUser.nickName } ? 'text-align: right;' : 'text-align: left;'">
-                                <span style="font-size:13px; color:grey;" id="chatSendTime" th:text="${chat.sendTime}"></span><br/><br/>
-                            </div>   
+                                <span style="font-size:13px; color:grey;" id="chatSendTime" th:text="${chat.sendTime}"></span>
+                                <div th:if="${ rcount != 0 }">
+                                <span th:style="${ i.index < (i.size - rcount) } ? 'visibility: hidden' : ''">1</span><br/><br/>
+                                </div>
+                            </div> 
                         </div>
                     </div>
                     
