@@ -258,8 +258,9 @@
                             <div th:style="${chat.sender == loginUser.nickName } ? 'text-align: right;  margin-left: 60%;' : 'text-align: left; margin-right: 60%;'">
                                 <span style="font-size:13px; color:grey;" id="chatSendTime" th:text="${chat.sendTime}"></span>
                                 <div th:if="${ rcount != 0 }">
-                                <span th:style="${ i.index < (i.size - rcount) } ? 'visibility: hidden' : ''">1</span><br/><br/>
+                                <span th:style="${ i.index < (i.size - rcount) } ? 'visibility: hidden' : ''">1</span>
                                 </div>
+                                <br/><br/>
                             </div>   
                         </div>
                     </div>
