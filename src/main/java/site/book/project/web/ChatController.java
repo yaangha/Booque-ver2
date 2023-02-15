@@ -133,6 +133,14 @@ public class ChatController {
              model.addAttribute("usedBook", usedbook);
              // chatListDto를 같
              model.addAttribute("chatWith", usedbook);
+             
+             if (reservedRepository.findByUsedBookId(usedbook.getUsedBookId()) != null) {
+                 Integer reservedId = reservedRepository.findByUsedBookId(usedbook.getUsedBookId()).getUserId();
+                 String reservedName = userRepository.findById(reservedId).get().getNickName();
+                 model.addAttribute("reservedId", reservedId);
+                 model.addAttribute("reservedName", reservedName);
+             }
+             
         } else {
 
             Chat chatById = chatRepository.findByChatRoomId(chatRoomId);

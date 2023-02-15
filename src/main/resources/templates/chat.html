@@ -56,6 +56,14 @@
         padding-bottom: 15px;
     }
     
+    .lastMessage {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+         -webkit-box-orient: vertical;
+    }
+    
     #chatSearchDiv {
         position:relative;
     }
@@ -153,7 +161,7 @@
                                 <td style="padding-left: 10px; padding-right:10px; width:80%;">
                                     <div th:text="${ chat.chatWithName }"></div>
                                     <div style="font-size:9px;" th:text="${ chat.modifiedTime }"></div>
-    	                            <span th:text="${ chat.lastMessage }"></span>
+    	                            <span class="lastMessage" th:text="${ chat.lastMessage }"></span>
                                 </td>
                                 <td style="padding-right:10px; width:20%;">
                                      <img width="auto" height="50" th:src = "${ '/market/api/view/'+ chat.usedBookImage }" />
