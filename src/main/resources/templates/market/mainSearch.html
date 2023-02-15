@@ -45,35 +45,8 @@
   
 </head>
 <body>
-
-
-    <!-- (예진) 검색어 포험된 책 리스트(최대 4개) 보여주기 + 원하는 책 새 글 알림 등록 -->
-        <div class="col-3 border-bottom mb-3 border-dark pb-2"> 
-              <h6 class="mb-1 fw-bold" style="font-size: 15px; font-style: italic;">&nbsp;이런 책 찾으시나요?</h6>
-              <h6 class="border-bottom mb-3 border-dark" style="font-size: 13px; font-style: italic;">&nbsp;원하는 책 클릭하고, 새 글 알림 받아보세요!</h6>
-             <div class="rounded" th:each="x : ${ list4 }">
-                <div class="row g-0 mb-2 p-1">
-                    <div class="col-md-3">
-                        <a th:href="@{ /detail?id={bookId} (bookId = ${ x.bookId })}">
-                        <img th:src="${ x.bookImage }" style="width: 70px;" /></a>
-                        <input type="hidden" id="b-Id" th:value="${ x.bookId }"/>
-                    </div>
-                  <div class="col-md-9" style="text-align: left;">
-                         <small class="d-inline-flex px-1 my-1  border rounded text-secondary">  
-                             <span th:text="${ x.bookgroup }"></span><span> / </span><span th:text="${ x.category }"></span> 
-                         </small>&nbsp;&nbsp;&nbsp;&nbsp;
-                         <span class="m-1" onclick="register(event);"><img src="/images/nu.png" width="15"><small>클릭</small></span> 
-                         <div style="border:none; font-size: 15px;" class="w-100 fw-bold"  th:text="${ x.bookName }"></div> 
-                         <div><span style="font-size: 12px;">지은이 : </span><small th:text ="${ x.author }"></small> </div> 
-                         <div><small th:text ="${ x.publisher }"></small><span style="font-size: 12px;"> 출판</span></div>  
-                   </div> 
-                    
-                </div>
-             </div>
-         </div> 
-
-    
-    <div class="w-70 container">
+      <div class="w-70 container">
+     
     
     <div style="margin-bottom: 80px;"><!-- 상단 div(검색, 판매글, 마이페이지 이동 등) -->
     
@@ -114,7 +87,7 @@
                 <i class="bi bi-search" style="font-size: 2rem;"></i>
             </button>
                         
-            <div style="display: inline-block; margin-left: 65px;">
+            <div style="display: inline-block; margin-left: 20px;">
         
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i> 상품등록</button>
             
@@ -147,15 +120,41 @@
     </div><!-- 상단 div end -->
     
     <div><!-- main contents -->
-    <div style="margin-top:15px; margin-bottom:15px;">
-        <div style="font-weight: bold; font-size:25px; margin-left: 40px; display:inline-block;">부끄마켓 중고거래</div>
-        <select id="orderSlt" onchange="changeStatus()" name="orderSlt" class="form-select" style="width:120px; height: 40px; margin-left: 910px; margin-right:40px; display: inline-block;">
+    <div style="margin-top:15px; margin-bottom:30px; padding-bottom: 15px; border-bottom: 1px solid silver;">
+        <div style="font-weight: bold; font-size:25px; margin-left: 40px; display:inline-block; ">부끄마켓 중고거래</div>
+        <select id="orderSlt" onchange="changeStatus()" name="orderSlt" class="form-select" style="width:120px; height: 40px; margin-left: 900px; margin-right:40px; display: inline-block;">
             <option th:selected ="${ orderSlt } == 최신순" >최신순</option>
             <option th:selected ="${ orderSlt } == 최저가순" >최저가순</option>
             <option th:selected ="${ orderSlt } == 최고가순" >최고가순</option>
         </select>
     </div>    
     </form> <!-- formSearchL end -->
+    
+    <div>
+    <h6 class="mb-1 fw-bold" style="margin-left: 40px; font-size: 15px; font-style: italic;">&nbsp;이런 책 찾으시나요?</h6>
+    <h6 style="margin-left: 40px; font-size: 13px; font-style: italic;">&nbsp;원하는 책 클릭하고, 새 글 알림 받아보세요!</h6>
+    <div class="rounded" th:each="x : ${ list4 }" style="margin-left: 40px; border: 1px solid silver; display: inline-block;"><!-- main div -->
+            <div style="margin: 10px;">
+                <div style="display: inline-block; vertical-align: top; margin-right: 10px;">
+                    <a th:href="@{ /detail?id={bookId} (bookId = ${ x.bookId })}"><img th:src="${ x.bookImage }" style="width: 60px;" /></a>
+                    <input type="hidden" id="b-Id" th:value="${ x.bookId }"/>
+                </div>
+              <div style="text-align: left; display: inline-block;">
+                     <div class="d-inline-flex px-1 my-1  border rounded text-secondary" style="font-size: 10px;">  
+                         <span th:text="${ x.bookgroup }"></span><span> / </span><span th:text="${ x.category }"></span> 
+                     </div>
+                     <div style="font-size: 13px; width: 145px;" class="fw-bold text-truncate"  th:text="${ x.bookName }"></div> 
+                     <div style="font-size: 12px;"><span th:text ="${ '저자: ' + x.author }"></span> </div> 
+                     <div style="font-size: 12px;"><span th:text ="${ x.publisher + ' 출판' }"></span></div>  
+               </div> 
+               <div style="display: inline-block;">
+                <span class="m-1" onclick="register(event);"><i class="bi bi-hand-index-fill" style="font-size: 21px;"></i></span>
+                
+               </div>
+            </div>
+         </div><!-- main div end -->
+    </div>
+    
     
     <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:40px; display:inline-block;"><!-- content 1개 -->
         <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ marketCreateDto.usedBookId }) }" th:myname="${ marketCreateDto.usedBookId }" onclick="usedBookHits(this.getAttribute('myname'))">
@@ -177,8 +176,8 @@
 
     
     </div><!-- main contents end -->
+    </div>
     
-    </div> <!-- w-70 end -->
     
     <!-- 부트스트랩 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>

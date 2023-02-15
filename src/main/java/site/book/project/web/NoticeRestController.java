@@ -86,7 +86,8 @@ public class NoticeRestController {
     // (예진) userId(postWriter/subscribedBookId) 알림 리스트(notice list) 불러오기
     @GetMapping("/showNotice/{userId}")
     public ResponseEntity<List<NoticeDto>> showAllNotices(@PathVariable Integer userId) {
-      
+         log.info("노티스아이디={}",userId);
+        
          List<NoticeDto> list =noticeService.readNotices(userId);
        
         return ResponseEntity.ok(list);

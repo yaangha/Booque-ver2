@@ -3,18 +3,21 @@
  */
 window.addEventListener('DOMContentLoaded', () => {
     
+    const userId = document.querySelector('#userId2').innerText;
+    
     if(userId){
-        
+         console.log(userId);
          showNotice();      // 로그인 한 유저의 알림 리스트
     }
   
     
     function showNotice(){
-        const userId = document.querySelector('#userId').value;
+        console.log(userId);
        
         axios
         .get('/showNotice/' + userId)  
-        .then(response => { updateNoticeList(response.data) } )
+        .then(response => { 
+            updateNoticeList(response.data) } )
         .catch(err => { console.log(err) });
         
     }    
