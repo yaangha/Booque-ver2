@@ -13,9 +13,13 @@
 
     
    function readCartDesc(){
-        const userid = document.querySelector('#userId').value;
+        const userid = document.querySelector('#userId')
+        const testU =document.querySelector('#testU').innerText;
+        console.log(userid)
+        console.log(testU)
+        console.log(testU.innerText)
         
-        axios.get('api/cart/all/' + userid) 
+        axios.get('api/cart/all/' + testU) 
         .then(response => { updateCartList(response.data)
         
         })
@@ -220,13 +224,9 @@
         if(sum>=30000){
             delivery.innerText='3만원 이상 구매, 무료 배송입니다.'
             totalPrice.innerText = total.innerText;
-        }else if(sum>0) {
+        }else {
             delivery.innerText = '3,000원'
             totalPrice.innerText =(sum+3000).toLocaleString();
-        }else {
-            delivery.innerText = '0원'
-            totalPrice.innerText ='0'
-            
         }
         
     }    
@@ -333,7 +333,6 @@
     
     
  })
-
 
 
 

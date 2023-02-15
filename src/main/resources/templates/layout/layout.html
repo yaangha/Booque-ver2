@@ -112,7 +112,7 @@
         </th:block>
         <!-- 로그인 한 상태 -->
         <th:block sec:authorize="isAuthenticated()">
-        
+        <div id="userN" sec:authentication="principal.id"></div>
             <!-- 알림 버튼 -->
             <div class="w3-dropdown-hover w3-bar-item w3-right">
                 <button class="w3-button" id="btnAlarm" style="color:white; margin-top:8px; margin-right:30px;">
@@ -120,6 +120,7 @@
                 </button>
 
                 <input type="hidden" id="userId" th:value="${ userId }"/>
+                
                  <div class="w3-dropdown-content w3-card-4 w3-bar-block mb-2" style="top:66px; right:46px;">
 
                      <!-- (예진) 댓글 알림 리스트 보여줄 영역 -->
@@ -383,6 +384,7 @@
     
     <script>
     const userId = document.querySelector('#userId').value;
+    const userN = document.querySelector('#userN').innerText;
     
     // (예진) 알림 클릭하면 알림 확인한 것으로 보고 notice 삭제
     function deleteNotice() {

@@ -21,13 +21,16 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
+import site.book.project.domain.Reserved;
 import site.book.project.domain.UsedBook;
 import site.book.project.domain.UsedBookImage;
 import site.book.project.domain.User;
 import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
+import site.book.project.dto.UsedBookReserveDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.ChatRepository;
+import site.book.project.repository.ReservedRepository;
 import site.book.project.repository.UsedBookImageRepository;
 import site.book.project.repository.UsedBookRepository;
 import site.book.project.repository.UserRepository;
@@ -43,6 +46,7 @@ public class ChatService {
     private final UserRepository userRepository;
     private final UsedBookRepository usedBookRepository;
     private final UsedBookImageRepository usedBookImageRepository;
+    private final ReservedRepository reservedRepository;
     
     @Value("${file.upload-dir}")
     String fileUploadPath; 
@@ -245,17 +249,37 @@ public class ChatService {
             UsedBook usedBook = usedBookRepository.findById(usedBookId).get();
             List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(usedBookId);
             
-            ChatListDto dto = ChatListDto.builder()
-                    .chatRoomId(chat.getChatRoomId()).modifiedTime(ChatController.convertTime(chat.getModifiedTime()))
-                    .usedBookId(usedBookId).usedBookImage(imgList.get(0).getFileName()).price(usedBook.getPrice())
-                    .status(usedBook.getStatus())
-                    .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
-                    .usedTitle(usedBook.getTitle())
-                    .usedBookTitle(usedBook.getBookTitle())
-                    .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel()).chatWithId(chatWith.getId())
-                    .build();
-            
-            list.add(dto);
+            // 예약 정보가 있다면 불러 오기
+            if (reservedRepository.findByUsedBookId(usedBookId) != null) {
+                Integer reserverId = reservedRepository.findByUsedBookId(usedBookId).getUserId();
+                String reserverName = userRepository.findById(reserverId).get().getNickName();
+                
+                ChatListDto dto = ChatListDto.builder()
+                        .chatRoomId(chat.getChatRoomId()).modifiedTime(ChatController.convertTime(chat.getModifiedTime()))
+                        .usedBookId(usedBookId).usedBookImage(imgList.get(0).getFileName()).price(usedBook.getPrice())
+                        .status(usedBook.getStatus())
+                        .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
+                        .usedTitle(usedBook.getTitle())
+                        .usedBookTitle(usedBook.getBookTitle()).userId(usedBook.getUserId())
+                        .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel()).chatWithId(chatWith.getId())
+                        .reservedId(reserverId).reservedName(reserverName)
+                        .build();
+                
+                list.add(dto);
+                
+            } else {
+                ChatListDto dto = ChatListDto.builder()
+                        .chatRoomId(chat.getChatRoomId()).modifiedTime(ChatController.convertTime(chat.getModifiedTime()))
+                        .usedBookId(usedBookId).usedBookImage(imgList.get(0).getFileName()).price(usedBook.getPrice())
+                        .status(usedBook.getStatus())
+                        .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel())
+                        .usedTitle(usedBook.getTitle())
+                        .usedBookTitle(usedBook.getBookTitle()).userId(usedBook.getUserId())
+                        .chatWithName(chatWith.getNickName()).chatWithImage(chatWith.getUserImage()).chatWithLevel(chatWith.getBooqueLevel()).chatWithId(chatWith.getId())
+                        .build();
+                
+                list.add(dto);
+            }
             
         }
         return list;

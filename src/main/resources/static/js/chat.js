@@ -8,6 +8,7 @@ window.addEventListener('DOMContentLoaded', () => {
         var stompClient = null;
         var sender = $('#loginUser').val();
         var chatRoomId = $('#chatRoomId').val();
+        var chatWithImage = $('#chatWithImage').val();
         // invoke when DOM(Documents Object Model; HTML(<head>, <body>...etc) is ready
         $(document).ready(connect());
         
@@ -43,7 +44,6 @@ window.addEventListener('DOMContentLoaded', () => {
         
         const btnSend = document.querySelector('#btnSend');
         const messageInput = document.querySelector('#message');
-        const messageValue = document.querySelector('#message').val;
         
         // (지혜) 메시지 입력해야 보내기버튼 활성화되기
         messageInput.addEventListener('keyup', activateBtnSend);
@@ -52,7 +52,9 @@ window.addEventListener('DOMContentLoaded', () => {
         
         function activateBtnSend() {
             
-            console.log('activateBtnSend 함수');
+            const messageValue = document.querySelector('#message').value;
+            
+            console.log('activateBtnSend 함수 - value: '+messageValue);
             
             if (messageValue == '') {
                 btnSend.disabled = true;
@@ -172,13 +174,16 @@ window.addEventListener('DOMContentLoaded', () => {
             messageObj.message+
             '</div><div style="font-size:13px; color:grey;">' +
             messageObj.sendTime +
-            '</div><span id="check" style="font-color:blue;">1</span></p>';
+            '</div><span id="check" style="color:dodgerblue;">1</span></div></p>';
             } else {
-            return '<p><div id="newResponseHistory" class="row alert alert-info"><div class="col_8">' +
+            return '<div id="newResponseHistory"><div style="float:left;">' +
+            '<img class="rounded-circle" width="40" height="40" src="' +
+            chatWithImage + 
+            '" style="margin-right:10px;"></div><div><span>' +
             messageObj.message+
-            '</div><div style="font-size:13px; color:grey;">' +
+            '</span><br/></div><div style="font-size:13px; color:grey;"><span>' +
             messageObj.sendTime +
-            '</div></p>';
+            '<span><br/><br/></div></div>';
             }
         }
         
@@ -186,7 +191,6 @@ window.addEventListener('DOMContentLoaded', () => {
         $('#message').focus(function(){
             
             let nm = document.getElementById('newResponseHistory');
-            nm.className = "row";
             nm.removeAttribute('id');
             if(sender == sender){
                 console.log("확인해주세요!")
@@ -249,4 +253,90 @@ window.addEventListener('DOMContentLoaded', () => {
             // parent.focus();  부모창으로 포커스(크롬에서는 지원되지 않는다 함...ㅠㅠ)
         }
         
+        
+    const usedBookId = document.querySelector('#usedBookId').value;
+    const buyerId = document.querySelector('#chatWithId').value;
+    const buyerName = document.querySelector('#chatWithName').value;
+        
+    // (지혜) 판매자가 '거래 예약' 클릭시
+    function reserve() {
+        
+        console.log('usedBookId = '+usedBookId+', buyerId = '+buyerId+', buyerName = '+buyerName);
+        confirm(buyerName+'님과 거래 예약하시겠습니까?');
+
+        const reserveDto = {
+            usedBookId : usedBookId,
+            userId : buyerId
+        }
+        
+        if(confirm){
+            axios.post('/chat/reserve', reserveDto)
+             .then(response =>{
+                 alert(buyerName +'님과 거래 예약되었습니다!');
+                 console.log(response);
+                 window.location.reload();    // 페이지 새로고침
+             });
+        };
+    };
+    
+    
+    // (지혜) 판매자가 '거래 취소' 클릭시
+    function cancel() {
+        
+        console.log('usedBookId = '+usedBookId+', buyerName = '+buyerName);
+        confirm(buyerName+'님과의 예약을 취소하시겠습니까?');
+        
+        if(confirm){
+            axios.post('/chat/cancel',null, { params: { usedBookId : usedBookId }})
+             .then(response =>{
+                 alert(buyerName +'님과의 거래가 취소되었습니다!');
+                 console.log(response);
+                 window.location.reload();    // 페이지 새로고침
+             });
+        };
+    };
+    
+    
+    
+    // (지혜) 판매자가 '거래 완료' 클릭시
+    function sold() {
+        
+        console.log('usedBookId = '+usedBookId+', buyerName = '+buyerName);
+        confirm(buyerName+'님과의 거래가 완료됐나요?');
+
+        if(confirm){
+            axios.post('/chat/sold', null, { params: { usedBookId : usedBookId }})
+             .then(response =>{
+                 alert(buyerName +'님과의 거래가 완료되었습니다!');
+                 console.log(response);
+                 window.location.reload();    // 페이지 새로고침
+             })
+             .catch(err => {
+                console.log(err);
+            });
+        };
+        
+    };
+    
+    
+    // (지혜) 검색칸에 입력하는 내용(중고책 제목)에 맞춰 채팅방 리스트 필터링
+    // 아직 구현 중!! 미완성
+    function chatSearch() {
+        
+        let input = document.querySelector('#chatSearch');
+        const filter = input.value.toUpperCase();
+        
+        let chatRoom = document.querySelectorAll('.btnChatRoom');
+        for (i = 0; i <= chatRoom.length; i++) {
+            let usedBookTitle = document.querySelector('#usedBookTitle');
+            if (usedBookTitle) {
+                txtValue = usedBookTitle.value;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    chatRoom[i].style.display = "";
+                } else {
+                    chatRoom[i].style.display = "none";
+                }
+            }
+        }
+    }
         
