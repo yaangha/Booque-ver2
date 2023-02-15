@@ -188,6 +188,55 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     
     
+    // (지혜) 안읽은 채팅방 필터링
+    const btnShowAllChats = document.querySelector('#showAllChats');
+    const btnShowUnreadChats = document.querySelector('#showUnreadChats');
+    
+    btnShowAllChats.addEventListener('click', showAll);
+    btnShowUnreadChats.addEventListener('click', showUnread);
+    
+    function showAll() {    // 전체 채팅방 보기
+        let chatRoom = document.querySelectorAll('.btnChatRoom');
+        for (i = 0; i <= chatRoom.length; i++) {
+            chatRoom[i].style.display = "block";
+            }
+    }
+    
+    function showUnread() {
+        let chatRoom = document.querySelectorAll('.btnChatRoom');
+        let 
+        
+        for (i = 0; i <= chatRoom.length; i++) {
+            
+            }
+    }
+    
+    
+    
+    let input = document.querySelector('#chatSearch');
+        const filter = input.value.toUpperCase();   // 검색창에 입력되는 문자(대소문자 구별x)
+        
+        let chatRoom = document.querySelectorAll('.btnChatRoom');
+        for (i = 0; i <= chatRoom.length; i++) {
+            console.log('챗방 갯수 = '+chatRoom.length+'개');
+            let usedBookTitle = document.querySelectorAll('.usedBookTitle');
+            if (usedBookTitle) {
+                txtValue = usedBookTitle[i].value.toUpperCase();
+                console.log('txtValue = '+txtValue);
+                console.log('filter = '+filter);
+                if (txtValue.indexOf(filter) > -1) {   // 검색창의 글자와 중고책 제목에 일치하는 글자가 있으면
+                    chatRoom[i].style.display = "block";
+                } else {
+                    chatRoom[i].style.display = "none";
+                }
+            }
+        }
+    
+    
+    
+    
+    
+    
 });
 
         // (지혜) 채팅창에서 프사,닉네임,책표지 클릭시 부모창 링크 변경(챗리스트에선 적용x)

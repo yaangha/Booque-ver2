@@ -145,6 +145,8 @@
                     <div style="margin-top:7px;">
                         <button id="showAllChats" class="w3-border w3-medium" style="color:dimgrey; margin-right:10px;">전체보기</button>
                         <button id="showUnreadChats" class="w3-border w3-medium" style="color:dimgrey;">안 읽은 채팅만 보기</button>
+                        <input type="hidden" th:text="${unreadInfo.unread}"/>
+                        <input type="hidden" th:text="${unreadInfo.unreadNickName}"/>
                     </div>
                 </div>
                 
