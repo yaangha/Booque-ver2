@@ -3,8 +3,7 @@
  */
  
 window.addEventListener('DOMContentLoaded', () => {
-
-        
+    
         var stompClient = null;
         var sender = $('#loginUser').val();
         var chatRoomId = $('#chatRoomId').val();
@@ -91,62 +90,7 @@ window.addEventListener('DOMContentLoaded', () => {
             // 보낸 후 보내기버튼 비활성화
             btnSend.disabled = true;
             btnSend.style.color = "silver";
-            
-            
-            const userId = document.querySelector('#userId').value
-            sendChatList(userId)
-            
         }
-        
-        
-        function sendChatList(userId){
-            axios.get('/chat/api/list?userId='+ userId)
-                .then(response => {
-                        sendBychatList(response)
-                    })
-                .err(err => {
-                    console.log(err)
-                })
-            
-        }
-        
-        function sendBychatList(response){
-            const chatListTbody = document.querySelector('#chatListTbody')
-            chatListTbody.innerHTML = '';
- 
-            
-            response.data.forEach(x => {
-             //   x[0].style.backgroundColor = "seashell";
-                console.log(x)
-                
-               const htmlStr = `
-                            <tr  class="btnChatRoom" 
-                            onclick="location.href='/chat?chatRoomId=${ x.chatRoomId}'"
-                            style="cursor:pointer; background-color:none;">
-                                <td style="padding-left:10px; width:20%;">
-                                    <img class="rounded-circle" width="40" height="40" src = "${ x.chatWithImage }" />
-                                </td>
-                                <td style="padding-left: 10px; padding-right:10px; width:80%;">
-                                    <div >${ x.chatWithName }</div>
-                                    <div style="font-size:9px;" >${ x.modifiedTime }</div>
-                                    <span >${ x.lastMessage }</span>
-                                </td>
-                                <td style="padding-right:10px; width:20%;">
-                                     <img width="auto" height="50" src = "${ '/market/api/view/'+ x.usedBookImage }" />
-                                </td>
-                            </tr>
-                `
-                
-            chatListTbody.innerHTML += htmlStr
-                
-            })
-            
-        const chatTr = document.querySelectorAll('.btnChatRoom')
-        chatTr[0].style.backgroundColor = "seashell";
-        }
-        
-        
-        
         
         // 메시지 입력 창에서 Enter키가 보내기와 연동되도록 설정
         var inputMessage = document.getElementById('message'); 
@@ -319,20 +263,30 @@ window.addEventListener('DOMContentLoaded', () => {
     };
     
     
-    // (지혜) 검색칸에 입력하는 내용(중고책 제목)에 맞춰 채팅방 리스트 필터링
-    // 아직 구현 중!! 미완성
+    // (지혜) 검색칸에 입력하는 글자를 실시간으로 인식해서, 중고책 제목이 일치하는 채팅방 리스트만 보이도록 필터링
     function chatSearch() {
         
         let input = document.querySelector('#chatSearch');
-        const filter = input.value.toUpperCase();
+        const filter = input.value.toUpperCase();   // 검색창에 입력되는 문자(대소문자 구별x)
+        
+        const btnChatSearch = document.querySelector('#btnChatSearch');
+        
+        if (filter == '') {
+                btnChatSearch.style.display = "block";
+            } else {
+                btnChatSearch.style.display = "none";
+            }
         
         let chatRoom = document.querySelectorAll('.btnChatRoom');
         for (i = 0; i <= chatRoom.length; i++) {
-            let usedBookTitle = document.querySelector('#usedBookTitle');
+            console.log('챗방 갯수 = '+chatRoom.length+'개');
+            let usedBookTitle = document.querySelectorAll('.usedBookTitle');
             if (usedBookTitle) {
-                txtValue = usedBookTitle.value;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    chatRoom[i].style.display = "";
+                txtValue = usedBookTitle[i].value.toUpperCase();
+                console.log('txtValue = '+txtValue);
+                console.log('filter = '+filter);
+                if (txtValue.indexOf(filter) > -1) {   // 검색창의 글자와 중고책 제목에 일치하는 글자가 있으면
+                    chatRoom[i].style.display = "block";
                 } else {
                     chatRoom[i].style.display = "none";
                 }

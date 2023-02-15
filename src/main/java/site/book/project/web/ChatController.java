@@ -118,9 +118,9 @@ public class ChatController {
             
             // 최신 메세지 내용 불러 오기  Dto에 넣어서 보냄
         for(int i=0; i<list.size(); i++) {
-        	String last = chatService.readLastThreeLines(myChats.get(i));
-        	list.get(i).setLastMessage(last);
-        	
+            String last = chatService.readLastThreeLines(myChats.get(i));
+            list.get(i).setLastMessage(last);
+            
         }
         
         model.addAttribute("data", list);
@@ -232,26 +232,5 @@ public class ChatController {
         
         return ago;
         
-    }
-    
-    @GetMapping("/chat/api/list")
-    @ResponseBody
-    public List<ChatListDto> chatlist(Integer userId) throws IOException{
-    	log.info("채팅창 리스트 바꿔야지ㅣ이ㅣ잉{}", userId);
-        List<ChatListDto> list = chatService.loadChatList(userId);
-        
-        // 뷰에 보여 줄 채팅방 정보들(리스트)
-        
-        List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(userId, userId);
-
-        // 최신 메세지 내용 불러 오기  Dto에 넣어서 보냄
-        for(int i=0; i<list.size(); i++) {
-            String last = chatService.readLastThreeLines(myChats.get(i));
-            list.get(i).setLastMessage(last);
-        
-        }
-        
-        
-    	return list;
     }
 }
