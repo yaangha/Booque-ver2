@@ -227,4 +227,102 @@ window.addEventListener('DOMContentLoaded', () => {
             parent = window.opener;
             parent.location.href=url;
             // parent.focus();  부모창으로 포커스(크롬에서는 지원되지 않는다 함...ㅠㅠ)
+
         }
+        
+        
+    const usedBookId = document.querySelector('#usedBookId').value;
+    const buyerId = document.querySelector('#chatWithId').value;
+    const buyerName = document.querySelector('#chatWithName').value;
+        
+    // (지혜) 판매자가 '거래 예약' 클릭시
+    function reserve() {
+        
+        console.log('usedBookId = '+usedBookId+', buyerId = '+buyerId+', buyerName = '+buyerName);
+        confirm(buyerName+'님과 거래 예약하시겠습니까?');
+
+        const reserveDto = {
+            usedBookId : usedBookId,
+            userId : buyerId
+        }
+        
+        if(confirm){
+            axios.post('/chat/reserve', reserveDto)
+             .then(response =>{
+                 alert(buyerName +'님과 거래 예약되었습니다!');
+                 console.log(response);
+                 window.location.reload();    // 페이지 새로고침
+             });
+        };
+    };
+    
+    
+    // (지혜) 판매자가 '거래 취소' 클릭시
+    function cancel() {
+        
+        console.log('usedBookId = '+usedBookId+', buyerName = '+buyerName);
+        confirm(buyerName+'님과의 예약을 취소하시겠습니까?');
+        
+        if(confirm){
+            axios.post('/chat/cancel',null, { params: { usedBookId : usedBookId }})
+             .then(response =>{
+                 alert(buyerName +'님과의 거래가 취소되었습니다!');
+                 console.log(response);
+                 window.location.reload();    // 페이지 새로고침
+             });
+        };
+    };
+    
+    
+    
+    // (지혜) 판매자가 '거래 완료' 클릭시
+    function sold() {
+        
+        console.log('usedBookId = '+usedBookId+', buyerName = '+buyerName);
+        confirm(buyerName+'님과의 거래가 완료됐나요?');
+
+        if(confirm){
+            axios.post('/chat/sold', null, { params: { usedBookId : usedBookId }})
+             .then(response =>{
+                 alert(buyerName +'님과의 거래가 완료되었습니다!');
+                 console.log(response);
+                 window.location.reload();    // 페이지 새로고침
+             })
+             .catch(err => {
+                console.log(err);
+            });
+        };
+        
+    };
+    
+    
+    // (지혜) 검색칸에 입력하는 글자를 실시간으로 인식해서, 중고책 제목이 일치하는 채팅방 리스트만 보이도록 필터링
+    function chatSearch() {
+        
+        let input = document.querySelector('#chatSearch');
+        const filter = input.value.toUpperCase();   // 검색창에 입력되는 문자(대소문자 구별x)
+        
+        const btnChatSearch = document.querySelector('#btnChatSearch');
+        
+        if (filter == '') {
+                btnChatSearch.style.display = "block";
+            } else {
+                btnChatSearch.style.display = "none";
+            }
+        
+        let chatRoom = document.querySelectorAll('.btnChatRoom');
+        for (i = 0; i <= chatRoom.length; i++) {
+            console.log('챗방 갯수 = '+chatRoom.length+'개');
+            let usedBookTitle = document.querySelectorAll('.usedBookTitle');
+            if (usedBookTitle) {
+                txtValue = usedBookTitle[i].value.toUpperCase();
+                console.log('txtValue = '+txtValue);
+                console.log('filter = '+filter);
+                if (txtValue.indexOf(filter) > -1) {   // 검색창의 글자와 중고책 제목에 일치하는 글자가 있으면
+                    chatRoom[i].style.display = "block";
+                } else {
+                    chatRoom[i].style.display = "none";
+                }
+            }
+        }
+    }
