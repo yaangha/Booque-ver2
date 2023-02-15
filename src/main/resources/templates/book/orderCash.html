@@ -24,6 +24,7 @@
 <body>
 
 <div class="w-100 container"><!-- 메인 화면 블록 start -->
+     <input type="hidden" id="uId" th:value="${ uId }"/>
     <!-- 진행 순서 보여주기 -->
     <ul class="h5 list-group list-group-horizontal justify-content-center">
         <li class="list-group-item border-0" style="color:gray;">01 CART</li>
@@ -200,7 +201,7 @@
     <br/>
     
     </div><!-- 메인 블록 end -->
-
+ <script th:src="@{ /js/notice.js }"></script>
 <script>
 
 let today = new Date();  
