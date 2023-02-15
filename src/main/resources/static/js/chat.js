@@ -263,20 +263,30 @@ window.addEventListener('DOMContentLoaded', () => {
     };
     
     
-    // (지혜) 검색칸에 입력하는 내용(중고책 제목)에 맞춰 채팅방 리스트 필터링
-    // 아직 구현 중!! 미완성
+    // (지혜) 검색칸에 입력하는 글자를 실시간으로 인식해서, 중고책 제목이 일치하는 채팅방 리스트만 보이도록 필터링
     function chatSearch() {
         
         let input = document.querySelector('#chatSearch');
-        const filter = input.value.toUpperCase();
+        const filter = input.value.toUpperCase();   // 검색창에 입력되는 문자(대소문자 구별x)
+        
+        const btnChatSearch = document.querySelector('#btnChatSearch');
+        
+        if (filter == '') {
+                btnChatSearch.style.display = "block";
+            } else {
+                btnChatSearch.style.display = "none";
+            }
         
         let chatRoom = document.querySelectorAll('.btnChatRoom');
-        for (i = 0; i < chatRoom.length; i++) {
-            let usedBookTitle = document.querySelector('#usedBookTitle');
+        for (i = 0; i <= chatRoom.length; i++) {
+            console.log('챗방 갯수 = '+chatRoom.length+'개');
+            let usedBookTitle = document.querySelectorAll('.usedBookTitle');
             if (usedBookTitle) {
-                txtValue = usedBookTitle.textContent || usedBookTitle.value;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    chatRoom[i].style.display = "";
+                txtValue = usedBookTitle[i].value.toUpperCase();
+                console.log('txtValue = '+txtValue);
+                console.log('filter = '+filter);
+                if (txtValue.indexOf(filter) > -1) {   // 검색창의 글자와 중고책 제목에 일치하는 글자가 있으면
+                    chatRoom[i].style.display = "block";
                 } else {
                     chatRoom[i].style.display = "none";
                 }

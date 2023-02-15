@@ -108,7 +108,7 @@
 
     <div class="w3-container">
             <div class="title_text" style="margin-bottom:15px; text-align:right; margin-right:40px;">
-                <div style="color:lightgrey; margin-right:20px; font-size:30px; display: inline-block; vertical-align: bottom; 
+                <div style="color:lightgrey; margin-right:15px; font-size:30px; display: inline-block; vertical-align: bottom; 
                 text-shadow:1px 1px 0 #444"><b>Booque Chat</b></div>
                 <img src="/images/booque_logo.jpg" width="60px" />
             </div>
@@ -127,11 +127,10 @@
                     </div>
                     <!-- 채팅 검색(채팅상대 닉네임, 채팅 내용) -->
                     <div id="chatSearchDiv" style="margin-top:10px;">
-                        <input type="search" placeholder="중고책  제목으로  검색" id="chatSearch" class="w3-input w3-border" onkeyup="chatSearch()"/>
-                        <!-- 
+                        <input type="text" placeholder="중고책  제목으로  검색" id="chatSearch" class="w3-input w3-border" onkeyup="chatSearch()"/>
                         <button id="btnChatSearch" class="w3-large">
                             <i class="fa fa-search"></i>
-                        </button> -->
+                        </button>
                     </div>
                     <!-- 전체 채팅방 보기 / 안읽은 채팅방만 보기 -->
                     <!-- 시간여유가 될 경우: 체크박스 클릭or해제할 때마다 밑에 채팅방 리스트 달라지도록 반영(찜버튼처럼) -->
@@ -147,7 +146,7 @@
                         <tbody>
                             <tr class="btnChatRoom" th:each="chat : ${ data}" 
                             th:onclick="|location.href='@{/chat?chatRoomId={chatRoomId} (chatRoomId = ${ chat.chatRoomId})}'|"
-                            style="cursor:pointer; background-color:none;">
+                            style="cursor:pointer; background-color:none; display:block;">
                                 <td style="padding-left:10px; width:20%;">
                                     <img class="rounded-circle" width="40" height="40" th:src = "${ chat.chatWithImage }" />
                                 </td>
@@ -158,7 +157,9 @@
                                 </td>
                                 <td style="padding-right:10px; width:20%;">
                                      <img width="auto" height="50" th:src = "${ '/market/api/view/'+ chat.usedBookImage }" />
-                                     <input type="hidden" id="usedBookTitle" th:value="${chat.usedBookTitle}"/>
+                                </td>
+                                <td>
+                                    <input type="hidden" class="usedBookTitle" th:value="${chat.usedBookTitle}"/>
                                 </td>
                             </tr>
                         </tbody>
@@ -247,14 +248,16 @@
                     <!-- 출력 창(chatHistory) -->
                     <div id="content" class="chat-history">
                         <div th:each="chat : ${chatHistory}">
+                            <div>
                             <div th:style="${chat.sender != loginUser.nickName } ? 'display: block; float: left;' : 'display:none;'">
                                 <img class="rounded-circle" width="40" height="40" th:src = "${ chatWith.chatWithImage }" style="margin-right:10px;">
                             </div>
                             <div
-                                th:style="${chat.sender == loginUser.nickName } ? 'text-align: right;' : 'text-align: left;'">
+                                th:style="${chat.sender == loginUser.nickName } ? 'text-align: right; margin-left: 60%;' : 'text-align: left; margin-right: 60%;'">
                                 <span id="chatMessage" th:text="${chat.message}"></span><br/>
                             </div>
-                            <div th:style="${chat.sender == loginUser.nickName } ? 'text-align: right;' : 'text-align: left;'">
+                            </div>
+                            <div th:style="${chat.sender == loginUser.nickName } ? 'text-align: right;  margin-left: 60%;' : 'text-align: left; margin-right: 60%;'">
                                 <span style="font-size:13px; color:grey;" id="chatSendTime" th:text="${chat.sendTime}"></span><br/><br/>
                             </div>   
                         </div>
