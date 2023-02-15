@@ -1,6 +1,7 @@
 package site.book.project.web;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -25,6 +27,7 @@ import site.book.project.domain.Chatting;
 import site.book.project.domain.Reserved;
 import site.book.project.domain.UsedBook;
 import site.book.project.domain.UserChatLog;
+import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
 import site.book.project.dto.UsedBookReserveDto;
 import site.book.project.repository.ReservedRepository;
@@ -138,4 +141,7 @@ public class ChattingController {
     public Set<String> fetchAll(){
         return UserChatLog.getInstance().getUsers();
     }
+    
+
+    
 }
