@@ -286,7 +286,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 console.log('txtValue = '+txtValue);
                 console.log('filter = '+filter);
                 if (txtValue.indexOf(filter) > -1) {   // 검색창의 글자와 중고책 제목에 일치하는 글자가 있으면
-                    chatRoom[i].style.display = "block";
+                     chatRoom[i].style.display = "block";
                 } else {
                     chatRoom[i].style.display = "none";
                 }

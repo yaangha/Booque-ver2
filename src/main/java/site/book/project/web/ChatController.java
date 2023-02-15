@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
+import site.book.project.domain.Reserved;
 import site.book.project.domain.UsedBook;
 import site.book.project.domain.UsedBookImage;
 import site.book.project.domain.User;
@@ -126,14 +127,23 @@ public class ChatController {
         model.addAttribute("data", list);
         
         List<ChatReadDto> chatHistory = null;
-        if(chatRoomId==null) {
+        if(chatRoomId==null) {   // 판매자가 상단바의 채팅 아이콘을 클릭해 들어갔을 때 보이는 첫 창
              chatHistory = chatService.readChatHistory(myChats.get(0));
 
              ChatListDto usedbook = list.get(0);
              model.addAttribute("usedBook", usedbook);
              // chatListDto를 같
              model.addAttribute("chatWith", usedbook);
-        } else {
+             
+             // 예약자 정보
+             if (reservedRepository.findByUsedBookId(usedbook.getUsedBookId()) != null) {
+                 Integer reservedId = reservedRepository.findByUsedBookId(usedbook.getUsedBookId()).getUserId();
+                 String reservedName = userRepository.findById(reservedId).get().getNickName();
+                 model.addAttribute("reservedId", reservedId);
+                 model.addAttribute("reservedName", reservedName);
+             }
+             
+        } else {  // 구매자가 '채팅하기'를 눌러 들어갔거나,  판매자가 상단바 채팅아이콘 클릭 후 어느 특정 방을 클릭했을 때
 
             Chat chatById = chatRepository.findByChatRoomId(chatRoomId);
             chatHistory = chatService.readChatHistory(chatById);
