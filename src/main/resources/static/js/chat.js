@@ -114,18 +114,18 @@ window.addEventListener('DOMContentLoaded', () => {
         // 입력한 메시지를 HTML 형태로 가공
         function createTextNode(messageObj) {
             if(messageObj.sender == sender){
-                return '<p><div align="right" id="newHistory" class="row"><div class="col_8">' +
+                return '<p><div align="right" id="newHistory"><div style="margin-left: 60%;">' +
             messageObj.message+
-            '</div><div style="font-size:13px; color:grey;">' +
+            '</div><div style="font-size:13px; color:grey; margin-left: 60%;">' +
             messageObj.sendTime +
             '</div><span id="check" style="color:dodgerblue;">1</span></div></p>';
             } else {
             return '<div id="newResponseHistory"><div style="float:left;">' +
             '<img class="rounded-circle" width="40" height="40" src="' +
             chatWithImage + 
-            '" style="margin-right:10px;"></div><div><span>' +
+            '" style="margin-right:10px;"></div><div style="margin-right: 60%;"><span>' +
             messageObj.message+
-            '</span><br/></div><div style="font-size:13px; color:grey;"><span>' +
+            '</span><br/></div><div style="font-size:13px; color:grey; margin-right: 60%;"><span>' +
             messageObj.sendTime +
             '<span><br/><br/></div></div>';
             }
