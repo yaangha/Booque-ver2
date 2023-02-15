@@ -27,6 +27,7 @@ public class ChatListDto {
     private String usedTitle;  // 판매글 제목
     private Integer price;          // 중고 판매 가격
     private String status;         // 판매 상태
+    private Integer userId;        // 판매자 id(pk)
     
     private Integer chatWithId;    // 채팅 상대 id(pk)
     private String chatWithName;    // 채팅 상대 닉네임
@@ -34,5 +35,8 @@ public class ChatListDto {
     private String chatWithLevel;   // 채팅 상대 부끄레벨
     
     private String lastMessage;
+    
+    private Integer reservedId;    // 예약자 pk
+    private String reservedName;   // 예약자 닉네임
     
 }

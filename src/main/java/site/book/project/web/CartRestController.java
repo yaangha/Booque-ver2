@@ -46,7 +46,6 @@ public class CartRestController {
     }
 
     /**
-     * key:value로 했을 때 안됨.
      * mapping 주소값은 넘어오는 parameter와 동일하지 않아도
      * @param count 장바구니 변경되는 수량
      * @param cartId 디비에 저장된 장바구니 고유값
@@ -59,7 +58,10 @@ public class CartRestController {
     }
     
 
-
+    @GetMapping("/cartTest/{test}")
+    public void test(@PathVariable Integer test) {
+        log.info("이거 맞아???? 뭐지..??    {}" ,test);
+    }
     
  
     

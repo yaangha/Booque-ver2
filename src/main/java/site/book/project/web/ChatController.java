@@ -26,6 +26,7 @@ import site.book.project.dto.ChatReadDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.ChatAssistRepository;
 import site.book.project.repository.ChatRepository;
+import site.book.project.repository.ReservedRepository;
 import site.book.project.repository.UsedBookImageRepository;
 import site.book.project.repository.UsedBookRepository;
 import site.book.project.repository.UserRepository;
@@ -64,7 +65,8 @@ public class ChatController {
     private UsedBookImageRepository usedBookImageRepository;
     @Autowired
     private ChatAssistRepository chatAssistRepository;
-    
+    @Autowired
+    private ReservedRepository reservedRepository;
     // 중고판매글에서 '채팅하기' 버튼 클릭시
     @PostMapping("/chat")
     @ResponseBody
@@ -124,9 +126,9 @@ public class ChatController {
             
             // 최신 메세지 내용 불러 오기  Dto에 넣어서 보냄
         for(int i=0; i<list.size(); i++) {
-        	String last = chatService.readLastThreeLines(myChats.get(i));
-        	list.get(i).setLastMessage(last);
-        	
+            String last = chatService.readLastThreeLines(myChats.get(i));
+            list.get(i).setLastMessage(last);
+            
         }
         
         model.addAttribute("data", list);
@@ -161,6 +163,17 @@ public class ChatController {
             // 책 정보
             UsedBook u = usedBookRepository.findById(chatById.getUsedBookId()).get();
             UsedBookImage img = usedBookImageRepository.findByUsedBookId(u.getId()).get(0);
+            
+            // 예약자 정보
+            if (reservedRepository.findByUsedBookId(u.getId()) != null) {
+                Integer reservedId = reservedRepository.findByUsedBookId(u.getId()).getUserId();
+                String reservedName = userRepository.findById(reservedId).get().getNickName();
+                model.addAttribute("reservedId", reservedId);
+                model.addAttribute("reservedName", reservedName);
+            } else {
+                log.info("보이니? ");
+            }
+            
             //  채팅 상대 정보
 
 
@@ -168,7 +181,7 @@ public class ChatController {
             ChatListDto usedbook = ChatListDto.builder().usedBookImage(img.getFileName())
                                                 .price(u.getPrice()).status(u.getStatus())
                                                 .usedTitle(u.getTitle())
-                                                .usedBookTitle(u.getBookTitle())
+                                                .usedBookTitle(u.getBookTitle()).userId(u.getUserId())
                                                 .chatRoomId(chatRoomId)
                                                 .price(u.getPrice()).status(u.getStatus()).usedTitle(u.getTitle())
                                                 .chatRoomId(chatRoomId).usedBookId(u.getId())

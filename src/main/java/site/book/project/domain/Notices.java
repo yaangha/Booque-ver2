@@ -24,21 +24,16 @@ public class Notices {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICES_SEQ_GEN")
     private Integer noticeId;
     
-    private Integer userId;  // postWriter id;
-    
+    // 새 댓글 알림
+    private Integer userId;  // postWriter id; => 알림 받을 사람
     private Integer bookId;
-    
     private Integer postId;
-    
     private Integer replyId;
     
     
-    
-    private Integer noticeUsedBookId; 
-    
-    private Integer usedBookId;
-    
-    
+    // usedBookId 알림
+    private Integer subscribedBookId;  // 유저가 알람 받기로 등록한 BookId
+    private Integer usedBookId;  // usedBookPost의 id
 
- 
+  
 }

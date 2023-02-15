@@ -1,23 +1,28 @@
 package site.book.project.web;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Book;
 import site.book.project.domain.Post;
+import site.book.project.domain.User;
 import site.book.project.dto.HomeTopFiveListDto;
 import site.book.project.dto.NoticeDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.service.HomeService;
 import site.book.project.service.NoticeService;
+import site.book.project.service.UserService;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,7 +30,7 @@ import site.book.project.service.NoticeService;
 public class HomeController {
 
     private final HomeService homeService;
-    private final NoticeService noticeService;
+    private final UserService userService;
     
     @GetMapping("/")
     public String home(Model model, @AuthenticationPrincipal UserSecurityDto userSecurityDto) {
@@ -115,14 +120,6 @@ public class HomeController {
            model.addAttribute("userId", userId); 
         }
         
-//        // (예진) 새 댓글 알림(notice) 리스트
-//        if(userSecurityDto != null) {
-//            List<NoticeDto> noticeList = noticeService.readNotices(userSecurityDto.getId()); 
-//            
-//            int noticeCount = noticeList.size();
-//            model.addAttribute("noticeList", noticeList);                   // notice 리스트 
-//            model.addAttribute("noticeCount", noticeCount);
-//        }
         
         model.addAttribute("top4ScoreList", list);                     // 전체 책 별점순 1~8위
         model.addAttribute("top4ReviewList", postList);                // 전체 책 리뷰많은순 1~8위
@@ -142,5 +139,6 @@ public class HomeController {
         return "home";
     }
 
+  
     
 }

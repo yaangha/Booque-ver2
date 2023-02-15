@@ -31,7 +31,7 @@ public class MarketCreateDto {
 	private LocalDateTime modifiedTime;
 	private Integer hits;
 	private Integer wishCount;
-	
+	private String status;
 	
 	private List<String> fileNames;
 	private Integer storage;

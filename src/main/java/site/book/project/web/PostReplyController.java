@@ -44,6 +44,7 @@ public class PostReplyController {
         List<ReplyReadDto> list = replyService.readReplies(postId);
         
         log.info("# of list = {}", list.size());
+        log.info("댓글전체리스트={}",list);
        
   
         return ResponseEntity.ok(list);
@@ -56,7 +57,7 @@ public class PostReplyController {
         
         Integer replyId =  replyService.create(dto); 
         ReplyReadDto readDto =  replyService.readReply(replyId);
-    
+   
 
         return ResponseEntity.ok(readDto);
     }
@@ -67,7 +68,7 @@ public class PostReplyController {
         log.info("getReply(replyId={})", replyId);
         
         ReplyReadDto dto = replyService.readReply(replyId);
-        log.info("dto={}", dto);
+        log.info("dto={}", dto); log.info("readDto보여졍={}", dto);
         return ResponseEntity.ok(dto);
     }
     

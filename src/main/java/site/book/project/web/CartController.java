@@ -67,7 +67,7 @@ public class CartController {
         User user = userService.read(userId);
         List<CartDto> cartList = cartService.cartDtoList(userId); // 장바구니에 표시할 책 정보
         Integer total = cartService.total(cartList);
-        
+        log.info("total={}", total);
         // 책 수량을 선택하지 않고 장바구니에 추가할 경우, 책 수량 1로 고정
         if (dto.getCount() == null) {
             dto.setCount(1);

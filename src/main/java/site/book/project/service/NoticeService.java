@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import site.book.project.domain.Book;
 import site.book.project.domain.Notices;
 import site.book.project.domain.PostReply;
+import site.book.project.domain.UsedBook;
 import site.book.project.domain.User;
 import site.book.project.dto.NoticeDto;
 import site.book.project.repository.NoticeRepository;
@@ -20,50 +22,77 @@ public class NoticeService {
 
     private final NoticeRepository noticeRepository;
     private final ReplyService replyService;
+    private final UsedBookService usedBookService;
+    private final UserService userService;
+    private final BookService bookService;
     
-    // 새 댓글 달리면 노티스 등록
+    // 새 알림 생성
     public Integer create(NoticeDto dto) {
         
-        Notices notice = Notices.builder()
+        Notices notice = null;
+        if(dto.getUsedBookId() == null) {
+             notice = Notices.builder()
                 .userId(dto.getUserId())
                 .bookId(dto.getBookId())
                 .postId(dto.getPostId())
                 .replyId(dto.getReplyId()).build();
-        
-        Notices n= noticeRepository.save(notice);
-        return n.getNoticeId();
-    }
-
-   
-    public List<NoticeDto> readNotices(Integer userId) {
-        log.info("read노티스(유저Id={})", userId);
+        } else {
+            notice = Notices.builder()
+            .userId(dto.getUserId())
+            .bookId(dto.getBookId())
+            .usedBookId(dto.getUsedBookId()).build();
+        }
+           
+        noticeRepository.save(notice);
+        return notice.getNoticeId();
+    }   
+    
+    public List<NoticeDto> readNotices(Integer userId) {  // 알림 받을 userId
         
         List<Notices> list = noticeRepository.findByUserIdOrderByNoticeIdDesc(userId);
         List<NoticeDto> noticeList = new ArrayList<>();
-        PostReply r = null;
-        NoticeDto dto = null;
+      
         for (Notices n : list) {
-            r = replyService.readRep(n.getReplyId());
-           
-             dto= NoticeDto.builder().noticeId(n.getNoticeId())
-            .postId(n.getPostId())
-            .bookId(n.getBookId())
-            .userId(n.getUserId())
-            .replyId(n.getReplyId())
-            .replyWriter(r.getReplyWriter())
-            .userImage(r.getUser().getUserImage())
-            .nickName(r.getUser().getNickName())
-            .build();           
             
-            noticeList.add(dto);
+            if(n.getUsedBookId() == null) {
+               PostReply r = replyService.readRep(n.getReplyId());
+           
+               NoticeDto dto= NoticeDto.builder()
+                              .noticeId(n.getNoticeId())
+                              .postId(n.getPostId())
+                              .bookId(n.getBookId())
+                              .userId(n.getUserId())
+                              .replyId(n.getReplyId())
+                              .userImage(r.getUser().getUserImage())
+                              .nickName(r.getUser().getNickName())
+                               .build();           
+            
+                noticeList.add(dto);
+                
+            } else {
+                    UsedBook ub = usedBookService.read(n.getUsedBookId());
+                    Book b = bookService.read(n.getBookId());
+                
+                    NoticeDto dto= NoticeDto.builder()
+                        .noticeId(n.getNoticeId())
+                        .bookId(n.getBookId())
+                        .userId(n.getUserId())
+                        .usedBookId(n.getUsedBookId())
+                        .title(ub.getTitle())
+                        .bookName(b.getBookName())
+                        .bookImage(b.getBookImage())
+                        .build();
+                
+                    noticeList.add(dto);
+            }
+            
         }
-        
-        log.info("노티스디티오리스트={}",noticeList);
         
         return noticeList;
     }
 
-
+    
+    
     public Integer delete(Integer noticeId) {
      
         noticeRepository.deleteById(noticeId);
@@ -77,5 +106,11 @@ public class NoticeService {
          Notices notice = noticeRepository.findById(noticeId).get();
         return notice;
     }
+
+
+
+
+
+  
 
 }
