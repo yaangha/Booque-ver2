@@ -90,7 +90,61 @@ window.addEventListener('DOMContentLoaded', () => {
             // 보낸 후 보내기버튼 비활성화
             btnSend.disabled = true;
             btnSend.style.color = "silver";
+            
+            const userId = document.querySelector('#userId').value
+            sendChatList(userId)
         }
+        
+        
+        function sendChatList(userId){
+            axios.get('/chat/api/list?userId='+ userId)
+                .then(response => {
+                        sendBychatList(response)
+                    })
+                .err(err => {
+                    console.log(err)
+                })
+            
+        }
+        
+        function sendBychatList(response){
+            const chatListTbody = document.querySelector('#chatListTbody')
+            chatListTbody.innerHTML = '';
+ 
+            
+            response.data.forEach(x => {
+             //   x[0].style.backgroundColor = "seashell";
+                console.log(x)
+                
+               const htmlStr = `
+                            <tr  class="btnChatRoom" 
+                            onclick="location.href='/chat?chatRoomId=${ x.chatRoomId}'"
+                            style="cursor:pointer; background-color:none;">
+                                <td style="padding-left:10px; width:20%;">
+                                    <img class="rounded-circle" width="40" height="40" src = "${ x.chatWithImage }" />
+                                </td>
+                                <td style="padding-left: 10px; padding-right:10px; width:80%;">
+                                    <div >${ x.chatWithName }</div>
+                                    <div style="font-size:9px;" >${ x.modifiedTime }</div>
+                                    <span class="lastMessage" >${ x.lastMessage }</span>
+                                </td>
+                                <td style="padding-right:10px; width:20%;">
+                                     <img width="auto" height="50" src = "${ '/market/api/view/'+ x.usedBookImage }" />
+                                </td>
+                                <td>
+                                    <input type="hidden" class="usedBookTitle" value="${x.usedBookTitle}"/>
+                                </td>
+                            </tr>
+                `
+                
+            chatListTbody.innerHTML += htmlStr
+                
+            })
+            
+        const chatTr = document.querySelectorAll('.btnChatRoom')
+        chatTr[0].style.backgroundColor = "seashell";
+        }
+        
         
         // 메시지 입력 창에서 Enter키가 보내기와 연동되도록 설정
         var inputMessage = document.getElementById('message'); 
