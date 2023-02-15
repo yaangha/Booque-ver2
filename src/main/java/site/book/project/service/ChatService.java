@@ -6,27 +6,28 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
+import site.book.project.domain.ChatAssist;
 import site.book.project.domain.Reserved;
 import site.book.project.domain.UsedBook;
 import site.book.project.domain.UsedBookImage;
 import site.book.project.domain.User;
 import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
+import site.book.project.repository.ChatAssistRepository;
 import site.book.project.dto.UsedBookReserveDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.ChatRepository;
@@ -43,6 +44,7 @@ import site.book.project.web.ChatController;
 public class ChatService {
     
     private final ChatRepository chatRepository;
+    private final ChatAssistRepository chatAssistRepository;
     private final UserRepository userRepository;
     private final UsedBookRepository usedBookRepository;
     private final UsedBookImageRepository usedBookImageRepository;
@@ -58,8 +60,12 @@ public class ChatService {
         Chat chat = Chat.builder().usedBookId(usedBookId).sellerId(sellerId).buyerId(buyerId)
                     .createdTime(LocalDateTime.now()).modifiedTime(LocalDateTime.now())
                     .build();
-
+        
         chatRepository.save(chat);
+        ChatAssist chatAssist = ChatAssist.builder().chatRoomId(chat.getChatRoomId()).readCount(0).build();
+        
+        chatAssistRepository.save(chatAssist);
+        
         createFile(chat.getChatRoomId(), usedBookId);
         
         Chat dto = chatRepository.findByUsedBookIdAndBuyerId(usedBookId, buyerId);
@@ -162,6 +168,10 @@ public class ChatService {
         
         fos.close();
         
+        // (홍찬) chatAssist에 마지막 채팅 추가
+        ChatAssist assistDto = chatAssistRepository.findByChatRoomId(chatRoomId);
+        assistDto.updateLastChat(message, LocalDateTime.now());
+        
         // 읽음 여부 표시 기능 (TODO)
         /*
         if (senderId.equals(chat.getSellerId())) {
@@ -177,12 +187,14 @@ public class ChatService {
         // ChatReadDto recentChat = new ChatReadDto();
         String recentMessage = "";
         
+        ChatAssist dto = chatAssistRepository.findByChatRoomId(chat.getChatRoomId());
+        dto.setModifiedTime(chat.getModifiedTime());
+        
         // fileName 컬럼을 통해 파일의 경로 찾기, 파일 읽기
         String pathName = fileUploadPath + chat.getFileName();
         
         // 1. RandomAcessFile, 마지막 라인을 담을 String, 읽을 라인 수 "r" 읽기모드
         RandomAccessFile chatResourceFile = new RandomAccessFile(pathName, "r");
-        StringBuilder lastLine = new StringBuilder();
         int lineCount = 2; // 마지막 2줄을 읽겠다는 내용!
 
         // 2. 전체 파일 길이
@@ -207,8 +219,8 @@ public class ChatService {
                 }
             }
             
-            // 3.4. 결과 문자열의 앞에 읽어온 글자(c)를 붙여준다.
-            lastLine.insert(0, c);
+            // 3.4. 마지막 채팅을 db에 저장
+            dto.setLastChat(recentMessage);
         }
         chatResourceFile.close();
         // 4. 결과 출력
@@ -216,9 +228,6 @@ public class ChatService {
         return recentMessage;
     }
 
-    private String toConvert (String Unicodestr) throws UnsupportedEncodingException {
-        return new String (Unicodestr.getBytes("8859_1"),"KSC5601");
-        }
     
     
     // 내가 (판매자 혹은 구매자로) 포함된 모든 채팅방 불러와 dto에 데이터 추가
@@ -280,11 +289,41 @@ public class ChatService {
                 
                 list.add(dto);
             }
+//            //최신 메세지 내용 불러 오기(채팅방 만들어지고 채팅이 하나도 없을 때)
+//            if (chat.getCreatedTime().equals(chat.getModifiedTime())) {
+//                String lastChat = " ";
+//                dto.setRecentChat(lastChat);
+//            } else { // 만들어진 채팅방이 있으면 거기에서 마지막 채팅을 불러옴.
+//                String lastChat = chatAssistRepository.findByChatRoomId(chat.getChatRoomId()).getLastChat();
+//                dto.setRecentChat(lastChat);
+//            }
             
-        }
+            }
         return list;
         
     }
     
-    
+    // 안읽은 메세지 저장(안읽음=1, 읽음=0)
+    public Integer updateReadChat(String nickName, Integer chatRoomId, Integer unread) {
+        ChatAssist entity = chatAssistRepository.findByChatRoomId(chatRoomId);
+        log.info("ncu={}{}{}",nickName, chatRoomId,unread);
+        // 메세지를 읽은 경우| nickName : 기준이 되는 사람 닉네임, unread : 안읽었으면 1/읽었으면 0
+        if (unread == 1 && nickName.equals(entity.getNickName())) { // 읽었을 경우
+            entity.updateReadChk(nickName, 0, 0);
+            return 0;
+        }
+        // 메세지를 안읽은 경우
+        if (entity.getReadCount()!= 0) { // 안읽은 메세지 개수 갱신하는 경우
+            if (nickName.equals(entity.getNickName())) { // 닉네임이 같으면 안읽음개수 추가
+                entity.updateReadChk(nickName, unread, entity.getReadCount()+1);
+                return 1;
+            } else { // 닉네임이 다르면 유저 갱신후 안읽음 1 추가(닉네임이 다를 때: 처음 만들어지는 경우)
+                entity.updateReadChk(nickName, unread, 1);
+                return 1; // 안읽음이 역전되었으니 상대방 입장에서 읽음.
+            }
+        } else { // 처음 만들어지는 경우
+            entity.updateReadChk(nickName, unread, 1);
+            return 1;
+        }
+    }
 }

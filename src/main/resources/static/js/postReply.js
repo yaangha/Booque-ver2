@@ -111,10 +111,9 @@
             if(r.replyId == repId) {  
                str +='<div class="bgColor" id="bgColorBtn" style="background-color: #e6f2ff;">';
             }
-            
-            if(r.replyId != repId) {
-                 str +='<div class="bgColor" id="bgColorBtn">';
-                 }
+            if(r.replyId != repId) {  
+               str +='<div class="bgColor" id="bgColorBtn">';
+            }      
             str +=`<div class="flex-shrink-0"><a href="/post/list?postWriter=${r.replyWriter}">`
                 + '<img class="rounded-circle m-2" width="45" height="45" src="' + r.userImage + '" alt="..." />'
                 + `<span class="fw-bold m-2">${r.nickName}</span></a></div>`
@@ -131,9 +130,10 @@
             }
             
             str += '</div>';
-            str += '</div>';
-     
-       
+
+            str +='</div>';
+            
+            
         }
         
         divReplies.innerHTML = str;

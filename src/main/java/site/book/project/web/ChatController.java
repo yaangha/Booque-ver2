@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.Chat;
+import site.book.project.domain.ChatAssist;
 import site.book.project.domain.UsedBook;
 import site.book.project.domain.UsedBookImage;
 import site.book.project.domain.User;
 import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
 import site.book.project.dto.UserSecurityDto;
+import site.book.project.repository.ChatAssistRepository;
 import site.book.project.repository.ChatRepository;
 import site.book.project.repository.ReservedRepository;
 import site.book.project.repository.UsedBookImageRepository;
@@ -62,12 +64,14 @@ public class ChatController {
     @Autowired
     private UsedBookImageRepository usedBookImageRepository;
     @Autowired
+    private ChatAssistRepository chatAssistRepository;
+    @Autowired
     private ReservedRepository reservedRepository;
  
     // 중고판매글에서 '채팅하기' 버튼 클릭시
     @PostMapping("/chat")
     @ResponseBody
-    public String getWebSocketWithSockJs(@AuthenticationPrincipal UserSecurityDto userDto, Integer usedBookId, Integer sellerId) throws IOException {
+    public String getWebSocketWithSockJs(@AuthenticationPrincipal UserSecurityDto userDto, Integer usedBookId, Integer sellerId, Model model) throws IOException {
         
         Integer buyerId = userDto.getId();
         
@@ -79,13 +83,17 @@ public class ChatController {
         if (chatExistsOrNot != null) {
             // 이미 채팅을 하고 있다면
             log.info("이미 채팅 중입니다!");
+            User dto = userRepository.findById(sellerId).get();
+            Integer whenRead = chatService.updateReadChat(dto.getNickName(), chatExistsOrNot.getChatRoomId(), 1);
+            model.addAttribute("read", whenRead);
             return "/chat?chatRoomId="+chatExistsOrNot.getChatRoomId();
             
         } else {
             // 새로운 채팅 시작이라면
             log.info("새 채팅을 시작합니다!");
             // chat 생성 (+ txt 파일 생성)       
-            Integer newChatRoomId = chatService.createChat(usedBookId, sellerId, buyerId);       
+            Integer newChatRoomId = chatService.createChat(usedBookId, sellerId, buyerId);     
+            
             return "/chat?chatRoomId="+newChatRoomId;
         }
     }
@@ -97,7 +105,7 @@ public class ChatController {
         
         Integer loginUserId = userDto.getId();
         User loginUser = userRepository.findById(loginUserId).get();
-        
+        String loginNickName = loginUser.getNickName();
         // 뷰에 보여 줄 내 정보
         model.addAttribute("loginUser", loginUser);
         
@@ -106,7 +114,8 @@ public class ChatController {
         // 뷰에 보여 줄 채팅방 정보들(리스트)
         
         List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
-         
+
+        
         
         // 최신 메세지 내용 불러 오기
         List<String> cl = new ArrayList<>();
@@ -126,7 +135,7 @@ public class ChatController {
         model.addAttribute("data", list);
         
         List<ChatReadDto> chatHistory = null;
-        if(chatRoomId==null) {   // 판매자가 상단바의 채팅 아이콘을 클릭해 들어갔을 때 보이는 첫 창
+        if(chatRoomId==null) {  // 판매자가 상단바의 채팅 아이콘을 클릭해 들어갔을 때 보이는 첫 창
              chatHistory = chatService.readChatHistory(myChats.get(0));
 
              ChatListDto usedbook = list.get(0);
@@ -134,7 +143,8 @@ public class ChatController {
              // chatListDto를 같
              model.addAttribute("chatWith", usedbook);
              
-             // 예약자 정보
+             
+          // 예약자 정보
              if (reservedRepository.findByUsedBookId(usedbook.getUsedBookId()) != null) {
                  Integer reservedId = reservedRepository.findByUsedBookId(usedbook.getUsedBookId()).getUserId();
                  String reservedName = userRepository.findById(reservedId).get().getNickName();
@@ -142,8 +152,22 @@ public class ChatController {
                  model.addAttribute("reservedName", reservedName);
              }
              
-        } else {  // 구매자가 '채팅하기'를 눌러 들어갔거나,  판매자가 상단바 채팅아이콘 클릭 후 어느 특정 방을 클릭했을 때
-
+             
+             // 안읽은 메세지 개수
+             ChatAssist CA = chatAssistRepository.findByChatRoomId(myChats.get(0).getChatRoomId());
+             Integer unreadCount = CA.getReadCount();
+             String withName = CA.getNickName();
+             if(unreadCount != 0) {
+                 if (loginNickName.equals(withName)) {
+                     unreadCount = chatService.updateReadChat(withName, myChats.get(0).getChatRoomId(), 1);
+                     model.addAttribute("rcount", unreadCount);
+                 } else {
+                 model.addAttribute("rcount", unreadCount);
+                 }
+                 } else {
+                     model.addAttribute("rcount", 0);
+                 }
+        } else {    // 구매자가 '채팅하기'를 눌러 들어갔거나,  판매자가 상단바 채팅아이콘 클릭 후 어느 특정 방을 클릭했을 때
 
             Chat chatById = chatRepository.findByChatRoomId(chatRoomId);
             chatHistory = chatService.readChatHistory(chatById);
@@ -191,30 +215,47 @@ public class ChatController {
 
             model.addAttribute("usedBook", usedbook);
             model.addAttribute("chatWith", chatPerson);
+            // 안읽은 메세지 개수
+            ChatAssist CA = chatAssistRepository.findByChatRoomId(chatRoomId);
+            Integer unreadCount = CA.getReadCount();
+            String withName = CA.getNickName();
+            if(unreadCount != 0) {
+                if (loginNickName.equals(withName)) {
+                    unreadCount = chatService.updateReadChat(withName, chatRoomId, 1);
+                    model.addAttribute("rcount", unreadCount);
+                } else {
+                model.addAttribute("rcount", unreadCount);
+                }
+            } else {
+                model.addAttribute("rcount", 0);
+            }
+            
         }
 
             // chatHistory 불러 오기
             //chatHistory Model에 저장해 View로 전달
             model.addAttribute("chatHistory", chatHistory);
+            
     }
     
-    // (홍찬) 내 대화 목록 불러오기
-    @GetMapping("/chat/list")
-    public String openMyChatList(@AuthenticationPrincipal UserSecurityDto userDto, Model model) throws IOException {
-        Integer loginUserId = userDto.getId();
-
-        log.info("잘 도착햇나{}",loginUserId);
-        // 최근에 업데이트된 날짜 순으로 받아온 내가 대화중인 대화들
-        List<Chat> chat = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
-        List<String> cl = new ArrayList<>();
-        for (Chat c : chat) {
-            log.info("방번호{}",c.getChatRoomId());
-            cl.add(chatService.readLastThreeLines(c));
-        }
-        
-        model.addAttribute("myChatList" ,cl);
-        return "chat";
-    }
+//    // (홍찬) 내 대화 목록 불러오기
+//    @GetMapping("/chat/list")
+//    public String openMyChatList(@AuthenticationPrincipal UserSecurityDto userDto, Model model) throws IOException {
+//        Integer loginUserId = userDto.getId();
+//
+//        log.info("잘 도착햇나{}",loginUserId);
+//        // 최근에 업데이트된 날짜 순으로 받아온 내가 대화중인 대화들
+//        List<Chat> chat = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
+//        List<String> cl = new ArrayList<>();
+//        for (Chat c : chat) {
+//            log.info("방번호{}",c.getChatRoomId());
+//            cl.add(chatService.readLastThreeLines(c));
+//        }
+//        
+//        model.addAttribute("myChatList" ,cl);
+//        return "chat";
+//    }
+    
     // (지혜) 최신 업데이트시간을 ㅇ초 전, ㅇ분 전, ㅇ시간 전, ㅇ일 전 식으로 바꿔 출력하기
     public static String convertTime(LocalDateTime modifiedTime) {
         
@@ -243,15 +284,17 @@ public class ChatController {
         return ago;
         
     }
+    
+    
     @GetMapping("/chat/api/list")
     @ResponseBody
     public List<ChatListDto> chatlist(Integer userId) throws IOException{
         log.info("채팅창 리스트 바꿔야지ㅣ이ㅣ잉{}", userId);
         List<ChatListDto> list = chatService.loadChatList(userId);
-        
         // 뷰에 보여 줄 채팅방 정보들(리스트)
         
         List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(userId, userId);
+        
 
         // 최신 메세지 내용 불러 오기  Dto에 넣어서 보냄
         for(int i=0; i<list.size(); i++) {
@@ -260,9 +303,8 @@ public class ChatController {
         
         }
         
+        log.info("채팅창 리스트 바꿔야지ㅣ이ㅣ잉{}",list);
         
         return list;
     }
-    
-    
 }

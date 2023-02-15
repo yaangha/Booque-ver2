@@ -7,6 +7,7 @@ window.addEventListener('DOMContentLoaded', () => {
         var stompClient = null;
         var sender = $('#loginUser').val();
         var chatRoomId = $('#chatRoomId').val();
+        var seller  = $('#seller').text();
         var chatWithImage = $('#chatWithImage').val();
         // invoke when DOM(Documents Object Model; HTML(<head>, <body>...etc) is ready
         $(document).ready(connect());
@@ -15,17 +16,23 @@ window.addEventListener('DOMContentLoaded', () => {
             // map URL using SockJS 
             var socket = new SockJS('/chat');
             var url = '/user/' + chatRoomId + '/queue/messages';
+            var url2 = '/user/' + chatRoomId + '/queue/notification/'+ seller;
             // webSocket 대신 SockJS을 사용하므로 Stomp.client()가 아닌 Stomp.over()를 사용함
             stompClient = Stomp.over(socket);
             // connect(header, connectCallback(==연결에 성공하면 실행되는 메서드))
-            stompClient.connect({}, function() {
+            stompClient.connect({}, function() { 
+                registration();
                 autoScroll();
                 // url: 채팅방 참여자들에게 공유되는 경로
                 // callback(function()): 클라이언트가 서버(Controller broker)로부터 메시지를 수신했을 때(== STOMP send()가 실행되었을 때) 실행
-                stompClient.subscribe(url, function(output) {
+                stompClient.subscribe(url, function(output) { // 메세지에 관한 구독
+                    isOnline();
                     // JSP <body>에 append할 메시지 contents
                     showBroadcastMessage(createTextNode(JSON.parse(output.body)));
                     autoScroll();
+                });
+                stompClient.subscribe(url2, function(output){ // 메세지 읽음 알림에 관한 구독
+                    read(); 
                 });
                 }, 
                     // connect() 에러 발생 시 실행
@@ -85,23 +92,24 @@ window.addEventListener('DOMContentLoaded', () => {
                 'sender': sender,
                 'message': message,
                 'sendTime': getCurrentTime()
-                });
+                });   
             $('#message').val("");
             // 보낸 후 보내기버튼 비활성화
             btnSend.disabled = true;
             btnSend.style.color = "silver";
             
-            const userId = document.querySelector('#userId').value
+            const userId = document.querySelector('#userId').value;
             sendChatList(userId)
+            
         }
-        
         
         function sendChatList(userId){
             axios.get('/chat/api/list?userId='+ userId)
                 .then(response => {
+                    
                         sendBychatList(response)
                     })
-                .err(err => {
+                .catch(err => {
                     console.log(err)
                 })
             
@@ -119,7 +127,7 @@ window.addEventListener('DOMContentLoaded', () => {
                const htmlStr = `
                             <tr  class="btnChatRoom" 
                             onclick="location.href='/chat?chatRoomId=${ x.chatRoomId}'"
-                            style="cursor:pointer; background-color:none;">
+                            style="cursor:pointer; background-color:none; width: 270px;">
                                 <td style="padding-left:10px; width:20%;">
                                     <img class="rounded-circle" width="40" height="40" src = "${ x.chatWithImage }" />
                                 </td>
@@ -146,6 +154,11 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         
         
+        
+        
+        
+        
+        
         // 메시지 입력 창에서 Enter키가 보내기와 연동되도록 설정
         var inputMessage = document.getElementById('message'); 
         inputMessage.addEventListener('keyup', function enterSend(event) {
@@ -166,45 +179,55 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         
         // 입력한 메시지를 HTML 형태로 가공
+//        function createTextNode(messageObj) {
+//            if(messageObj.sender == sender){
+//                return '<p><div align="right" id="newHistory"><div style="margin-left: 60%;">' +
+//            messageObj.message+
+//            '</div><div style="font-size:13px; color:grey; margin-left: 60%;">' +
+//            messageObj.sendTime +
+//            '</div><span id="reads" style="color:dodgerblue;">1</span></div></p>';
+//            } else {
+//            return '<div id="newResponseHistory" class="alert alert-info"><div style="float:left;">' +
+//            '<img class="rounded-circle" width="40" height="40" src="' +
+//           chatWithImage + 
+//            '" style="margin-right:10px;"></div><div style="margin-right: 60%;"><span>' +
+//            messageObj.message+
+//            '</span><br/></div><div style="font-size:13px; color:grey;  margin-right: 60%;"><span>' +
+//            messageObj.sendTime +
+//            '<span><br/><br/></div></div>';
+//            }
+//        }
+        
         function createTextNode(messageObj) {
-            if(messageObj.sender == sender){
-                return '<p><div align="right" id="newHistory"><div style="margin-left: 60%;">' +
+            if(messageObj.sender == sender){ // 채팅을 보내는 사람
+                return '<div style="text-align: right; margin-left: 480px; width:270px;" id="newHistory"><div style="text-align: right; width:270px;">' +
             messageObj.message+
-            '</div><div style="font-size:13px; color:grey; margin-left: 60%;">' +
+            '</div><div style="width: 270px; text-align: right: font-size:13px; color:grey;">' +
             messageObj.sendTime +
-            '</div><span id="check" style="color:dodgerblue;">1</span></div></p>';
-            } else {
-            return '<div id="newResponseHistory"><div style="float:left;">' +
+            '</div><div id="reads" style="color:dodgerblue;">1</div></div>';
+            } else { // 채팅을 받는 사람
+            return '<div id="newResponseHistory" class="alert alert-info"><div style="width: 40px; margin-right: 15px; display: inline-block; float: left;">' +
             '<img class="rounded-circle" width="40" height="40" src="' +
             chatWithImage + 
-            '" style="margin-right:10px;"></div><div style="margin-right: 60%;"><span>' +
+            '" style="margin-right:10px;"></div><div style="width: 270px; text-align: left; display: inline-block;"><div>' +
             messageObj.message+
-            '</span><br/></div><div style="font-size:13px; color:grey; margin-right: 60%;"><span>' +
+            '</div><div style="font-size:13px; color:grey;">' +
             messageObj.sendTime +
-            '<span><br/><br/></div></div>';
+            '</div><br/><br/></div></div>';
             }
         }
         
-        
+        // 채팅 입력창에 포커싱 맞췄을 때 발동
         $('#message').focus(function(){
-            
-            let nm = document.getElementById('newResponseHistory');
-            nm.removeAttribute('id');
-            if(sender == sender){
-                console.log("확인해주세요!")
-        setInterval( CheckPageFocus, 200 );
-        }
+            const nm = document.querySelectorAll('#newResponseHistory');
+            for (var i = 0; i < nm.length; ++i) {
+            nm[i].className = "";
+            nm[i].removeAttribute('id');
+            }
+            stompClient.send("/app/chat/read/"+ chatRoomId, {}, JSON.stringify(
+            {sender:sender}
+        ))
         });
-        
-        function CheckPageFocus() {
-        //var info = document.getElementById("message");
-        if ( document.hasFocus() ) {
-            let nm = document.getElementById('check');
-            nm.style.visibility = 'hidden';
-            nm.removeAttribute('id');
-         } 
-        }
-        
         
         // (홍찬) 채팅칠 때 혹은 채팅받을 때 자동으로 스크롤 조절 해줌.
         function autoScroll() {
@@ -212,17 +235,50 @@ window.addEventListener('DOMContentLoaded', () => {
         $chatHistory.scrollTop($chatHistory[0].scrollHeight);
         }
         
-        // (홍찬) 메세지 보낼때/받을 때 대화목록 refresh
-        //$('.input_group').on('focusin',function(){
-        //   $('.chat-history').load(location.href+' .chat-history');
-        //});
-        
         // HTML 형태의 메시지를 화면에 출력해줌
         // 해당되는 id 태그의 모든 하위 내용들을 message가 추가된 내용으로 갱신해줌
         function showBroadcastMessage(message) {
             $("#content").html($("#content").html() + message);
         }
         
+        // 대화를 시작하는 대상 등록
+        function registration(){
+        $.get("/registration/" + sender)
+        .fail(err =>(console.log(err)))
+        };
+        
+        // 창 닫기 버튼 이벤트(로그아웃하는 시점)
+        window.addEventListener('unload',function(){
+            $.get("/unregistration/" + sender)
+            .fail(err => console.log("창닫기 오류"))
+        });
+        
+        
+        // 상대방이 온라인/오프라인 확인
+        function isOnline(){
+            const data = {
+            nickName: seller,
+            chatRoomId: chatRoomId
+        }
+            $.post("/onlineChk", data)
+            .done(response => { 
+                if(response == 1){ // true: 상대가 online
+                     
+                }
+            })
+            .fail(err => console.log("온라인/오프라인 오류"))
+        }
+        
+        //read();
+        // 읽음 = 0 안읽음 = 1 체크
+        function read(){
+            const read = document.querySelectorAll('#reads');
+            for (var i = 0; i < read.length; ++i) {
+            read[i].style.visibility = 'hidden';
+            read[i].removeAttribute('id');
+            }
+            
+        }
         
         
     // (지혜) 선택된 채팅창 배경색 바꾸기    
@@ -249,6 +305,7 @@ window.addEventListener('DOMContentLoaded', () => {
             parent = window.opener;
             parent.location.href=url;
             // parent.focus();  부모창으로 포커스(크롬에서는 지원되지 않는다 함...ㅠㅠ)
+
         }
         
         
@@ -260,14 +317,14 @@ window.addEventListener('DOMContentLoaded', () => {
     function reserve() {
         
         console.log('usedBookId = '+usedBookId+', buyerId = '+buyerId+', buyerName = '+buyerName);
-        confirm(buyerName+'님과 거래 예약하시겠습니까?');
+        const result = confirm(buyerName+'님과 거래 예약하시겠습니까?');
 
         const reserveDto = {
             usedBookId : usedBookId,
             userId : buyerId
         }
         
-        if(confirm){
+        if(result){
             axios.post('/chat/reserve', reserveDto)
              .then(response =>{
                  alert(buyerName +'님과 거래 예약되었습니다!');
@@ -282,9 +339,9 @@ window.addEventListener('DOMContentLoaded', () => {
     function cancel() {
         
         console.log('usedBookId = '+usedBookId+', buyerName = '+buyerName);
-        confirm(buyerName+'님과의 예약을 취소하시겠습니까?');
+        const result = confirm(buyerName+'님과의 예약을 취소하시겠습니까?');
         
-        if(confirm){
+        if(result){
             axios.post('/chat/cancel',null, { params: { usedBookId : usedBookId }})
              .then(response =>{
                  alert(buyerName +'님과의 거래가 취소되었습니다!');
@@ -300,9 +357,9 @@ window.addEventListener('DOMContentLoaded', () => {
     function sold() {
         
         console.log('usedBookId = '+usedBookId+', buyerName = '+buyerName);
-        confirm(buyerName+'님과의 거래가 완료됐나요?');
+        const result = confirm(buyerName+'님과의 거래가 완료됐나요?');
 
-        if(confirm){
+        if(result){
             axios.post('/chat/sold', null, { params: { usedBookId : usedBookId }})
              .then(response =>{
                  alert(buyerName +'님과의 거래가 완료되었습니다!');
@@ -340,11 +397,10 @@ window.addEventListener('DOMContentLoaded', () => {
                 console.log('txtValue = '+txtValue);
                 console.log('filter = '+filter);
                 if (txtValue.indexOf(filter) > -1) {   // 검색창의 글자와 중고책 제목에 일치하는 글자가 있으면
-                     chatRoom[i].style.display = "block";
+                    chatRoom[i].style.display = "block";
                 } else {
                     chatRoom[i].style.display = "none";
                 }
             }
         }
     }
-        
