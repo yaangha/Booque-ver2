@@ -15,15 +15,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.book.project.domain.BookComment;
 import site.book.project.domain.Order;
+import site.book.project.domain.UsedBook;
 import site.book.project.domain.User;
 import site.book.project.dto.BookCommentReadDto;
 import site.book.project.dto.BookWishDto;
+import site.book.project.dto.MarketCreateDto;
 import site.book.project.dto.UserModifyDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.UserRepository;
 import site.book.project.service.BookCommentService;
 import site.book.project.service.BookWishService;
 import site.book.project.service.OrderService;
+import site.book.project.service.UsedBookService;
 import site.book.project.service.UserService;
 
 @Slf4j
@@ -36,6 +39,7 @@ public class MyPageController {
     private final UserService userService;
     private final BookWishService bookWishService;
     private final BookCommentService bookCommentService;
+    private final UsedBookService usedBookService;
     
     // (하은) 마이페이지 연결
     @GetMapping("/myPage")
@@ -49,9 +53,11 @@ public class MyPageController {
         List<BookWishDto> wishBookInfo = bookWishService.searchWishList(user.getId());
         List<BookCommentReadDto> commentList = bookCommentService.readByUserId(user.getId());
         
+        List<MarketCreateDto> usedBookList = usedBookService.searchWishList(user.getId());
         
         
         
+        model.addAttribute("usedBookList", usedBookList);
         model.addAttribute("commentList", commentList);
         model.addAttribute("wishBookInfo", wishBookInfo);
         model.addAttribute("orderList", orderList);
@@ -71,18 +77,7 @@ public class MyPageController {
         return "redirect:/myPage";
     }
     
-    // 못함
-    @PostMapping("/myPage/file")
-    public String filemodify(@AuthenticationPrincipal UserSecurityDto  userSecurityDto,
-                            @RequestParam("filePath") MultipartFile file) throws IllegalStateException, IOException {
-
-        userService.modifyUserImage(userSecurityDto.getId(), file);
-        
-        
-        
-        
-        return "redirect:/myPage";
-    }
+   
     
     // (은정) wish 삭제
     @PostMapping("/myPage/delete")

@@ -3,6 +3,9 @@
  */
 
  window.addEventListener('DOMContentLoaded', () => {
+     
+   // showNotice();
+ 
     // 댓글 목록
     readAllReplies();
     // 댓글 갯수
@@ -38,22 +41,42 @@
         axios.post('/api/reply', data)
                 .then(response => {
                     alert('#  댓글 등록 성공');
-                    clearInputContent();
+                   clearInputContent();
                     readAllReplies();
                     updateReplyCount();
+                    
+                    newReplyNotion(response.data);
                 })
                 .catch(error => {
                     console.log(error);
                 });
     }      
 
-
+    // (예진) 새 댓글 달리면 알림(notice) 만들어짐
+    function newReplyNotion(data){
+      
+           axios.post('/notice', data)
+           .then(response => {
+               console.log('노티스 저장성공');
+             
+           })         
+            .catch(error => {
+                    console.log(error);
+           });
+     
+    }
+    
+   
+    
     // 댓글 목록 함수
     function readAllReplies(){
         const postId = document.querySelector('#postId').value;
         axios
         .get('/api/reply/all/' + postId)  
-        .then(response => { updateReplyList(response.data) } )
+        .then(response => { 
+            console.log('리스폰스.데이터')
+            console.log(response.data)
+            updateReplyList(response.data) } )
         .catch(err => { console.log(err) });
     }    
     function updateReplyList(data){
@@ -81,30 +104,54 @@
 //                + '</div>'
 //                + '</div>';
 //        }
-        
-        for (let r of data){
-            str += '<div class="card border-dark mb-3 w-100" style="text-align: left;">'
-            + '<div class="flex-shrink-0"><img class="rounded-circle" width="60" height="60" src="' + r.userImage + '" alt="..." /></div>'
 
-            + `<div class="fw-bold"><a href="/post/list?postWriter=${r.replyWriter}">${r.replyWriter}</a></div>`
+       for (let r of data){
+            str += '<div class="card border-dark mb-3 w-100" style="text-align: left;">';
+            
+            if(r.replyId == repId) {  
+               str +='<div class="bgColor" id="bgColorBtn" style="background-color: #e6f2ff;">';
+            }
+            if(r.replyId != repId) {  
+               str +='<div class="bgColor" id="bgColorBtn">';
+            }      
+            str +=`<div class="flex-shrink-0"><a href="/post/list?postWriter=${r.replyWriter}">`
+                + '<img class="rounded-circle m-2" width="45" height="45" src="' + r.userImage + '" alt="..." />'
+                + `<span class="fw-bold m-2">${r.nickName}</span></a></div>`
                 + '<div class="card-body text-dark">'
                 + '<p class="card-text">' + r.replyContent + '</p>'
                 + '<div><small style="color:gray;"> 작성시간: ' + '<span id="commentDate">' + r.createdTime + '</span>' + '</small></div>'
     //            + '<div><small style="color:gray;"> 수정시간: ' + r.modifiedTime + '</small></div>'
                 + '</div>';
+                
             if(r.replyWriter == loginUser){
-            str += '<div class="card-footer">'
-                + `<button type="button" class="btnModifies btn btn-outline-primary" data-rid="${r.replyId}">수정</button>`
-                + '</div>';
+               str += '<div class="card-footer">'
+                   + `<button type="button" class="btnModifies btn btn-outline-primary" data-rid="${r.replyId}">수정</button>`
+                   + '</div>';
             }
+            
             str += '</div>';
+
+            str +='</div>';
+            
+            
         }
         
         divReplies.innerHTML = str;
         
         
+        // (예진) 새 댓글에 준 백그라운드 컬러 댓글 클릭하면 없어지게
+        const bg = document.querySelector('.bgColor');
+        
+        bg.addEventListener('click', function(){
+        const divBg = document.getElementById('bgColorBtn');
+        divBg.style.backgroundColor = 'white';
+        divBg.removeAttribute('class');
+        
+    });
+      
+        
         const dateC = document.querySelectorAll('#commentDate');
-    dateC.forEach(e => {
+       dateC.forEach(e => {
        let dateComment = new Date(e.innerText);
        console.log(dateComment)
        let dateM = dateComment.getMonth()+1;
@@ -117,6 +164,7 @@
         e.innerText = dd;
            
     })
+  
         
         // [수정] 버튼에 이벤트 리스너를 등록
         const buttons = document.querySelectorAll('.btnModifies');

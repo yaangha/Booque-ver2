@@ -39,6 +39,12 @@ dependencies {
     
     // Spring Security Test
     testImplementation 'org.springframework.security:spring-security-test'
+    
+    // websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    
+    // image thumbnail generator
+    implementation 'net.coobird:thumbnailator:0.4.18'
 }
 
 tasks.named('test') {

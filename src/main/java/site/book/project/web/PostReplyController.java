@@ -36,7 +36,7 @@ public class PostReplyController {
     private final UserService userService;
     private final PostService postService;
 
-    // 댓글 전체 리스트
+ // 댓글 전체 리스트
     @GetMapping("/all/{postId}")
     public ResponseEntity<List<ReplyReadDto>> readAllReplies(@PathVariable Integer postId){
         log.info("readAllReplies(postId={})", postId);
@@ -44,19 +44,22 @@ public class PostReplyController {
         List<ReplyReadDto> list = replyService.readReplies(postId);
         
         log.info("# of list = {}", list.size());
+        log.info("댓글전체리스트={}",list);
        
-
+  
         return ResponseEntity.ok(list);
     }
 
     // 댓글 작성
     @PostMapping
-    public ResponseEntity<Integer> registerReply(@RequestBody ReplyRegisterDto dto) {
+    public ResponseEntity<ReplyReadDto> registerReply(@RequestBody ReplyRegisterDto dto) {
         log.info("registerReply()");
+        
+        Integer replyId =  replyService.create(dto); 
+        ReplyReadDto readDto =  replyService.readReply(replyId);
+   
 
-        Integer replyWriter = replyService.create(dto);
-
-        return ResponseEntity.ok(replyWriter);
+        return ResponseEntity.ok(readDto);
     }
     
     // 댓글 수정/삭제 모달창에 가져오기
@@ -65,7 +68,7 @@ public class PostReplyController {
         log.info("getReply(replyId={})", replyId);
         
         ReplyReadDto dto = replyService.readReply(replyId);
-        log.info("dto={}", dto);
+        log.info("dto={}", dto); log.info("readDto보여졍={}", dto);
         return ResponseEntity.ok(dto);
     }
     

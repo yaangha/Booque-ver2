@@ -1,6 +1,7 @@
 package site.book.project.web;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,10 +25,13 @@ import site.book.project.domain.User;
 import site.book.project.dto.UserSecurityDto;
 
 import site.book.project.dto.BookWishDto;
+import site.book.project.dto.PostListDto;
+import site.book.project.dto.PostReadDto;
 import site.book.project.service.BookIntroService;
 import site.book.project.service.BookService;
 import site.book.project.service.BookWishService;
 import site.book.project.service.PostService;
+import site.book.project.service.UsedBookService;
 import site.book.project.service.UserService;
 
 @Controller
@@ -41,7 +45,7 @@ public class BookDetailController {
 	
 	private final BookWishService bookWishService;
 	private final BookIntroService bookIntroService;
-
+	private final UsedBookService usedBookService;
     
     @GetMapping("/detail")
     public String detail(Integer id, 
@@ -66,6 +70,9 @@ public class BookDetailController {
         log.info("하은 author={}", book.getAuthor());
         model.addAttribute("authorOtherBook", authorOtherBook);
         
+        // (하은) 책 디테일 창에서 부끄장터 검색창으로 연결
+        Integer countUsedBook = userService.countMarket(id);
+        model.addAttribute("countUsedBook", countUsedBook);
         
         // for문을 통해서 숫자를 그림으로 표현? 참고해서 고치기
         double score = book.getBookScore()/10.0;
@@ -78,10 +85,14 @@ public class BookDetailController {
      
         // choi 책 한권에 대한 post 정보 받기
         List<Post> postList = postService.findBybookId(id);
+        
+        
         model.addAttribute("postList", postList );   
         
+        
+    
         // (지혜) 유저 정보 받기( [  ] 님이 보고 계신 책은...)
-//        String nickName = userService.read(userId).getNickName();
+//        String nickName = userService.read(d).getNickName();
 //        model.addAttribute("nickName", nickName);
         
         return "book/detail";

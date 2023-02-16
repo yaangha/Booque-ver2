@@ -13,9 +13,13 @@
 
     
    function readCartDesc(){
-        const userid = document.querySelector('#userId').value;
+        const userid = document.querySelector('#userId')
+        const testU =document.querySelector('#testU').innerText;
+        console.log(userid)
+        console.log(testU)
+        console.log(testU.innerText)
         
-        axios.get('api/cart/all/' + userid) 
+        axios.get('api/cart/all/' + testU) 
         .then(response => { updateCartList(response.data)
         
         })
@@ -329,7 +333,6 @@
     
     
  })
-
 
 
 

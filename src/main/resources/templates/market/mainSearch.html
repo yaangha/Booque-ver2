@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{ layout/layoutM }">
+
+<div layout:fragment="content">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Booque Market</title>
+    
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+        }
+        
+        a:hover {
+            color: black;
+        }
+        
+        #searchInput {
+            border: none;
+            border-bottom: 3px solid black;
+            width: 500px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-right: 20px;
+        }      
+        
+        #searchInput:focus {
+            outline: none;
+        }
+        
+        #img {
+            box-shadow: 10px 10px 20px lightgrey;
+        }  
+    </style>
+    
+  
+</head>
+<body>
+      <div class="w-70 container">
+     
+    
+    <div style="margin-bottom: 80px;"><!-- 상단 div(검색, 판매글, 마이페이지 이동 등) -->
+    
+        <!-- <div style="margin-left:100px; display:inline-block;"> -->
+        <div style="margin-left:60px; display:inline-block;">
+        <form id="formSearchL" action="/market/mainSearch" method="get">
+
+        <label for="statusAll" style="margin-right: 20px"> 
+        <input onchange="searchOrderby()" checked name="status" id="statusAll" 
+        type="radio" value="all" style="padding: 10px;"> 전체</label> 
+        <label for="statusAble" style="margin-right: 20px">
+        <input onchange="searchOrderby()" name="status" id="statusAble" 
+        th:checked ="${ status } == able " type="radio" value="able"> 구매가능</label>
+        
+    
+            <select name="region" id="selectLocation" style="width:180px; height: 40px; display: inline-block; border: none;">
+                <option  value="">지역을 선택하세요</option>
+                <option th:selected="${ region } == 서울" value="서울">서울특별시</option>
+                <option th:selected="${ region } == 전북" value="전북">전라북도</option>
+                <option th:selected="${ region } == 부산" value="부산">부산광역시</option>
+                <option th:selected="${ region } == 대구" value="대구">대구광역시</option>
+                <option th:selected="${ region } == 인천" value="인천">인천광역시</option>
+                <option th:selected="${ region } == 광주" value="광주">광주광역시</option>
+                <option th:selected="${ region } == 대전" value="대전">대전광역시</option>
+                <option th:selected="${ region } == 울산" value="울산">울산광역시</option>
+                <option th:selected="${ region } == 세종특별자치시" value="세종특별자치시">세종특별자치시</option>
+                <option th:selected="${ region } == 경기도" value="경기도">경기도</option>
+                <option th:selected="${ region } == 강원도" value="강원도">강원도</option>
+                <option th:selected="${ region } == 충북" value="충북">충청북도</option>
+                <option th:selected="${ region } == 충남" value="충남">충청남도</option>
+                <option th:selected="${ region } == 전남" value="전남">전라남도</option>
+                <option th:selected="${ region } == 경북" value="경북">경상북도</option>
+                <option th:selected="${ region } == 경상" value="경상">경상남도</option>
+                <option th:selected="${ region } == 제주특별자치도" value="제주특별자치도">제주특별자치도</option>
+            </select>
+            
+            <input id="searchInput" name="mainKeyword" type="search" placeholder="검색어를 입력하세요!"  th:value="${ mainKeyword }"/>
+            <button id="btnSearchL" style="border: none; background-color: white;">
+                <i class="bi bi-search" style="font-size: 2rem;"></i>
+            </button>
+                        
+            <div style="display: inline-block; margin-left: 20px;">
+        
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i> 상품등록</button>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">상품등록</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    상품 등록을 진행하시겠습니까?
+                  </div>
+                  <div class="modal-footer">
+                    <div th:unless="${ #lists.isEmpty(usedBookPost) }">
+                        <a class="btn btn-secondary" th:href="@{ /market/storage }">이어서 작성</a>
+                    </div>
+                    <a class="btn btn-primary" th:href="@{ /market/create }">새로 작성</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <a class="btn btn-danger" style="margin-right: 40px;" th:href="@{ /market/mypage?userNickname={userNickname} (userNickname = ${ userNickname }) }"><i class="bi bi-house-door"></i> 마이부끄</a>            
+        </div>
+            
+        </div>
+        
+    </div><!-- 상단 div end -->
+    
+    <div><!-- main contents -->
+    <div style="margin-top:15px; margin-bottom:30px; padding-bottom: 15px; border-bottom: 1px solid silver;">
+        <div style="font-weight: bold; font-size:25px; margin-left: 40px; display:inline-block; ">부끄마켓 중고거래</div>
+        <select id="orderSlt" onchange="changeStatus()" name="orderSlt" class="form-select" style="width:120px; height: 40px; margin-left: 880px; margin-right:40px; display: inline-block;">
+            <option th:selected ="${ orderSlt } == 최신순" >최신순</option>
+            <option th:selected ="${ orderSlt } == 최저가순" >최저가순</option>
+            <option th:selected ="${ orderSlt } == 최고가순" >최고가순</option>
+        </select>
+    </div>    
+    </form> <!-- formSearchL end -->
+    
+    <div style="margin-bottom: 40px;">
+    <h6 class="mb-1 fw-bold" style="margin-left: 40px; font-size: 15px; font-style: italic;">&nbsp;이런 책 찾으시나요?</h6>
+    <h6 style="margin-left: 40px; font-size: 13px; font-style: italic;">&nbsp;원하는 책 클릭하고, 새 글 알림 받아보세요!</h6>
+    <div class="rounded" th:each="x : ${ list4 }" style="margin-left: 40px; border: 1px solid silver; display: inline-block;"><!-- main div -->
+            <div style="margin: 10px;">
+                <div style="display: inline-block; vertical-align: top; margin-right: 10px;">
+                    <a th:href="@{ /detail?id={bookId} (bookId = ${ x.bookId })}"><img th:src="${ x.bookImage }" style="width: 60px;" /></a>
+                    <input type="hidden" id="b-Id" th:value="${ x.bookId }"/>
+                </div>
+              <div style="text-align: left; display: inline-block;">
+                     <div class="d-inline-flex px-1 my-1  border rounded text-secondary" style="font-size: 10px;">  
+                         <span th:text="${ x.bookgroup }"></span><span> / </span><span th:text="${ x.category }"></span> 
+                     </div>
+                     <div style="font-size: 13px; width: 145px;" class="fw-bold text-truncate"  th:text="${ x.bookName }"></div> 
+                     <div style="font-size: 12px;"><span th:text ="${ '저자: ' + x.author }"></span> </div> 
+                     <div style="font-size: 12px;"><span th:text ="${ x.publisher + ' 출판' }"></span></div>  
+               </div> 
+               <div style="display: inline-block;">
+                <span class="m-1" onclick="register(event);"><i class="bi bi-hand-index-fill" style="font-size: 21px;"></i></span>
+                
+               </div>
+            </div>
+         </div><!-- main div end -->
+    </div>
+    
+    
+    <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:37px; display:inline-block;"><!-- content 1개 -->
+        <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ marketCreateDto.usedBookId }) }" th:myname="${ marketCreateDto.usedBookId }" onclick="usedBookHits(this.getAttribute('myname'))">
+            <img id="img" alt="" th:src="${ '/market/api/view/'+marketCreateDto.imgUsed }"  style="height:350px; width:350px; margin-bottom:10px; object-fit: cover;">
+            <div class="text-truncate" th:text="${ marketCreateDto.title }" style="font-weight: bold; font-size: 20px;"></div>
+            
+            <div th:if="${ marketCreateDto.status } == '판매완료'">
+                <div th:text="'판매완료!! ' + |${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold; font-size: 25px; color: gray; text-decoration: line-through;"></div>
+            </div>
+            <div th:unless="${ marketCreateDto.status } == '판매완료'">
+                <div th:text="|${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold; font-size: 25px; color: red;"></div>
+            </div>
+            
+            <div th:text="${ marketCreateDto.location }" style="display: inline-block;"></div>
+            <div><img class="rounded-circle" width="40" height="40" th:src = "${ marketCreateDto.userImage }" /><span th:text="${ '&nbsp;&nbsp;'+marketCreateDto.nickName }"></span></div>
+            <span class="text-truncate" th:text="${ '<' + marketCreateDto.bookTitle + '>'}"></span>
+            <div style="color: gray;"><i class="bi bi-clock" style="font-size: small;"></i>
+                <small style="color: gray;" th:text="${ #temporals.format(marketCreateDto.modifiedTime, 'yyyy/MM/dd HH:mm') }"></small>
+            </div>
+            <div class="align-middle" style="color:gray;">
+                <i class="bi bi-heart-fill" style="font-size:12px;"></i> 관심 <span id="wishCount" th:text="${ marketCreateDto.wishCount }"></span> 
+                <i class="bi bi-eye" style="font-size:17px; margin-left:8px;"></i> 조회 <span th:text="${ marketCreateDto.hits }"></span>
+            </div>
+        </a>
+    </div>
+
+    
+    </div><!-- main contents end -->
+    </div>
+    
+    
+    <!-- 부트스트랩 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    
+
+<script>
+
+function register(event) {
+
+	const bookId = document.querySelector('#b-Id').value;
+	
+	  axios
+	   .get('/register/notice/'+bookId)
+	   .then(response => {
+	       alert('알림 등록 완료!'); })
+	   .catch(err =>{
+	       console.log(err); });
+	}
+</script>
+
+    <script>
+    
+    const btnSearch = document.querySelector('#btnSearchL')
+
+    const formOrder= document.querySelector('#formSearchL')
+    
+    btnSearch.addEventListener('click', function(){
+        
+        // form으로 넘겨야 겠지?
+        const formSearch = document.querySelector('#formSearch')
+        
+        console.log(formSearch)
+        
+    })
+    
+    function changeStatus(){
+        formOrder.submit();
+    }
+    
+    function searchOrderby(){
+        formOrder.submit();
+        
+    }
+
+    
+    
+    
+    </script>
+    
+    <script> // (하은) 조회수 증가
+    function usedBookHits(usedBookId) {
+        axios.get('/market/usedBookHitCount', { params: { usedBookId : usedBookId }})
+           .then(response => {
+               console.log(response);
+           })
+           .catch(err => {
+               console.log(err);
+           })
+    }
+    </script>
+    
+</body>
+</div>
+</html>
