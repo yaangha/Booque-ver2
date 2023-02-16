@@ -62,14 +62,13 @@ window.addEventListener('DOMContentLoaded', () => {
             
             console.log('activateBtnSend 함수 - value: '+messageValue);
             
-            if (messageValue == '') {
+            if ($.trim(messageValue) == '') {
+                // if (messageValue.replace(/\s|　/gi, "").length == 0) {
                 btnSend.disabled = true;
                 btnSend.style.color = "silver";
-                console.log('보내기버튼 비활성화');
             } else {
                 btnSend.style.color = "dodgerblue";
                 btnSend.disabled = false;
-                console.log('보내기버튼 활성화');
             }
             
         };
@@ -163,11 +162,14 @@ window.addEventListener('DOMContentLoaded', () => {
         var inputMessage = document.getElementById('message'); 
         inputMessage.addEventListener('keyup', function enterSend(event) {
             
+            let inputMessageValue = inputMessage.value;
+            
             if (event.keyCode === null) {
                 event.preventDefault();
             }
             
-            if (event.keyCode === 13) {
+            if ((event.keyCode === 13) && ($.trim(inputMessageValue) != '')) {
+                // if ((event.keyCode === 13) && (input.replace(/\s|　/gi, "").length != 0)) {
                 send();
             }
         });

@@ -128,7 +128,7 @@
             
 
             <!-- 채팅 버튼(내 채팅 모아보기-새 창) -->
-            <button th:data-url="@{ /chat }" onclick="openWindow(this.getAttribute('data-url'))"  class="w3-bar-item w3-button  w3-right" id="btnChat" style="color:white; margin-top:18px; margin-right:30px;">
+            <button th:data-url="@{ /chat }" onclick="openWindow(this.getAttribute('data-url'))"  class="w3-bar-item w3-button  w3-right" id="btnChat" style="color:white; margin-top:18px; margin-right:5px;">
                 <i class="fa-solid fa-comments"></i>
             </button>
 
@@ -140,7 +140,7 @@
                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
                     </svg>
                 </button>
-                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="top:66px; right:98px;">
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="top:66px; right:100px;">
                     <a th:href="@{ /myPage }" class="w3-bar-item w3-button" 
                     style="font-size: 17px; text-align:center; padding-top:15px; color:grey; font-weight:bold;">마이페이지</a>
                     <a th:href="@{ /post/list }" class="w3-bar-item w3-button" 
