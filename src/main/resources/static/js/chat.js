@@ -202,11 +202,11 @@ window.addEventListener('DOMContentLoaded', () => {
         
         function createTextNode(messageObj) {
             if(messageObj.sender == sender){ // 채팅을 보내는 사람
-                return '<div style="text-align: right; margin-left: 480px; width:270px;" id="newHistory"><div style="text-align: right; width:270px;">' +
+                return '<div style="width: 500px;"><div style="text-align: right; margin-left: 480px; width:270px;" id="newHistory"><div style="text-align: right; width:270px;">' +
             messageObj.message+
             '</div><div style="width: 270px; text-align: right: font-size:13px; color:grey;">' +
             messageObj.sendTime +
-            '</div><div id="reads" style="color:dodgerblue;">1</div></div>';
+            '</div><div id="reads" style="color:dodgerblue;">1</div></div></div>';
             } else { // 채팅을 받는 사람
             return '<div id="newResponseHistory" class="alert alert-info"><div style="width: 40px; margin-right: 15px; display: inline-block; float: left;">' +
             '<img class="rounded-circle" width="40" height="40" src="' +
@@ -298,6 +298,40 @@ window.addEventListener('DOMContentLoaded', () => {
         };
     });
     });
+    
+    
+    
+    // (지혜) 안읽은 채팅방 필터링
+    const btnShowAllChats = document.querySelector('#showAllChats');
+    const btnShowUnreadChats = document.querySelector('#showUnreadChats');
+
+    btnShowAllChats.addEventListener('click', showAll);
+    btnShowUnreadChats.addEventListener('click', showUnread);
+
+    function showAll() {    // 전체 채팅방 보기
+        let chatRoom = document.querySelectorAll('.btnChatRoom');
+        for (i = 0; i <= chatRoom.length; i++) {
+            chatRoom[i].style.display = "block";
+            }
+    }
+
+    function showUnread() {
+        let chatRoom = document.querySelectorAll('.btnChatRoom');
+        let unread = document.querySelectorAll('.unread');
+        let unreadNickName = document.querySelectorAll('.unreadNickName');
+
+        for (i = 0; i <= chatRoom.length; i++) {
+                unreadCount = unread[i].value;
+                unreadName = unreadNickName[i].value;
+                if ((unreadName == sender) && (unreadCount > 0)) {
+                    chatRoom[i].style.display = "block";
+                } else {
+                    chatRoom[i].style.display = "none"; 
+                }
+            } 
+    }
+    
+    
     
     
 });

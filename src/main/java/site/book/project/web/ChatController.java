@@ -23,6 +23,7 @@ import site.book.project.domain.UsedBookImage;
 import site.book.project.domain.User;
 import site.book.project.dto.ChatListDto;
 import site.book.project.dto.ChatReadDto;
+import site.book.project.dto.UnreadDto;
 import site.book.project.dto.UserSecurityDto;
 import site.book.project.repository.ChatAssistRepository;
 import site.book.project.repository.ChatRepository;
@@ -235,6 +236,18 @@ public class ChatController {
             // chatHistory 불러 오기
             //chatHistory Model에 저장해 View로 전달
             model.addAttribute("chatHistory", chatHistory);
+            
+            // 안읽음 리스트를 위해 전달.
+            List<UnreadDto> unreadInfo = new ArrayList<>();
+            Integer unread = 0;
+            String unreadNickName = "";
+            for (Chat c : myChats) {
+                unread = chatAssistRepository.findByChatRoomId(c.getChatRoomId()).getReadCount();
+                unreadNickName = chatAssistRepository.findByChatRoomId(c.getChatRoomId()).getNickName();
+                UnreadDto dto = UnreadDto.builder().chatRoomId(c.getChatRoomId()).unread(unread).unreadNickName(unreadNickName).build();
+                unreadInfo.add(dto);
+            }
+            model.addAttribute("unreadInfo", unreadInfo);
             
     }
     

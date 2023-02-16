@@ -145,9 +145,13 @@
 
                     <div style="margin-top:7px;">
                         <button id="showAllChats" class="w3-border w3-medium" style="color:dimgrey; margin-right:10px;">전체보기</button>
-                        <button id="showUnreadChats" th:username="${#authentication.name}" onclick="unreadByRearrange(this.getAttribute('username'))"  class="w3-border w3-medium" style="color:dimgrey;">안 읽은 채팅만 보기</button>
+                        <button id="showUnreadChats" th:username="${#authentication.name}" class="w3-border w3-medium" style="color:dimgrey;">안 읽은 채팅만 보기</button>
                     </div>
-                </div>
+                    <div th:each=" u : ${unreadInfo}">
+                        <input type="hidden" class="unread" th:value="${u.unread}" /> 
+                        <input type="hidden" class="unreadNickName" th:value="${u.unreadNickName}" />
+                    </div>
+            </div>
                 
                 <!-- 채팅방 리스트  -->
                 <div id="chatList">
@@ -155,7 +159,7 @@
                         <tbody id="chatListTbody">
                             <tr  class="btnChatRoom" th:each="chat : ${ data}" 
                             th:onclick="|location.href='@{/chat?chatRoomId={chatRoomId} (chatRoomId = ${ chat.chatRoomId})}'|"
-                            style="cursor:pointer; background-color:none; display:block; width: 270px;">
+                            style="cursor:pointer; background-color:none; display:block; width: 268px;">
                                 <td style="padding-left:10px; width:20%;">
                                     <img class="rounded-circle" width="40" height="40" th:src = "${ chat.chatWithImage }" />
                                 </td>
@@ -274,7 +278,7 @@
                     </div> -->
                     
                     <!-- 하은 -->
-                    <div id="content" class="chat-history">
+                    <div id="content" class="chat-history" style="width: 805px;">
                         <div th:each="chat, i : ${chatHistory}"><!-- 메시지 하나가 차지하는 div -->
                             <div th:style="${chat.sender != loginUser.nickName } ? 'width: 40px; margin-right: 15px; display: inline-block; float: left;' : 'display:none;'">
                                 <img class="rounded-circle" width="40" height="40" th:src = "${ chatWith.chatWithImage }" style="margin-right:10px;">

@@ -149,7 +149,6 @@
         <select id="orderSlt" name="orderSlt" onchange="changeStatus()"  class="form-select" style="width:120px; height: 40px; margin-right:40px; display: inline-block;">
             <option th:selected ="${ orderSlt } == 최신순" value="최신순">최신순</option>
             <option th:selected ="${ orderSlt } == 인기순" value="인기순">인기순</option>
-            <option th:selected ="${ orderSlt } == 오래된순" value="오래된순">오래된순</option>
         </select>
         </form>
     </div>
@@ -159,7 +158,14 @@
 
             <img id="img" alt="" th:src="${ '/market/api/view/'+ marketCreateDto.imgUsed }"  style="height:350px; width:350px; margin-bottom:10px; object-fit: cover;">
             <div class="text-truncate" th:text="${ marketCreateDto.title }" style="font-weight: bold; font-size: 20px;"></div>
-            <div th:text="|${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold; font-size: 25px; color:red;"></div>
+            
+            <div th:if="${ marketCreateDto.status } == '판매완료'">
+                <div th:text="'판매완료!! ' + |${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold; font-size: 25px; color: gray; text-decoration: line-through;"></div>
+            </div>
+            <div th:unless="${ marketCreateDto.status } == '판매완료'">
+                <div th:text="|${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold; font-size: 25px; color: red;"></div>
+            </div>
+            
             <div class="text-truncate" th:text="${ marketCreateDto.location }" style="display: inline-block;"></div>
             <!-- (예진) 닉네임+유저이미지 -->
             <div><img class="rounded-circle" width="40" height="40" th:src = "${ marketCreateDto.userImage }" /><span th:text="${ '&nbsp;&nbsp;'+marketCreateDto.nickName }"></span></div>
