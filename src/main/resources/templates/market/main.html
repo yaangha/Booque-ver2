@@ -54,7 +54,8 @@
     <div class="w-70 container">
     
     <div style="margin-bottom: 80px;"><!-- 상단 div(검색, 판매글, 마이페이지 이동 등) -->
-        <div style="margin-left:100px; display:inline-block;">
+        <!-- <div style="margin-left:100px; display:inline-block;"> -->
+        <div style="margin-left:60px; display:inline-block;">
         
         <form id="formSearchL" action="/market/mainSearch" method="get">
         
@@ -145,7 +146,7 @@
     
     <div style="margin-top:15px; margin-bottom:15px; padding-bottom: 15px; border-bottom: 1px solid silver;">
         <div style="font-weight: bold; font-size:25px; margin-left: 40px; display:inline-block;">부끄마켓 중고거래</div>
-        <form id="formOrder" action="/market/main" method="get" style="display: inline-block; margin-left: 910px;">
+        <form id="formOrder" action="/market/main" method="get" style="display: inline-block; margin-left: 880px;">
         <select id="orderSlt" name="orderSlt" onchange="changeStatus()"  class="form-select" style="width:120px; height: 40px; margin-right:40px; display: inline-block;">
             <option th:selected ="${ orderSlt } == 최신순" value="최신순">최신순</option>
             <option th:selected ="${ orderSlt } == 인기순" value="인기순">인기순</option>
@@ -153,7 +154,7 @@
         </form>
     </div>
     
-     <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:40px; display:inline-block;"><!-- content 1개 -->
+     <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:37px; display:inline-block;"><!-- content 1개 -->
         <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ marketCreateDto.usedBookId }) }" th:myname="${ marketCreateDto.usedBookId }" onclick="usedBookHits(this.getAttribute('myname'))">
 
             <img id="img" alt="" th:src="${ '/market/api/view/'+ marketCreateDto.imgUsed }"  style="height:350px; width:350px; margin-bottom:10px; object-fit: cover;">

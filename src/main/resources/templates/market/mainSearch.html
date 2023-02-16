@@ -50,7 +50,8 @@
     
     <div style="margin-bottom: 80px;"><!-- 상단 div(검색, 판매글, 마이페이지 이동 등) -->
     
-        <div style="margin-left:100px; display:inline-block;">
+        <!-- <div style="margin-left:100px; display:inline-block;"> -->
+        <div style="margin-left:60px; display:inline-block;">
         <form id="formSearchL" action="/market/mainSearch" method="get">
 
         <label for="statusAll" style="margin-right: 20px"> 
@@ -122,7 +123,7 @@
     <div><!-- main contents -->
     <div style="margin-top:15px; margin-bottom:30px; padding-bottom: 15px; border-bottom: 1px solid silver;">
         <div style="font-weight: bold; font-size:25px; margin-left: 40px; display:inline-block; ">부끄마켓 중고거래</div>
-        <select id="orderSlt" onchange="changeStatus()" name="orderSlt" class="form-select" style="width:120px; height: 40px; margin-left: 900px; margin-right:40px; display: inline-block;">
+        <select id="orderSlt" onchange="changeStatus()" name="orderSlt" class="form-select" style="width:120px; height: 40px; margin-left: 880px; margin-right:40px; display: inline-block;">
             <option th:selected ="${ orderSlt } == 최신순" >최신순</option>
             <option th:selected ="${ orderSlt } == 최저가순" >최저가순</option>
             <option th:selected ="${ orderSlt } == 최고가순" >최고가순</option>
@@ -156,7 +157,7 @@
     </div>
     
     
-    <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:40px; display:inline-block;"><!-- content 1개 -->
+    <div th:each="marketCreateDto : ${ list }" style="width:350px; margin:37px; display:inline-block;"><!-- content 1개 -->
         <a th:href="@{ /market/detail?usedBookId={usedBookId} (usedBookId = ${ marketCreateDto.usedBookId }) }" th:myname="${ marketCreateDto.usedBookId }" onclick="usedBookHits(this.getAttribute('myname'))">
             <img id="img" alt="" th:src="${ '/market/api/view/'+marketCreateDto.imgUsed }"  style="height:350px; width:350px; margin-bottom:10px; object-fit: cover;">
             <div class="text-truncate" th:text="${ marketCreateDto.title }" style="font-weight: bold; font-size: 20px;"></div>

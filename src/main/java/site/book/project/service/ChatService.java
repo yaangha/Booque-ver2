@@ -188,7 +188,7 @@ public class ChatService {
         String recentMessage = "";
         
         ChatAssist dto = chatAssistRepository.findByChatRoomId(chat.getChatRoomId());
-        dto.setModifiedTime(chat.getModifiedTime());
+        //dto.setModifiedTime(chat.getModifiedTime());
         
         // fileName 컬럼을 통해 파일의 경로 찾기, 파일 읽기
         String pathName = fileUploadPath + chat.getFileName();

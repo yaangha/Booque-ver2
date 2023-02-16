@@ -104,7 +104,7 @@
         
     	<div class="align-middle float-end" style="display: inline-block;" th:if="${ user.username } != ${ #authentication.name }">
 	    	 <!-- 채팅하기 -->
-            <button id="startChat" type="button" class=" btn btn-primary" style="width:120px; height:40px; margin-left: 20px;"><i class="bi bi-chat" style="margin-right:10px;"></i><span> 채팅보내기</span></button>
+            <button id="startChat" type="button" class=" btn btn-primary" style="width:120px; height:40px; margin-left: 20px;"><i class="bi bi-chat" style="margin-right:10px;"></i><span> 채팅하기</span></button>
             <input id="sellerId" name="sellerId" type="hidden" th:value="${ user.id }" />
     	</div>
         
