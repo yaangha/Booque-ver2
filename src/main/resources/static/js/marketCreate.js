@@ -299,7 +299,7 @@ btnSubmit.addEventListener('click', function () {
         document.getElementById('marketCreate').style.display='none';
         
         const idDiv = document.querySelector('#usedId')
-        let used = '<input type="text" id="usedBookId" name=usedBookId value="'+usedBookId+'">';
+        let used = '<input type="hidden" id="usedBookId" name=usedBookId value="'+usedBookId+'">';
         idDiv.innerHTML = used
         
     }
