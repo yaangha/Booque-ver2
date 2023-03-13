@@ -45,7 +45,7 @@ detail.html 일부
 MarketController.java 일부
 
 ```java
-// (하은) 같은 책 다른 중고상품 수정
+// 같은 책 다른 중고상품 수정
 List<UsedBook> otherUsedBookList = usedBookService.readOtherUsedBook(usedBook.getBookId());
 List<MarketCreateDto> otherUsedBookList2 = mainList(otherUsedBookList);
 List<MarketCreateDto> otherUsedBookListFinal2 = new ArrayList<>();
@@ -62,10 +62,8 @@ model.addAttribute("otherUsedBookListFinal2", otherUsedBookListFinal2);
 UsedBookService.java 일부
 
 ```java
-// (하은) bookId가 동일한 다른 중고책 리스트 만들기
+// bookId가 동일한 다른 중고책 리스트 만들기
 public List<UsedBook> readOtherUsedBook(Integer bookId) {
-    log.info("하은 중고책의 책 정보를 가진 아이디는? = {}", bookId);
-
     // (1) 같은 책의 중고판매글 리스트
     List<UsedBook> otherUsedBookListAll = usedBookRepository.findByBookId(bookId); 
 
@@ -127,7 +125,7 @@ detail.html 일부
 MarketController.java 일부
 
 ```java
-// (하은) 블로그로 연결 -> 해당 책에 관한 리뷰 + 최신 리뷰 = 총 2개 보여주기
+// 블로그로 연결 -> 해당 책에 관한 리뷰 + 최신 리뷰 = 총 2개 보여주기
 List<Post> userPostList = postRepository.findByUserIdOrderByCreatedTime(user.getId());
 
 Post thisBookPost = null;
