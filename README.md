@@ -160,5 +160,16 @@ model.addAttribute("latestPost", latestPost);
 
 ## 구성 화면
 ### 메인 페이지
+![main](https://user-images.githubusercontent.com/113163657/224773967-ecef716c-1824-435c-9966-b6b6db222584.JPG)
+
+---
+### 검색 페이지
+![search(1)](https://user-images.githubusercontent.com/113163657/224774242-64938848-2a3d-40da-8f8a-764b095cb231.JPG)
+
+---
 ### 판매글 상세 페이지
+
+---
 ### 마이페이지
+![mypage(1)](https://user-images.githubusercontent.com/113163657/224774447-1e4fae3e-e4cf-4b0a-b08c-d1b7352bbdd2.JPG)
+![mypage(2)](https://user-images.githubusercontent.com/113163657/224774501-9c5366c3-75c5-48af-a927-66955c51688c.JPG)
