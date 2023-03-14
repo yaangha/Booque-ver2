@@ -44,18 +44,11 @@ public class MyPageController {
     // (하은) 마이페이지 연결
     @GetMapping("/myPage")
     public String myPage(@AuthenticationPrincipal UserSecurityDto u, Model model) {
-        
         User user = userRepository.findById(u.getId()).get();
-        
-        // 주문내역 확인 리스트로 가져옴. 날짜별로  최근순 
         List<Order> orderList = orderService.readByUserId(user.getId());
-        
         List<BookWishDto> wishBookInfo = bookWishService.searchWishList(user.getId());
         List<BookCommentReadDto> commentList = bookCommentService.readByUserId(user.getId());
-        
         List<MarketCreateDto> usedBookList = usedBookService.searchWishList(user.getId());
-        
-        
         
         model.addAttribute("usedBookList", usedBookList);
         model.addAttribute("commentList", commentList);
@@ -66,31 +59,21 @@ public class MyPageController {
         return "/book/myPage";
     }
     
-    
     // (은정)
     @PostMapping("/myPage/modify")
     public String modify(@AuthenticationPrincipal UserSecurityDto u,
                       UserModifyDto userModifyDto) {
-        // 중복검사는 ajax로 해야함..
          userService.modify(userModifyDto, u);
         
         return "redirect:/myPage";
     }
     
-   
-    
     // (은정) wish 삭제
     @PostMapping("/myPage/delete")
     public String deleteWish( Integer bookWishId) {
-        
         bookWishService.deleteWish(bookWishId);
         
-        
         return "redirect:/myPage";
-        
     }
-    
-    
-    
     
 }
