@@ -31,7 +31,6 @@ import site.book.project.service.UserService;
 public class ImageUploadController {
     
     private final UserService userService;
- 
     
     @Value("${site.book.upload.path}") // (예진) 이미지 저장할 로컬 폴더 
     private String imageFilePath; 
@@ -43,8 +42,6 @@ public class ImageUploadController {
        
         return ResponseEntity.ok(u);
     }
-    
-     
      
      @GetMapping("/view/{fileName}")  // 로컬 폴더 이미지 불러오기
      public ResponseEntity<Resource> viewUpdatedImage(@PathVariable String fileName) {
@@ -66,6 +63,5 @@ public class ImageUploadController {
        
         return ResponseEntity.ok().headers(headers).body(resource);
     }
-    
     
 }
