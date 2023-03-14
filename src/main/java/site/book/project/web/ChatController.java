@@ -36,22 +36,7 @@ import site.book.project.service.ChatService;
 @Slf4j
 @Controller
 public class ChatController {
-    
-    // 채팅 view 접속하기
-//    @GetMapping("/chat")
-//    public String onChatting(String withChatUsername, Model model) {
-//        log.info("withChatUsername={}", withChatUsername);
-//        model.addAttribute("firstConnectUser", withChatUsername);
-//        return "chat";
-//    }
-    
-    // 
-//    @GetMapping("message")
-//    @SendTo("/chat/message")
-//    public String getMessage(String message) {
-//        return message;
-//    }
-    
+
     // (지혜)
     @Autowired
     private ChatService chatService;
@@ -73,7 +58,6 @@ public class ChatController {
     @PostMapping("/chat")
     @ResponseBody
     public String getWebSocketWithSockJs(@AuthenticationPrincipal UserSecurityDto userDto, Integer usedBookId, Integer sellerId, Model model) throws IOException {
-        
         Integer buyerId = userDto.getId();
         
         log.info("채팅 존재여부 확인: usedBookId={}, sellerId={}", usedBookId, sellerId);
@@ -116,8 +100,6 @@ public class ChatController {
         
         List<Chat> myChats = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
 
-        
-        
         // 최신 메세지 내용 불러 오기
         List<String> cl = new ArrayList<>();
         for (Chat c : myChats) {
@@ -126,11 +108,10 @@ public class ChatController {
         }
             model.addAttribute("recentMessage" ,cl);
             
-            // 최신 메세지 내용 불러 오기  Dto에 넣어서 보냄
+        // 최신 메세지 내용 불러 오기  Dto에 넣어서 보냄
         for(int i=0; i<list.size(); i++) {
             String last = chatService.readLastThreeLines(myChats.get(i));
             list.get(i).setLastMessage(last);
-            
         }
         
         model.addAttribute("data", list);
@@ -144,7 +125,6 @@ public class ChatController {
              // chatListDto를 같
              model.addAttribute("chatWith", usedbook);
              
-             
           // 예약자 정보
              if (reservedRepository.findByUsedBookId(usedbook.getUsedBookId()) != null) {
                  Integer reservedId = reservedRepository.findByUsedBookId(usedbook.getUsedBookId()).getUserId();
@@ -152,7 +132,6 @@ public class ChatController {
                  model.addAttribute("reservedId", reservedId);
                  model.addAttribute("reservedName", reservedName);
              }
-             
              
              // 안읽은 메세지 개수
              ChatAssist CA = chatAssistRepository.findByChatRoomId(myChats.get(0).getChatRoomId());
@@ -186,9 +165,6 @@ public class ChatController {
             }
             
             //  채팅 상대 정보
-
-
-
             ChatListDto usedbook = ChatListDto.builder().usedBookImage(img.getFileName())
                                                 .price(u.getPrice()).status(u.getStatus())
                                                 .usedTitle(u.getTitle())
@@ -197,7 +173,6 @@ public class ChatController {
                                                 .price(u.getPrice()).status(u.getStatus()).usedTitle(u.getTitle())
                                                 .chatRoomId(chatRoomId).usedBookId(u.getId())
                                                 .build();
-
 
             ChatListDto chatPerson = null;
             if(loginUserId.equals(chatById.getSellerId())) {
@@ -212,7 +187,6 @@ public class ChatController {
                 .chatWithName(chatWith.getNickName()).chatWithId(chatWith.getId()).build();
 
             }
-
 
             model.addAttribute("usedBook", usedbook);
             model.addAttribute("chatWith", chatPerson);
@@ -251,24 +225,6 @@ public class ChatController {
             
     }
     
-//    // (홍찬) 내 대화 목록 불러오기
-//    @GetMapping("/chat/list")
-//    public String openMyChatList(@AuthenticationPrincipal UserSecurityDto userDto, Model model) throws IOException {
-//        Integer loginUserId = userDto.getId();
-//
-//        log.info("잘 도착햇나{}",loginUserId);
-//        // 최근에 업데이트된 날짜 순으로 받아온 내가 대화중인 대화들
-//        List<Chat> chat = chatRepository.findByBuyerIdOrSellerIdOrderByModifiedTimeDesc(loginUserId, loginUserId);
-//        List<String> cl = new ArrayList<>();
-//        for (Chat c : chat) {
-//            log.info("방번호{}",c.getChatRoomId());
-//            cl.add(chatService.readLastThreeLines(c));
-//        }
-//        
-//        model.addAttribute("myChatList" ,cl);
-//        return "chat";
-//    }
-    
     // (지혜) 최신 업데이트시간을 ㅇ초 전, ㅇ분 전, ㅇ시간 전, ㅇ일 전 식으로 바꿔 출력하기
     public static String convertTime(LocalDateTime modifiedTime) {
         
@@ -298,7 +254,6 @@ public class ChatController {
         
     }
     
-    
     @GetMapping("/chat/api/list")
     @ResponseBody
     public List<ChatListDto> chatlist(Integer userId) throws IOException{
@@ -316,7 +271,7 @@ public class ChatController {
         
         }
         
-        log.info("채팅창 리스트 바꿔야지ㅣ이ㅣ잉{}",list);
+        log.info("채팅창 리스트 바꿔야지 = {}",list);
         
         return list;
     }
