@@ -32,18 +32,8 @@ public class CategoryContoller {
         log.info("sort: group={}, category={}, page={}", dto.getBookgroup(), dto.getCategory(), dto.getPage());
         String group = dto.getBookgroup();
         String category = dto.getCategory();
-
         
         Page<Book> list = categoryService.sort(group, category, pageable);
-
-//        List<SearchListDto> reviewCount = new ArrayList<>();
-//        for (Book b : list) {
-//            Integer count = postService.countPostByBookId(b.getBookId());
-//            SearchListDto element = SearchListDto.builder().BookId(b.getBookId()).reviewCount(count).build();
-//            reviewCount.add(element);
-//        }
-        
-        // 시작페이지, 끝 페이지
         int startPage = Math.max(1, list.getPageable().getPageNumber() - 4);
         int endPage = Math.min(list.getTotalPages(), list.getPageable().getPageNumber() + 4);
 
@@ -52,7 +42,6 @@ public class CategoryContoller {
         model.addAttribute("searchList", list);
         model.addAttribute("bookgroup", group);
         model.addAttribute("category", category);
-//        model.addAttribute("reviewCount", reviewCount);
 
         return "/category";
     }
