@@ -34,17 +34,11 @@ public class CartController {
     private final CartService cartService;
     private final BookWishService bookWishService;
 
-    // Principal 객체가 있군 user객체 안뜰때 사용
     @GetMapping("/cart")
     public String cart(@AuthenticationPrincipal UserSecurityDto userSecurityDto,  Model model ){
-        log.info("하은 테스트 {}", userSecurityDto);
-        
         Integer id = userSecurityDto.getId();
-        
-        
         User user = userService.read(id); 
         List<CartDto> cartList = cartService.cartDtoList(id);
-        
         Integer total = cartService.total(cartList);
         
         // (하은) userId로 조건에 맞는 행 찾기 -> bookId로 book 정보 찾기        
@@ -62,12 +56,11 @@ public class CartController {
     // (하은수정) 장바구니로 넘어오는 코드 합치기
     @PostMapping("/cart")
     public String cart(@AuthenticationPrincipal UserSecurityDto userSecurityDto, BuyInfoDto dto, Model model) {
-        
         Integer userId = userSecurityDto.getId(); // userId로 cart, wish 정보 찾기
         User user = userService.read(userId);
         List<CartDto> cartList = cartService.cartDtoList(userId); // 장바구니에 표시할 책 정보
         Integer total = cartService.total(cartList);
-        log.info("total={}", total);
+        
         // 책 수량을 선택하지 않고 장바구니에 추가할 경우, 책 수량 1로 고정
         if (dto.getCount() == null) {
             dto.setCount(1);
@@ -78,7 +71,6 @@ public class CartController {
             cartService.addCart(userId, dto.getBookId(), dto.getCount());
         } else { // 사용자 있으면 update
             Integer afterCount = cartService.updateCount(userId, dto.getBookId(), dto.getCount());
-            log.info("변경 수량={}", afterCount);
         }
         
         // userId로 user 위시리스트 불러오기(책 리스트 + 책 정보)   
@@ -101,7 +93,6 @@ public class CartController {
             cartService.addCart(userId, dto.getBookId(), dto.getCount());
         } else { // 사용자 있으면 update
             Integer afterCount = cartService.updateCount(userId, dto.getBookId(), dto.getCount());
-            log.info("변경 수량={}", afterCount);
         }
         
          return "redirect:/detail?id=" + dto.getBookId();
