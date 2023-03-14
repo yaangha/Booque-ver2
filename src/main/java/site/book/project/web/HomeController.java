@@ -38,15 +38,9 @@ public class HomeController {
         
         // 전체 책 별점순 1~8위
         List<Book> list = homeService.readAllRankingOrderByBookScore();
-//        for (Book b : list) {
-//            log.info("id={},score={}", b.getBookId(), b.getBookScore());
-//        }
         
         // 전체 책 리뷰많은순 1~8위
         List<Book> postList = homeService.readAllRankingOrderByPostReview();
-//        for (Book p : postList) {
-//            log.info("id={},review={}", p.getBookId(), p.getPostCount());
-//        }
         
         // 분야별 별점순/리뷰많은 순 순위(별점순)
         String category = "";
@@ -70,9 +64,6 @@ public class HomeController {
         // 자기계발
         category = "자기계발";
         List<Book> selpHelpScoreList = homeService.readAllRankingCategoryOrderByBookScore(category);
-//        for (Book b : selpHelpList) {
-//          log.info("id={},score={}", b.getBookId(), b.getBookScore());
-//        }
         
         // 분야별 별점순/리뷰많은 순 순위(리뷰순)
         category = "경제/경영";
@@ -93,9 +84,6 @@ public class HomeController {
         // 자기계발
         category = "자기계발";
         List<Book> selpHelpPostList = homeService.readAllRankingCategoryOrderByBookReview(category);
-//        for (Book b : selpHelpPostList) {
-//            log.info("id={},score={}", b.getBookId(), b.getPostCount());
-//          }
         
         // 전체 포스트(리뷰) 중 댓글이 많이 달린 순 1~5위
         List<HomeTopFiveListDto> hotReviewPostList = homeService.readTopFiveHotReviewOrderByPost();
@@ -108,7 +96,6 @@ public class HomeController {
         for (HomeTopFiveListDto b : bestHitPostList) {
           log.info("id={},score={},bookname={}", b.getPostId(), b.getHit(), b.getBookName());
         }
-        
        
         if(userSecurityDto != null) { 
             // (예진) 홈 로그인시 nickName으로 교체
@@ -138,7 +125,5 @@ public class HomeController {
         
         return "home";
     }
-
   
-    
 }
