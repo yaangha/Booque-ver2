@@ -21,7 +21,6 @@ public class HitController {
     private final BookHitsService bookHitsService;
     private final PostHitsService postHitsService;
     
-    
     // 쿠키써서 조회수 어뷰징 방지
     // 쿠키 재적용 시간은 setMaxAge에서 시간 조절 가능, 일단 24시간으로 설정
     // bookDetail 관련 조회수
@@ -57,9 +56,6 @@ public class HitController {
             newCookie.setMaxAge(60 * 30);
             response.addCookie(newCookie);
         }
-//        for (Cookie cookie : cookies) {
-//            log.info("쿠키목록={}",cookie.getValue()
-//        }
         
     }
     
@@ -96,6 +92,5 @@ public class HitController {
         }
         
     }
-    
     
 }
