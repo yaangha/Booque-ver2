@@ -35,38 +35,6 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
         return new BCryptPasswordEncoder();
     }
     
-    /*
-    @Bean
-    // 로그인/로그아웃 기능을 테스트하기 위한 가상의 사용자 정보 생성.
-    public InMemoryUserDetailsManager inMeMoryUserDetailsManager () {
-        UserDetails user1 = User.builder() // 직접 만드려면 5~6개의 클래스가 필요하다.
-                .username("user1") // 로그인 아이디
-                .password(passwordEncoder().encode("1111")) // 로그인 아이디 - 반드시 암호화!
-                .roles("USER") // 실제로는 ROLE_USER 권한 부여. 일반사용자.
-                .build();
-        UserDetails user2 = User.builder()
-                .username("user2")
-                .password(passwordEncoder().encode("2222"))
-                .roles("USER", "ADMIN")
-                .build();
-        
-        return new InMemoryUserDetailsManager(user1, user2);
-    }
-    */
-    
-    /*
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-         // Spring Security는 GET 방식을 제외한 POST/PUT/DELETE 요청에서 
-         // CERF 토큰을 요구함.
-         // POST/PUT/DELETE 요청에서 CSRF 토큰을 서버로 전송하지 않으면 403(forbidden:권한 없음) 에러가 발생.
-         // 기능 구현을 간단히하기 위해서 Spring Security의 CFRS 기능을 비활성화. 
-        http.csrf().disable();
-        
-        return http.build();
-    }
-    */
-    
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {        
         // Spring Security는 GET 방식을 제외한 POST/PUT/DELETE 요청에서
