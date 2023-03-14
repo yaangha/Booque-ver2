@@ -65,18 +65,7 @@ public class ChattingController {
 
     @Autowired
     private ReservedRepository reservedRepository;
-    
-    // 메시지 컨트롤러
-//    @MessageMapping("/chat/{userName}")
-//    public void sendMessage (@DestinationVariable String userName, Chatting chat) {
-//        log.info("sendMessage(to={}, chat={})", userName, chat);
-//        boolean isExists = UserChatLog.getInstance().getUsers().contains(userName);
-//        if (isExists) {
-//            simpMessagingTemplate.convertAndSend("/topic/messages/" + userName, chat);
-//            
-//        }
-//    }
-    
+
     // (지혜)
     @MessageMapping("/chat/{chatRoomId}")
     public void send(@DestinationVariable Integer chatRoomId, ChatReadDto dto) throws IOException {
@@ -84,7 +73,6 @@ public class ChattingController {
         chatService.appendMessage(chatRoomId, dto);
         // log.info("send{},{}",chatRoomId,dto);
         log.info("텍스트파일에 메시지 내용 추가: " + dto);
-//        Integer chatRoomId = dto.getChatRoomId();
         String url = "/user/" + chatRoomId + "/queue/messages";
         simpMessagingTemplate.convertAndSend(url, new ChatReadDto(dto.getSender(), dto.getMessage(), dto.getSendTime())); 
 
@@ -94,17 +82,6 @@ public class ChattingController {
     @MessageMapping("/chat/read/{chatRoomId}")
     public void notification(@DestinationVariable Integer chatRoomId, ChatReadDto dto) throws IOException {
         String nickName = dto.getSender();
-//        ChatAssist CA = chatAssistRepository.findByChatRoomId(chatRoomId);
-//        Integer unreadCount = CA.getReadCount();
-//        String nickNameCmp = CA.getNickName();
-//        log.info("@@@@@@{},{},{}",chatRoomId,nickName, nickNameCmp);
-//        if (unreadCount != 0 ) {
-//            if (nickName.equals(nickNameCmp)) {
-//                chatService.updateReadChat(nickNameCmp, chatRoomId, 1); // 상대방의 글을 읽고 내 글을 보낼 때
-//            } else {
-//                chatService.updateReadChat(nickNameCmp, chatRoomId, 0); // 상대방이 내 글을 읽지 않고 안읽음 추가
-//            }   
-//        } 
         String url2 = "/user/" + chatRoomId + "/queue/notification/" + nickName;
         simpMessagingTemplate.convertAndSend(url2, nickName);
     }
@@ -148,7 +125,6 @@ public class ChattingController {
         // 예약 정보 삭제
         reserveService.deleteReservation(usedBookId);
     }
-
     
     // 채팅 로그 사용자 등록
     @CrossOrigin
@@ -186,10 +162,4 @@ public class ChattingController {
             return chatService.updateReadChat(nickName, chatRoomId, 0);
         }
     }
-//    // 채팅창 가져오기
-//    @CrossOrigin
-//    @GetMapping("/fetchAllUsers")
-//    public Set<String> fetchAll(){
-//        return UserChatLog.getInstance().getUsers();
-//    }
 }
