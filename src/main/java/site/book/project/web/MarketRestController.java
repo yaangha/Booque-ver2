@@ -54,11 +54,8 @@ public class MarketRestController {
     @Value("${com.example.upload.path}")
     private String uploadPath;
     
-    
     @PostMapping("/api/upload")
     public ResponseEntity<List<FileUploadResultDto>> upload(FileUploadDto dto){
-        
-        
         List<MultipartFile> files = dto.getFiles();
         if (files == null) {
             return ResponseEntity.noContent().build();
@@ -73,8 +70,6 @@ public class MarketRestController {
         return ResponseEntity.ok(list);
     }
     
-    
-    
     private FileUploadResultDto saveFile(MultipartFile file) {
         FileUploadResultDto result = null;
         
@@ -84,10 +79,8 @@ public class MarketRestController {
         String target = uuid + "_" + originalName;
         log.info(target);
         
-//        Path path = Paths.get(uploadPath, target);
         File dest = new File(uploadPath, target);   // 새로운 파일을 저장하는것?
         try {
-//            file.transferTo(path);
             file.transferTo(dest);
             
             result = FileUploadResultDto.builder()
@@ -95,7 +88,6 @@ public class MarketRestController {
                     .fileName(originalName)
                     .image(image)
                     .build();
-            
         } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
         }
@@ -127,26 +119,14 @@ public class MarketRestController {
     
     @DeleteMapping("/api/view/{fileName}")
     public void deleteFile(@PathVariable String fileName) {
-        log.info("삭제할 파일 이루ㅁ{}", fileName);
-        
         File file = new File(uploadPath, fileName);
-        log.info("파일은 뭔데??? {}", file);
-        
         boolean result =  file.delete();
-        
-        log.info("삭제 되엇니???? {}", result);
-        
     }
     
     @DeleteMapping("/api/deleteImg/{imgId}")
     public void deleteImg(@PathVariable Integer imgId) {
         usedBookImageRepository.deleteById(imgId);
-        
-        
-        
     }
-    
-    
     
     /**
      * ajax를 이용해서 키워드 받고 검색하기
@@ -162,8 +142,6 @@ public class MarketRestController {
         return ResponseEntity.ok(searhList);
     }
     
-    
-    
     // (은정)
     @GetMapping("/api/usedBookWish")
     public Map<String, Object> saveUsedBookWish(Integer usedBookId, @AuthenticationPrincipal UserSecurityDto userSecurityDto) {
@@ -172,9 +150,8 @@ public class MarketRestController {
         Integer count = 0;
         if(result==0) {
             count= usedBookService.minusWishCount(usedBookId);
-        }else {
+        } else {
             count = usedBookService.addWishCount(usedBookId);
-            
         }
         
         Map<String, Object> map = new HashMap<>();
@@ -195,8 +172,5 @@ public class MarketRestController {
         usedBookRepository.save(usedBook);
         
     }
-    
-    
-    
     
 }
