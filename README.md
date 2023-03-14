@@ -12,9 +12,9 @@
 + JavaScript
 
 ## 구현 기능(담당)
-1. 임시저장
++ 임시저장
 
-MarketController.java 일부
+> MarketController.java 일부
 
 ```java
 @PreAuthorize("hasRole('USER')")
@@ -66,9 +66,9 @@ public String storage(@AuthenticationPrincipal UserSecurityDto userDto, MarketCr
 }
 ```
 
-2. 다른 중고 판매글 노출
++ 다른 중고 판매글 노출
 
-detail.html 일부
+> detail.html 일부
 
 ```html
 <div id="other" th:unless="${ #lists.isEmpty(otherUsedBookListFinal2) }" style="border-top: 1px solid silver;"> <!-- 이 책의 다른 중고 상품은? -->
@@ -93,7 +93,7 @@ detail.html 일부
 </div>
 ```
 
-MarketController.java 일부
+> MarketController.java 일부
 
 ```java
 // 같은 책 다른 중고상품 수정
@@ -110,7 +110,7 @@ for (MarketCreateDto m : otherUsedBookList2) {
 model.addAttribute("otherUsedBookListFinal2", otherUsedBookListFinal2);
 ```
 
-UsedBookService.java 일부
+> UsedBookService.java 일부
 
 ```java
 // bookId가 동일한 다른 중고책 리스트 만들기
@@ -132,9 +132,9 @@ public List<UsedBook> readOtherUsedBook(Integer bookId) {
 }
 ```
 
-3. 블로그 이동
++ 블로그 이동
 
-detail.html 일부
+> detail.html 일부
 
 ```html
 <div class="row bg-dark p-2 text-dark bg-opacity-10 rounded-4" style="height: 100px; margin: 15px 0; overflow: hidden; padding-right: none;">
@@ -171,7 +171,7 @@ detail.html 일부
 </div>
 ```
 
-MarketController.java 일부
+> MarketController.java 일부
 
 ```java
 // 블로그로 연결 -> 해당 책에 관한 리뷰 + 최신 리뷰 = 총 2개 보여주기
@@ -203,9 +203,9 @@ model.addAttribute("thisBookPost", thisBookPost);
 model.addAttribute("latestPost", latestPost);
 ```
 
-4. 마이페이지
++ 마이페이지
 
-MarketController.java 일부
+> MarketController.java 일부
 
 ```java
 @GetMapping("/mypage") // 
@@ -252,33 +252,56 @@ public void mypage(Integer userId, Model model) {
 
 ## 구성 화면
 ### 메인 페이지
+
++ 중고 거래 상품 목록을 확인할 수 있으며 상품을 등록할 수 있음  
+
 ![main](https://user-images.githubusercontent.com/113163657/224998838-724028b2-c65b-48e3-bb46-8bcd2ff38e8f.JPG)
 
 ---
 ### 검색 페이지
+
++ 지역, 키워드 등으로 검색할 수 있으며 알림 신청을 할 수 있음  
+
 ![search(1)](https://user-images.githubusercontent.com/113163657/224774242-64938848-2a3d-40da-8f8a-764b095cb231.JPG)
 
 ---
 ### 판매글 상세 페이지
+
++ 상품 이미지와 가격 등 중고 판매 정보를 확인할 수 있으며 판매자의 블로그로도 이동할 수 있음  
 ![detail](https://user-images.githubusercontent.com/113163657/224998940-7ee00de4-bf6b-4a56-891c-0890cef09cca.png)
+
++ 동일한 책의 다른 중고 상품 목록을 볼 수 있음  
+
 ![other](https://user-images.githubusercontent.com/113163657/224998949-1d54cab2-f4f4-44b3-bead-30b3fa82e5d4.png)
 
 ### 시즌1 새 책 판매 페이지
+
++ 새상품 상세 페이지에서, 중고 판매 상품이 있는 경우 해당 목록으로 이동할 수 있음  
+
 ![detail2](https://user-images.githubusercontent.com/113163657/224999321-571acce9-83a0-4713-b56f-f82704db3d04.png)
 
 ---
 ### 판매글 작성 페이지
+
++ 책을 검색하여 등록할 수 있으며 이미지 업로드도 가능함  
+
 ![create](https://user-images.githubusercontent.com/113163657/224999066-9b64f759-27ef-4b0f-85a8-3e6702778ce1.png)
 
----
-### 임시저장 모달
++ 상품등록시 임시저장을 해놓은 글이 있다면 이어서 작성이 가능함  
+
 ![storage](https://user-images.githubusercontent.com/113163657/224999136-909c0b00-772a-4fef-b042-5f2ca49dea4d.png)
 
 ---
 ### 채팅 페이지
+
++ 중고 상품 판매자와 구매자가 채팅할 수 있으며 좌측에서 채팅 목록을 모아볼 수 있음  
+
 ![chat](https://user-images.githubusercontent.com/113163657/224999457-3ee6fa77-6583-4ebd-ab2e-228a8810deb2.JPG)
 
 ---
 ### 마이페이지
+
++ 블로그로 이동할 수 있으며, 판매 물품과 좋아요를 누른 목록을 볼 수 있음  
+
 ![mypage(1)](https://user-images.githubusercontent.com/113163657/224999168-5615de15-c9db-4115-8507-0337bfd306e2.JPG)
 ![mypage(2)](https://user-images.githubusercontent.com/113163657/224999178-9e4e40be-bb2c-4c50-bd4a-5d52ed645320.JPG)
