@@ -37,10 +37,7 @@ public class CartRestController {
     public ResponseEntity<List<CartDto>> cartListll(@RequestBody ArrayList<Integer> ckList){
 
         cartService.deleteCart(ckList);
-        // 유저 번호 그냥 얻자...  가장 끝번호에 추가하면 되잖아
-        // 유저 번호 
         List<CartDto> cartDtoList =  cartService.cartDtoList(ckList.get(ckList.size()-1));
-        log.info("유저번호가 제대로 넘어 갔나 ? {} , {}",ckList.get(ckList.size()-1) , cartDtoList );
         
         return ResponseEntity.ok(cartDtoList);
     }
@@ -52,17 +49,11 @@ public class CartRestController {
      */
     @GetMapping("api/cartCount/{count}/{cartId}")
     public void updateCount(@PathVariable Integer count, @PathVariable Integer cartId){
-        log.info("장바구니 수량 변경~~~~~~{},{}", count, cartId);
         cartService.cartCountUpdate(count, cartId);
-        
     }
-    
 
     @GetMapping("/cartTest/{test}")
     public void test(@PathVariable Integer test) {
-        log.info("이거 맞아???? 뭐지..??    {}" ,test);
     }
-    
- 
     
 }
