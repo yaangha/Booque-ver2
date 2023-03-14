@@ -252,7 +252,7 @@ public void mypage(Integer userId, Model model) {
 
 ## 구성 화면
 ### 메인 페이지
-![main](https://user-images.githubusercontent.com/113163657/224773967-ecef716c-1824-435c-9966-b6b6db222584.JPG)
+![main](https://user-images.githubusercontent.com/113163657/224998838-724028b2-c65b-48e3-bb46-8bcd2ff38e8f.JPG)
 
 ---
 ### 검색 페이지
@@ -260,8 +260,25 @@ public void mypage(Integer userId, Model model) {
 
 ---
 ### 판매글 상세 페이지
+![detail](https://user-images.githubusercontent.com/113163657/224998940-7ee00de4-bf6b-4a56-891c-0890cef09cca.png)
+![other](https://user-images.githubusercontent.com/113163657/224998949-1d54cab2-f4f4-44b3-bead-30b3fa82e5d4.png)
+
+### 시즌1 새 책 판매 페이지
+![detail2](https://user-images.githubusercontent.com/113163657/224999321-571acce9-83a0-4713-b56f-f82704db3d04.png)
+
+---
+### 판매글 작성 페이지
+![create](https://user-images.githubusercontent.com/113163657/224999066-9b64f759-27ef-4b0f-85a8-3e6702778ce1.png)
+
+---
+### 임시저장 모달
+![storage](https://user-images.githubusercontent.com/113163657/224999136-909c0b00-772a-4fef-b042-5f2ca49dea4d.png)
+
+---
+### 채팅 페이지
+![chat](https://user-images.githubusercontent.com/113163657/224999457-3ee6fa77-6583-4ebd-ab2e-228a8810deb2.JPG)
 
 ---
 ### 마이페이지
-![mypage(1)](https://user-images.githubusercontent.com/113163657/224774447-1e4fae3e-e4cf-4b0a-b08c-d1b7352bbdd2.JPG)
-![mypage(2)](https://user-images.githubusercontent.com/113163657/224774501-9c5366c3-75c5-48af-a927-66955c51688c.JPG)
+![mypage(1)](https://user-images.githubusercontent.com/113163657/224999168-5615de15-c9db-4115-8507-0337bfd306e2.JPG)
+![mypage(2)](https://user-images.githubusercontent.com/113163657/224999178-9e4e40be-bb2c-4c50-bd4a-5d52ed645320.JPG)
