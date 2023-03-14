@@ -11,9 +11,60 @@
 + CSS
 + JavaScript
 
-## 구현 기능
+## 구현 기능(담당)
 1. 임시저장
 
+MarketController.java 일부
+
+```java
+@PreAuthorize("hasRole('USER')")
+@GetMapping("/storage") // 메인화면 -> 상품등록에서 작성하던 글 이어서 작성하기 버튼 눌렀을 때!
+public void storage(@AuthenticationPrincipal UserSecurityDto userDto, Model model) {
+    // (1) 사용자 글에서 임시저장 목록 뽑기 -> userid로 작성한 글 리스트업(내림차순) -> [0]번째 글 저장 
+    List<UsedBook> usedBookList = usedBookRepository.findByUserIdOrderByModifiedTimeDesc(userDto.getId());
+
+    List<UsedBookPost> usedBookPost = new ArrayList<>(); // storage가 0인 목록을 저장할 리스트
+    for (UsedBook u : usedBookList) { // pk로 UsedBookPost에서 0인 목록 찾기 -> 먼저 나오는 값이 최신 순
+        UsedBookPost post = usedBookPostRepository.findByUsedBookId(u.getId());
+        if (post.getStorage() == 0) {
+            usedBookPost.add(post);
+        }
+    }
+
+    // usedBookPost[0]가 제일 최신순
+    UsedBook usedBook = usedBookRepository.findById(usedBookPost.get(0).getUsedBookId()).get();
+    Book book = bookRepository.findById(usedBook.getBookId()).get();
+    MarketCreateDto dto = MarketCreateDto.builder()
+            .usedBookId(usedBook.getId()).bookTitle(book.getBookName()).price(usedBook.getPrice()).location(usedBook.getLocation())
+            .level(usedBook.getBookLevel()).title(usedBook.getTitle()).contents(usedBookPost.get(0).getContent())
+            .build();
+
+    List<UsedBookImage> imgList = usedBookImageRepository.findByUsedBookId(usedBook.getId());
+
+    model.addAttribute("imgList", imgList);
+    model.addAttribute("dto", dto);    
+    model.addAttribute("book", book);
+    model.addAttribute("usedBook", usedBook);
+}
+
+@PostMapping("/storage") // 임시저장 완료 후 부끄마켓 메인 페이지로 이동
+public String storage(@AuthenticationPrincipal UserSecurityDto userDto, MarketCreateDto dto, Integer usedBookId) {
+    List<String> defaultImg = new ArrayList<>();
+    defaultImg.add("booque_logo.jpg");
+
+    if(dto.getFileNames()!= null) {
+        usedBookService.createImg(usedBookId, dto.getFileNames());
+    } else {
+        usedBookService.createImg(usedBookId, defaultImg);
+    }
+
+    dto.setUserId(userDto.getId());
+    dto.setStorage(0);
+    usedBookService.create(usedBookId, dto);
+
+    return "redirect:/market/main";
+}
+```
 
 2. 다른 중고 판매글 노출
 
@@ -155,6 +206,54 @@ model.addAttribute("latestPost", latestPost);
 ```
 
 4. 마이페이지
+
+MarketController.java 일부
+
+```java
+@GetMapping("/mypage") // 
+public void mypage(Integer userId, Model model) {
+
+    User user = userRepository.findById(userId).get();
+    List<UsedBook> usedBookAll = new ArrayList<>(); // 사용자에 따른 중고책 판매 리스트
+    List<UsedBook> usedBook = new ArrayList<>(); // usedBookAll에서 임시저장 제외한 리스트(메인에 표시될 목록)
+
+    usedBookAll = usedBookRepository.findByUserId(userId);
+
+    for (UsedBook u : usedBookAll) {
+        UsedBookPost usedBookPost = usedBookPostRepository.findByUsedBookId(u.getId());
+        if (usedBookPost.getStorage() == 1) {
+            usedBook.add(u);
+        }
+    }
+
+    List<MarketCreateDto> list = mainList(usedBook); 
+
+    List<UsedBookWish> wishList = usedBookWishRepository.findByUserId(userId); // 사용자가 찜한 리스트
+    List<UsedBook> wishUsedBook = new ArrayList<>();
+
+    for (UsedBookWish u : wishList) {
+        UsedBook usedBookCHK = usedBookRepository.findById(u.getUsedBookId()).get();
+        if (usedBookCHK.getId() == u.getUsedBookId()) {
+            wishUsedBook.add(usedBookCHK);
+        }
+    }
+    List<MarketCreateDto> wishListCHK = mainList(wishUsedBook); // 찜한 리스트 중 화면에 보여줄 목록
+
+    // 리뷰 + 판매중 + 판매완료 개수
+    Integer postCount = postRepository.findByUserId(userId).size();
+    Integer usedBookSoldoutCount = usedBookRepository.countUsedBookSoldoutPost(userId, "판매완료").size();
+    Integer countAllUsedBook = usedBook.size();
+    Integer usedBookSellingCount = countAllUsedBook - usedBookSoldoutCount;
+
+    model.addAttribute("wishListCHK", wishListCHK);
+    model.addAttribute("user", user);
+    model.addAttribute("list", list);
+    model.addAttribute("usedBook", usedBook);
+    model.addAttribute("postCount", postCount);
+    model.addAttribute("usedBookSellingCount", usedBookSellingCount);
+    model.addAttribute("usedBookSoldoutCount", usedBookSoldoutCount);
+}
+```
 
 ## 구성 화면
 ### 메인 페이지
