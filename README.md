@@ -72,24 +72,24 @@ detail.html 일부
 
 ```html
 <div id="other" th:unless="${ #lists.isEmpty(otherUsedBookListFinal2) }" style="border-top: 1px solid silver;"> <!-- 이 책의 다른 중고 상품은? -->
-  <div style="font-size:18px; padding-bottom: 15px;"><span th:text="${ '<' + book.bookName + '>' }" style="font-size:21px; font-weight: bold;"></span> 다른 중고 상품은?</div>
-  <div class="otherList align-middle" th:each="marketCreateDto : ${ otherUsedBookListFinal2 }"> <!-- 다른 상품 나열 부분 -->
+    <div style="font-size:18px; padding-bottom: 15px;"><span th:text="${ '<' + book.bookName + '>' }" style="font-size:21px; font-weight: bold;"></span> 다른 중고 상품은?</div>
+    <div class="otherList align-middle" th:each="marketCreateDto : ${ otherUsedBookListFinal2 }"> <!-- 다른 상품 나열 부분 -->
     <div style="width:200px; height: 315px;"> <!-- 상품목록 1개 -->
-    <a th:href="@{ /market/detail(usedBookId=${ marketCreateDto.usedBookId }) }" th:myname="${ marketCreateDto.usedBookId }" onclick="usedBookHits(this.getAttribute('myname'))">
+        <a th:href="@{ /market/detail(usedBookId=${ marketCreateDto.usedBookId }) }" th:myname="${ marketCreateDto.usedBookId }" onclick="usedBookHits(this.getAttribute('myname'))">
             <img id="img" alt="" th:src="${ '/market/api/view/'+marketCreateDto.imgUsed }"  style="height:200px; width:200px; margin-bottom: 5px; object-fit: cover;">
-      <div class="text-truncate" th:text="${ marketCreateDto.title }" style="font-size:17px;"></div>
-      <div th:text="|${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold;"></div>
-      <span th:text="${ marketCreateDto.level }" style="color:red; font-weight:bold;"></span>
+            <div class="text-truncate" th:text="${ marketCreateDto.title }" style="font-size:17px;"></div>
+            <div th:text="|${#numbers.formatInteger(marketCreateDto.price, 0, 'COMMA')}원|" style="font-weight: bold;"></div>
+            <span th:text="${ marketCreateDto.level }" style="color:red; font-weight:bold;"></span>
             <small class="text-truncate" th:text="${ marketCreateDto.location }" style="display: block;"></small>
             <div class="align-middle" style="color:gray;">
                 <small>
-                <i class="bi bi-heart-fill" style="font-size:10px;"></i> 관심 <span id="wishCount" th:text="${ marketCreateDto.wishCount }"></span> 
-                <i class="bi bi-eye" style="font-size:13px; margin-left:8px;"></i> 조회 <span th:text="${ marketCreateDto.hits }"></span>
-            </small>
+                    <i class="bi bi-heart-fill" style="font-size:10px;"></i> 관심 <span id="wishCount" th:text="${ marketCreateDto.wishCount }"></span> 
+                    <i class="bi bi-eye" style="font-size:13px; margin-left:8px;"></i> 조회 <span th:text="${ marketCreateDto.hits }"></span>
+                </small>
             </div>
-    </a>
+        </a>
     </div>
-  </div>
+    </div>
 </div>
 ```
 
@@ -168,10 +168,8 @@ detail.html 일부
         <a th:href="@{ /post/list(postWriter=${ user.username }) }" class="btn btn-dark" style="border: 1px solid black; padding: 16px 18px; margin:16px;"><span th:text="${ '[' + user.nickName + '] 님의 블로그 구경하기' }"></span>
         <i class="bi bi-house-door"></i></a>
     </div>
-</a>
 </div>
 ```
-
 
 MarketController.java 일부
 
@@ -212,11 +210,9 @@ MarketController.java 일부
 ```java
 @GetMapping("/mypage") // 
 public void mypage(Integer userId, Model model) {
-
     User user = userRepository.findById(userId).get();
     List<UsedBook> usedBookAll = new ArrayList<>(); // 사용자에 따른 중고책 판매 리스트
     List<UsedBook> usedBook = new ArrayList<>(); // usedBookAll에서 임시저장 제외한 리스트(메인에 표시될 목록)
-
     usedBookAll = usedBookRepository.findByUserId(userId);
 
     for (UsedBook u : usedBookAll) {
@@ -227,7 +223,6 @@ public void mypage(Integer userId, Model model) {
     }
 
     List<MarketCreateDto> list = mainList(usedBook); 
-
     List<UsedBookWish> wishList = usedBookWishRepository.findByUserId(userId); // 사용자가 찜한 리스트
     List<UsedBook> wishUsedBook = new ArrayList<>();
 
