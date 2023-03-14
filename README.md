@@ -267,7 +267,8 @@ public void mypage(Integer userId, Model model) {
 ---
 ### 판매글 상세 페이지
 
-+ 상품 이미지와 가격 등 중고 판매 정보를 확인할 수 있으며 판매자의 블로그로도 이동할 수 있음  
++ 상품 이미지와 가격 등 중고 판매 정보를 확인할 수 있으며 판매자의 블로그로도 이동할 수 있음 
+
 ![detail](https://user-images.githubusercontent.com/113163657/224998940-7ee00de4-bf6b-4a56-891c-0890cef09cca.png)
 
 + 동일한 책의 다른 중고 상품 목록을 볼 수 있음  
